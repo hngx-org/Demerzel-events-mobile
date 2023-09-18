@@ -1,0 +1,34 @@
+name: Flutter Code Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.1'
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Apply fixes
+        run: dart fix --apply
+
+      - name: Fail workflow if code validation fails
+        if: ${{ failure() }}
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.actions.createStatus({
+              context: 'Flutter Code Validation',
+              state: 'failure',
+              description: 'Code validation failed.'
+            })
