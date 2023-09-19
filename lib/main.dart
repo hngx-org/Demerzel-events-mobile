@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hng_events_app/screens/Home_screen.dart';
+
+import 'navigation/navigation_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,18 +14,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFF97316),
-          primary: const Color(0xFFF97316),
-          // secondary: const Color(0xFFF97316),
-        ),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(),
-    );
+    return ScreenUtilInit(
+        designSize: const Size(370, 810),
+        minTextAdapt: false,
+        splitScreenMode: true,
+        builder: (_, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFFF97316),
+                primary: const Color(0xFFF97316),
+                // secondary: const Color(0xFFF97316),
+              ),
+              useMaterial3: true,
+            ),
+            home: const HomeScreen(),
+            onGenerateRoute: NavigationManager.generateRoute,
+          );
+        });
   }
 }
 
@@ -70,5 +82,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-// PULL TESTTTTTTTTTTTTT 
+// PULL TESTTTTTTTTTTTTT
