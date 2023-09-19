@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/dash_board_screen.dart';
 import 'package:hng_events_app/navigation/navigation_manager.dart';
 
-import 'constants/theme/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: const Color(0xFFF97316),
-                primary: HngColors.hngPurple,
+                primary: ProjectColors.purple,
                 // secondary: const Color(0xFFF97316),
               ),
               useMaterial3: true,

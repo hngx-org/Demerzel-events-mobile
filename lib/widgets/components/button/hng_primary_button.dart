@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/constants/theme/colors.dart';
+import 'package:hng_events_app/constants/colors.dart';
 
 class HngPrimaryButton extends StatelessWidget {
   const HngPrimaryButton({
@@ -20,7 +20,7 @@ class HngPrimaryButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: isEnabled && !isLoading ? onPressed : null,
         style: ElevatedButton.styleFrom(
-            backgroundColor: HngColors.primaryOrangeColor,
+            backgroundColor: ProjectColors.purple,
             elevation: 0.0,
             minimumSize: const Size(262, 52),
             padding: const EdgeInsets.all(0.0)),
@@ -39,6 +39,6 @@ class HngPrimaryButton extends StatelessWidget {
                     ? const CircularProgressIndicator()
                     : Text(text,
                         style: const TextStyle(
-                            color: HngColors.primaryWhiteColor)))));
+                            color: ProjectColors.white)))));
   }
 }

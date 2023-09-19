@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hng_events_app/constants/theme/colors.dart';
+import 'package:hng_events_app/constants/colors.dart';
 
 class HngTextInputField extends StatefulWidget {
   const HngTextInputField({
@@ -74,7 +74,7 @@ class HngTextInputFieldState extends State<HngTextInputField> {
               hintStyle: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: HngColors.hngGrey),
+                  ?.copyWith(color: ProjectColors.grey),
               contentPadding:
                   EdgeInsets.symmetric(vertical: 0, horizontal: 10.w),
               errorBorder: OutlineInputBorder(
@@ -88,14 +88,14 @@ class HngTextInputFieldState extends State<HngTextInputField> {
                       BorderSide(color: Theme.of(context).colorScheme.error)),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                  borderSide: const BorderSide(color: HngColors.hngGrey)),
+                  borderSide: const BorderSide(color: ProjectColors.grey)),
               disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                  borderSide: const BorderSide(color: HngColors.hngGrey)),
+                  borderSide: const BorderSide(color: ProjectColors.grey)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                  borderSide: const BorderSide(color: HngColors.primaryBlackColor)),
-              helperStyle: const TextStyle(color: HngColors.primaryBlackColor),
+                  borderSide: const BorderSide(color: ProjectColors.black)),
+              helperStyle: const TextStyle(color: ProjectColors.black),
               helperText: widget.helperText))
     ]);
   }

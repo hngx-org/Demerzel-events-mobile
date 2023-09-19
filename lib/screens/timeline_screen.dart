@@ -31,7 +31,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           ),
           const CircleAvatar(
             radius: 50,
-            backgroundImage: AssetImage(HngImages.homeImage),
+            backgroundImage: AssetImage(ProjectImages.homeImage),
           ),
           const Text(
             HngString.data,
@@ -43,7 +43,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
           ),
           HngTextInputField(
             onChanged: (value) {},
-            validator: (String? value) {},
+            validator: (String? value) {
+              return null; //replace with logic code for the validator
+            },
           ),
           HngOutlineButton(
             text: HngString.goToFreeLunchPage,
