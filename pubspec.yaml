@@ -16,6 +16,7 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   table_calendar: ^3.0.9
+  svg_flutter: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -34,6 +35,7 @@ flutter:
   assets:
     - assets/images/
     - assets/illustrations/
+    - assets/icons/
  
 fonts:
     - family: NotoSans

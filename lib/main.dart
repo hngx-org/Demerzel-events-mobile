@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/views/calendar.dart';
-
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/constants/theme.dart';
+import 'package:hng_events_app/screens/calendar_screen.dart';
+import 'package:hng_events_app/screens/settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,14 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFF97316),
-          primary: const Color(0xFFF97316),
-          // secondary: const Color(0xFFF97316),
-        ),
-        useMaterial3: true,
-      ),
+      theme: ProjectTheme.materialTheme(context),
       home: const CalendarPage(),
     );
   }
@@ -57,11 +51,10 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               "data",
               style: TextStyle(
-                fontSize: 45,
-                fontFamily: "NotoSans",
-                fontWeight: FontWeight.w900,
-                color: ProjectColors.grey
-              ),
+                  fontSize: 45,
+                  fontFamily: "NotoSans",
+                  fontWeight: FontWeight.w900,
+                  color: ProjectColors.grey),
             ),
           ],
         ),

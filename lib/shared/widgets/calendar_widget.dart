@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hng_events_app/constants/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 
@@ -60,14 +61,14 @@ class _CalCardState extends State<CalCard> {
                   calendarStyle: const CalendarStyle(
 
                     todayDecoration: BoxDecoration(
-                      color: Colors.red,
+                      color:ProjectColors.purple,
                       // shape: BoxShape.rectangle,
                       // borderRadius: BorderRadius.all(
                       //   Radius.circular(8),
                       // ),
                     ),
                     selectedDecoration: BoxDecoration(
-                      color: Colors.blue,
+                      color:ProjectColors.purple,
                       // shape: BoxShape.rectangle,
                       // borderRadius: BorderRadius.all(
                       //   Radius.circular(8),
@@ -80,7 +81,7 @@ class _CalCardState extends State<CalCard> {
                         margin: const EdgeInsets.all(4.0),
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
-                            color: Colors.red,
+                            color:ProjectColors.purple,
                             shape: BoxShape.circle,
                             //borderRadius: BorderRadius.circular(20.0),
                             ),
@@ -92,7 +93,7 @@ class _CalCardState extends State<CalCard> {
                         margin: const EdgeInsets.all(4.0),
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
-                            color: Colors.blue,
+                            color: ProjectColors.purple,
                             shape: BoxShape.circle,
                             //borderRadius: BorderRadius.circular()
                             ),
