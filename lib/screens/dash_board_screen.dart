@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hng_events_app/screens/settings.dart';
 import 'package:hng_events_app/constants/theme/colors.dart';
 import 'package:hng_events_app/constants/string.dart';
 import 'package:hng_events_app/screens/calendar_screen.dart';
 import 'package:hng_events_app/screens/my_people_screen.dart';
+import 'package:hng_events_app/screens/settings_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen.dart';
 
 class DashBoardScreen extends StatefulWidget {
