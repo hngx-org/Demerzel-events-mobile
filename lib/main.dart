@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hng_events_app/screens/Home_screen.dart';
+import 'package:hng_events_app/screens/dash_board_screen.dart';
+import 'package:hng_events_app/navigation/navigation_manager.dart';
 
-import 'navigation/navigation_manager.dart';
+import 'constants/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,61 +26,14 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: const Color(0xFFF97316),
-                primary: const Color(0xFFF97316),
+                primary: HngColors.hngPurple,
                 // secondary: const Color(0xFFF97316),
               ),
               useMaterial3: true,
             ),
-            home: const HomeScreen(),
+            home: const DashBoardScreen(),
             onGenerateRoute: NavigationManager.generateRoute,
           );
         });
   }
 }
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).colorScheme.primary;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: const Text("Title"),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage("assets/images/pfp3.jfif"),
-            ),
-            Text(
-              "data",
-              style: TextStyle(
-                fontSize: 45,
-                fontFamily: "Inter",
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: primaryColor,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
-
-// PULL TESTTTTTTTTTTTTT

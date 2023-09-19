@@ -22,9 +22,9 @@ class HngSearchField extends StatelessWidget {
                 filled: true,
                 fillColor: HngColors.primaryWhiteColor,
                 prefixIcon: const Icon(Icons.search),
-                prefixIconColor: HngColors.hngGrey300,
+                prefixIconColor: HngColors.hngGrey,
                 hintText: hintText,
-                hintStyle: const TextStyle(color: HngColors.hngGrey300),
+                hintStyle: const TextStyle(color: HngColors.hngGrey),
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 0, horizontal: 5.w),
                 enabledBorder: OutlineInputBorder(

@@ -74,7 +74,7 @@ class HngTextInputFieldState extends State<HngTextInputField> {
               hintStyle: Theme.of(context)
                   .textTheme
                   .bodyMedium
-                  ?.copyWith(color: HngColors.hngGrey300),
+                  ?.copyWith(color: HngColors.hngGrey),
               contentPadding:
                   EdgeInsets.symmetric(vertical: 0, horizontal: 10.w),
               errorBorder: OutlineInputBorder(
@@ -88,10 +88,10 @@ class HngTextInputFieldState extends State<HngTextInputField> {
                       BorderSide(color: Theme.of(context).colorScheme.error)),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                  borderSide: const BorderSide(color: HngColors.hngGrey300)),
+                  borderSide: const BorderSide(color: HngColors.hngGrey)),
               disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
-                  borderSide: const BorderSide(color: HngColors.hngGrey300)),
+                  borderSide: const BorderSide(color: HngColors.hngGrey)),
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(8.r)),
                   borderSide: const BorderSide(color: HngColors.primaryBlackColor)),
