@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/views/calendar.dart';
 
+import 'package:hng_events_app/constants/colors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -51,14 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("assets/images/pfp3.jfif"),
+              backgroundImage: AssetImage("assets/images/img1.png"),
             ),
             Text(
               "data",
               style: TextStyle(
                 fontSize: 45,
-                fontFamily: "Inter",
+                fontFamily: "NotoSans",
                 fontWeight: FontWeight.w900,
+                color: ProjectColors.grey
               ),
             ),
           ],
