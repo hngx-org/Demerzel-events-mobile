@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/theme.dart';
-import 'package:hng_events_app/screens/calendar_screen.dart';
-import 'package:hng_events_app/screens/settings_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ProjectTheme.materialTheme(context),
-      home: const CalendarPage(),
+      home: const MyHomePage(),
     );
   }
 }
