@@ -8,5 +8,4 @@ class ProjectColors {
   static const Color black = Color(0xff000000);
   static const Color green = Color(0xff89FA70);
   static const Color purple = Color(0xffE78DFB);
-
 }
