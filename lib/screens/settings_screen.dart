@@ -28,6 +28,7 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
+        backgroundColor: ProjectColors.white,
         centerTitle: false,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4.0),
@@ -35,9 +36,18 @@ class SettingsPage extends StatelessWidget {
               height: 1,
               color: Colors.black,
             )),
-        title: const Text('Settings'),
+        title: const Text(
+          'Settings',
+          style: appBarTextStyle,
+        ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_vert,
+              color: ProjectColors.black,
+            ),
+          ),
         ],
       ),
       body: Padding(
@@ -45,9 +55,7 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           children: [
             InkWell(
-              onTap: () {
-
-              },
+              onTap: () {},
               child: Container(
                 height: 72,
                 decoration: ProjectConstants.appBoxDecoration,
@@ -134,7 +142,6 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-
           ],
         ),
       ),
@@ -160,7 +167,7 @@ class SettingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      child: ListTile( 
+      child: ListTile(
         tileColor: Colors.white,
         leading: SvgPicture.asset(leading),
         title: Text(
