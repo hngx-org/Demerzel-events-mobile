@@ -9,7 +9,7 @@ class PeopleScreen extends StatefulWidget {
 class _PeopleScreenState extends State<PeopleScreen> {
   @override
   Widget build(BuildContext context) {
-    return Text("People");
+    return const Text("People");
   }
 }
 

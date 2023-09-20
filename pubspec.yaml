@@ -32,6 +32,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_screenutil: ^5.9.0
+  table_calendar: ^3.0.9
+  svg_flutter: ^0.0.1
 
 
 dev_dependencies:
@@ -60,6 +62,7 @@ flutter:
   assets:
     - assets/images/
     - assets/illustrations/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

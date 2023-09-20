@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    
     return ScreenUtilInit(
         designSize: const Size(370, 810),
         minTextAdapt: false,
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
-                seedColor: const Color(0xFFF97316),
+                seedColor: const Color(0xffE78DFB),
                 primary: ProjectColors.purple,
                 // secondary: const Color(0xFFF97316),
               ),

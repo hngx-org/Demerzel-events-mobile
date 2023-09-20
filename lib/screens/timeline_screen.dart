@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/images.dart';
-import 'package:hng_events_app/constants/routes.dart';
 import 'package:hng_events_app/constants/string.dart';
 import 'package:hng_events_app/widgets/components/button/hng_outline_button.dart';
 import 'package:hng_events_app/widgets/components/text_input/hng_search_field.dart';
@@ -50,7 +49,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           HngOutlineButton(
             text: HngString.goToFreeLunchPage,
             onPressed: () {
-              Navigator.pushNamed(context, HngRoutes.home);
+              // Navigator.pushNamed(context, HngRoutes.home);
             },
           ),
         ],

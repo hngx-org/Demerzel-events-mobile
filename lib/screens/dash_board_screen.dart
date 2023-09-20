@@ -18,8 +18,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   static const List<Widget> _pages = <Widget>[
     TimelineScreen(),
     PeopleScreen(),
-    CalendarScreen(),
-    SettingsScreen()
+    CalendarPage(),
+    SettingsPage()
   ];
 
   int _currentIndex = 0;
@@ -70,7 +70,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 label: HngString.timeLine),
             BottomNavigationBarItem(
                 icon: Icon(Icons.groups_outlined, color: ProjectColors.grey),
-                activeIcon: Icon(Icons.people, color: ProjectColors.purple),
+                activeIcon: Icon(Icons.groups_outlined, color: ProjectColors.purple),
                 label: HngString.myPeople),
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month, color: ProjectColors.grey),
