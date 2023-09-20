@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 class ProjectConstants {
   static  BoxDecoration appBoxDecoration = BoxDecoration(
-    color: Colors.white,
+    //color: Colors.white,
                   border: Border.all(),
                   borderRadius: BorderRadius.circular(10));
   static const SizedBox sizedBox = SizedBox(height: 24,);
