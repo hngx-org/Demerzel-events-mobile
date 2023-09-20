@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
@@ -78,5 +79,19 @@ class EventCard extends StatelessWidget {
         ]),
       ),
     );
+    
+import 'package:flutter/material.dart';
+
+class CalendarScreen extends StatefulWidget {
+  const CalendarScreen({super.key});
+
+  @override
+  State<CalendarScreen> createState() => _CalendarScreenState();
+}
+
+class _CalendarScreenState extends State<CalendarScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Text("Calendar");
   }
 }

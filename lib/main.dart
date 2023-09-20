@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/theme.dart';
+
+import 'package:hng_events_app/screens/dash_board_screen.dart';
+import 'package:hng_events_app/navigation/navigation_manager.dart';
+
 
 
 void main() {
@@ -54,18 +59,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   fontFamily: "NotoSans",
                   fontWeight: FontWeight.w900,
                   color: ProjectColors.grey),
+              
+    return ScreenUtilInit(
+        designSize: const Size(370, 810),
+        minTextAdapt: false,
+        splitScreenMode: true,
+        builder: (_, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Demo',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFFF97316),
+                primary: ProjectColors.purple,
+                // secondary: const Color(0xFFF97316),
+              ),
+              useMaterial3: true,
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: primaryColor,
-        child: const Icon(Icons.add),
-      ),
-    );
+            home: const DashBoardScreen(),
+            onGenerateRoute: NavigationManager.generateRoute,
+          );
+        });
   }
 }
-
-
-// PULL TESTTTTTTTTTTTTT 
