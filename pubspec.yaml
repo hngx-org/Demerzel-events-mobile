@@ -97,6 +97,11 @@ flutter:
           weight: 800
         - asset: fonts/NotoSans/NotoSans-Black.ttf
           weight: 900
+
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato/Lato-Bold.ttf
+          weight: 700
         
     # - family: Schyler
     #   fonts:
