@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/screens/chat_screen.dart';
 import 'package:hng_events_app/screens/splash_screen.dart';
 
 void main() {
@@ -16,8 +17,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',
       theme: ThemeData(primaryColor: ProjectColors.purple),
-      home: const SplashScreen(),
-      // home: const ChatScreen(),
+      // home: const SplashScreen(),
+      home: const CommentScreen(),
     );
   }
 }

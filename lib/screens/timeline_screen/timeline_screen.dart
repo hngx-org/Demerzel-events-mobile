@@ -85,7 +85,7 @@ class TimelineScreen extends StatelessWidget {
                   "Everyone",
                   style: TextStyle(fontSize: 20, color: Colors.black),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -93,14 +93,17 @@ class TimelineScreen extends StatelessWidget {
         body: TabBarView(
           children: const [FriendsScreen(), EveryoneScreen()],
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xffE78DFB),
-          shape: const CircleBorder(),
-          onPressed: () {},
-          child: const Icon(
-            Icons.add,
-            size: 40,
-            color: Colors.black,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 70.0),
+          child: FloatingActionButton(
+            backgroundColor: const Color(0xffE78DFB),
+            shape: const CircleBorder(),
+            onPressed: () {},
+            child: const Icon(
+              Icons.add,
+              size: 40,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
