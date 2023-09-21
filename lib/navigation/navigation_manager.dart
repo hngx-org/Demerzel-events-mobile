@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/routes.dart';
-import 'package:hng_events_app/screens/timeline_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/timeline_screen.dart';
 
 class NavigationManager {
   static Route<dynamic> generateRoute(RouteSettings settings) {
