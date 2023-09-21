@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/screens/create_group.dart';
 
 class MyPeopleHeader extends StatelessWidget implements PreferredSizeWidget {
   const MyPeopleHeader({super.key});
@@ -41,7 +42,14 @@ class MyPeopleHeader extends StatelessWidget implements PreferredSizeWidget {
               ],
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                 Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateGroup(),
+                          ),
+                        );
+              },
               style: ButtonStyle(
                 backgroundColor:
                     MaterialStateProperty.all(ProjectColors.purple),

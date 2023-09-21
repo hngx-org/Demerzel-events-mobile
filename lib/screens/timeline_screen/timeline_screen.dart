@@ -60,6 +60,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/everyone_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/friends_screen.dart';
 
@@ -98,7 +99,11 @@ class TimelineScreen extends StatelessWidget {
           child: FloatingActionButton(
             backgroundColor: const Color(0xffE78DFB),
             shape: const CircleBorder(),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context){
+                return CreateEvents();
+              }));
+            },
             child: const Icon(
               Icons.add,
               size: 40,

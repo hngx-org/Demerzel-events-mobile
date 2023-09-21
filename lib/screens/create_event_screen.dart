@@ -61,6 +61,8 @@ class _CreateEventsState extends State<CreateEvents> {
           onPressed: () {
             // Add the action you want when the return icon is pressed.
             // Typically, you'd use Navigator.pop(context) to navigate back.
+
+            Navigator.pop(context);
           },
         ),
         title: const Center(
@@ -158,8 +160,8 @@ class _CreateEventsState extends State<CreateEvents> {
                         Padding(
                           padding: const EdgeInsets.only(left: 110.0),
                           child: Container(
-                            height: 30,
-                            width: 95,
+                            height: 35,
+                            width: 100,
                             decoration: BoxDecoration(
                               color: ProjectColors.purple,
                               borderRadius: BorderRadius.circular(5.0),
@@ -191,7 +193,7 @@ class _CreateEventsState extends State<CreateEvents> {
                         Padding(
                           padding: const EdgeInsets.only(left: 17.0),
                           child: Container(
-                            height: 30,
+                            height: 35,
                             decoration: BoxDecoration(
                               color: ProjectColors.purple,
                               borderRadius: BorderRadius.circular(5.0),
@@ -245,7 +247,7 @@ class _CreateEventsState extends State<CreateEvents> {
                         Padding(
                           padding: const EdgeInsets.only(left: 120.0),
                           child: Container(
-                            height: 30,
+                            height: 35,
                             decoration: BoxDecoration(
                               color: ProjectColors.purple,
                               borderRadius: BorderRadius.circular(5.0),
@@ -284,7 +286,7 @@ class _CreateEventsState extends State<CreateEvents> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: Container(
-                            height: 30,
+                            height: 35,
                             decoration: BoxDecoration(
                               color: ProjectColors.purple,
                               borderRadius: BorderRadius.circular(5.0),
