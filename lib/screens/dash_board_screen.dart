@@ -5,7 +5,7 @@ import 'package:hng_events_app/constants/string.dart';
 import 'package:hng_events_app/screens/calendar_screen.dart';
 import 'package:hng_events_app/screens/my_people_screen.dart';
 import 'package:hng_events_app/screens/settings_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/timeline_screen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({super.key});

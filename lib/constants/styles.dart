@@ -8,3 +8,4 @@ const normalTextStyle = TextStyle(fontSize: 13);
 const appBarTextStyle = TextStyle(fontSize: 20, color: ProjectColors.black);
 const largeTextStyle = TextStyle(fontSize: 22, fontWeight: FontWeight.w500);
 const settingsItemTextStyle = TextStyle(fontSize: 18);
+const textBold = FontWeight.bold;
