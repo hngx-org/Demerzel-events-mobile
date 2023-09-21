@@ -12,24 +12,32 @@ class CalendarPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
+        backgroundColor: ProjectColors.white,
         centerTitle: false,
         bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(4.0),
-            child: Container(
-              height: 1,
-              color: Colors.black,
-            )),
+          preferredSize: const Size.fromHeight(4.0),
+          child: Container(
+            height: 1,
+            color: Colors.black,
+          ),
+        ),
         title: const Text(
           'Calendar',
           style: appBarTextStyle,
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert))
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.more_vert,
+              color: ProjectColors.black,
+            ),
+          ),
         ],
       ),
       body: const Padding(
         padding: ProjectConstants.bodyPadding,
-        child: Column( 
+        child: Column(
           children: [
             CalCard(),
             ProjectConstants.sizedBox,

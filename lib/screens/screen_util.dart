@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/screens/chat_screen.dart';
-import 'package:hng_events_app/screens/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/screens/splash_screen.dart';
+import 'package:hng_events_app/screens/dash_board_screen.dart';
+import 'package:hng_events_app/navigation/navigation_manager.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ScreenUtilInitScreen extends StatelessWidget {
+  const ScreenUtilInitScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'WetinDeySup',
-      theme: ThemeData(primarySwatch: Colors.purple),
-      home: const ChatScreen(),
-    );
-    
     return ScreenUtilInit(
         designSize: const Size(370, 810),
         minTextAdapt: false,
@@ -28,7 +16,7 @@ class MyApp extends StatelessWidget {
         builder: (_, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Flutter Demo',
+            title: 'WetinDeySup',
             theme: ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: const Color(0xffE78DFB),
@@ -41,9 +29,5 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: NavigationManager.generateRoute,
           );
         });
-      theme: ThemeData(primaryColor: ProjectColors.purple),
-      home: const SplashScreen(),
-      // home: const CreateGroup(),
-    );
   }
 }
