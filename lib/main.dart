@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'WetinDeySup',
       theme: ThemeData(primaryColor: ProjectColors.purple),
       home: const SplashScreen(),
-      // home: const CreateEvents(),
+      // home: const CreateGroup(),
     );
   }
 }
