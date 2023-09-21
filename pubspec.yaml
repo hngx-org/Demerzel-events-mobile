@@ -31,6 +31,13 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.2
+  flutter_screenutil: ^5.9.0
+  table_calendar: ^3.0.9
+  svg_flutter: ^0.0.1
+  icon_decoration: ^2.0.2
+  neubrutalism_ui: ^1.0.0
+
   http: ^1.1.0
 
 dev_dependencies:
@@ -58,6 +65,7 @@ flutter:
   assets:
     - assets/images/
     - assets/illustrations/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -89,6 +97,12 @@ flutter:
           weight: 800
         - asset: fonts/NotoSans/NotoSans-Black.ttf
           weight: 900
+
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato/Lato-Bold.ttf
+          weight: 700
+        
     # - family: Schyler
     #   fonts:
     #     - asset: fonts/Schyler-Regular.ttf
