@@ -31,12 +31,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
   flutter_screenutil: ^5.9.0
   table_calendar: ^3.0.9
   svg_flutter: ^0.0.1
   icon_decoration: ^2.0.2
   neubrutalism_ui: ^1.0.0
+  
 
   http: ^1.1.0
 

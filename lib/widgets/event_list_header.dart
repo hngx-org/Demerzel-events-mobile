@@ -15,10 +15,12 @@ class EventListHeader extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          IconButton(
-            icon: const Icon(Icons.chevron_left, size: 30,),
-            onPressed: () {},
-          ),
+           IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.chevron_left)),
+        //SvgPicture.asset('assetName'),
           const Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
