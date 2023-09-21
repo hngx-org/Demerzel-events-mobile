@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/screens/event_list_screen.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
 import 'package:hng_events_app/widgets/my_people_header.dart';
 
@@ -26,20 +27,27 @@ class _PeopleScreenState extends State<PeopleScreen> {
           crossAxisCount: 2,
           crossAxisSpacing: 12.0,
           mainAxisSpacing: 12.0,
-          children: const [
+          children:  [
             MyPeopleCard(
               title: "YBNL Mafia 🎶",
-              image: AssetImage(
+              image: const AssetImage(
                 "assets/illustrations/dancers_illustration.png",
+              
               ),
-              bubbleVisible: false,
+              bubbleVisible: false, onPressed: () {  },
             ),
             MyPeopleCard(
               title: "Techies 💻",
-              image: AssetImage(
+              image: const AssetImage(
                 "assets/illustrations/techies_illustration.png",
               ),
               bubbleVisible: true,
+               onPressed: () {  Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EventsScreen(),
+                          ),
+                        ); },
             ),
           ],
         ),

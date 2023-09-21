@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/screens/chat_screen.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 
 class EventsCard extends StatelessWidget {
@@ -12,7 +13,7 @@ class EventsCard extends StatelessWidget {
         child: Container(
           margin: const EdgeInsets.all(20),
           width: double.infinity,
-          height: 245,
+          //height: 245,
           decoration: BoxDecoration(
             border: Border.all(
               color: ProjectColors.black,
@@ -48,7 +49,8 @@ class EventsCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: ProjectColors.black),
                     boxShadow: const <BoxShadow>[
-                      BoxShadow(color: ProjectColors.black, offset: Offset(2, 2))
+                      BoxShadow(
+                          color: ProjectColors.black, offset: Offset(2, 2))
                     ],
                   ),
                   child: const Center(
@@ -94,7 +96,8 @@ class EventsCard extends StatelessWidget {
                   DecoratedIcon(
                     icon: Icon(Icons.timer, color: ProjectColors.white),
                     decoration: IconDecoration(
-                        border: IconBorder(width: 1, color: ProjectColors.black)),
+                        border:
+                            IconBorder(width: 1, color: ProjectColors.black)),
                   ),
                   SizedBox(
                     width: 10,
@@ -112,12 +115,16 @@ class EventsCard extends StatelessWidget {
                 height: 8,
               ),
               //button widget
-              const Button(),
+              Button(
+                onPressed: () {
+                 
+                },
+              ),
               const SizedBox(
                 height: 16,
               ),
               const Divider(height: 0, thickness: 2, color: ProjectColors.grey),
-      
+
               //inpuField widget
               const InputField()
             ],
@@ -130,11 +137,12 @@ class EventsCard extends StatelessWidget {
 
 //button widget add gesture detector to add functionality
 class Button extends StatelessWidget {
-  const Button({super.key});
-
+  const Button({super.key, required this.onPressed});
+  final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      onTap: onPressed,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         width: MediaQuery.of(context).size.width,
@@ -187,7 +195,14 @@ class _InputFieldState extends State<InputField> {
                   hintText: 'Leave a comment', border: InputBorder.none),
             ),
           ),
-          trailing: const Icon(Icons.chevron_right)),
+          trailing:  IconButton(onPressed: (){
+            Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CommentScreen(),
+                          ),
+                        );
+          }, icon:Icon( Icons.chevron_right))),
     );
   }
 }

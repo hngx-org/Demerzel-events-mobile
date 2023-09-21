@@ -263,6 +263,7 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/models/chat.dart';
 import 'package:hng_events_app/widgets/comment_card.dart';
 import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:svg_flutter/svg.dart';
@@ -274,7 +275,11 @@ class CommentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const Icon(Icons.chevron_left),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.chevron_left)),
         //SvgPicture.asset('assetName'),
         title: const Text('11 comments'),
 
@@ -446,13 +451,6 @@ class ChatCard extends StatelessWidget {
       ],
     );
   }
-}
-
-class Chat {
-  final String text;
-  final String? attachemt;
-
-  Chat({required this.text, this.attachemt});
 }
 
 List<Chat> chats = [
