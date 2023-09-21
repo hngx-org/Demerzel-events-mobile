@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:hng_events_app/widgets/event_list_header.dart';
 
@@ -44,20 +45,7 @@ class EventsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              margin: const EdgeInsets.all(20),
-              width: 60,
-              height: 30,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(),
-                  color: ProjectColors.purple),
-              child: const Center(
-                child: Text(
-                  "Today",
-                ),
-              ),
-            ),
+            const DateCard(),
             Expanded(
               // flex: 6,
               child: SizedBox(
