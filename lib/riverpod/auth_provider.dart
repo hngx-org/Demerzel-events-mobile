@@ -1,25 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/screens/signin_webview.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../classes/user.dart';
 import '../repositories/auth_repository.dart';
-import 'user_provider.dart';
 
-class AuthNotifier extends StateNotifier<bool> {
+class AuthNotifier extends StateNotifier<User?> {
   //if true == authenticated, false == unauthenticated
-  AuthNotifier(this.ref) : super (false);
+  AuthNotifier(this.ref) : super (null);
 
   AuthRepository repo = AuthRepository();
   
   final Ref ref;
 
-  Future signin () async{
+  setCustomUser(){
+    state = User.custom();
+  }
+
+  Future signin (BuildContext context) async{
     await repo.signin().then(
       (value) {
-        state = true;
-        ref.read(userProvider.notifier).state = value;
+        showDialog(context: context, builder: (context){return const Center(child: CircularProgressIndicator(),);});
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context){
+            return SigninWebView(url: value.toString());
+          })
+        );
+        // ref.read(userProvider.notifier).state = value;
       }
     );
+  }
+
+  Future setUser(String token) async{
+    repo.getUser(token).then((value) {
+      state = value;
+    });
   }
 
   onLaunch() async{
@@ -30,10 +48,10 @@ class AuthNotifier extends StateNotifier<bool> {
     if (userTokenExists) {
       if(JwtDecoder.isExpired(userToken!)){
         // ref.read(userProvider.notifier).state = User.fromJson()
-        state = true;
+        await repo.getUser(userToken);
       }
     }
   }
 }
 
-  final authProvider = StateNotifierProvider<AuthNotifier, bool>((ref) => AuthNotifier(ref));
+  final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) => AuthNotifier(ref));
