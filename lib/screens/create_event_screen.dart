@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
@@ -486,10 +487,10 @@ class _CreateEventsState extends State<CreateEvents> {
         "location": "Uyo, Nigeria",
         "title": titleController.text,
         "description": bodyController.text,
-        "start_date": startDate!.toIso8601String(),
-        "end_date": endDate!.toIso8601String(),
-        "start_time": startTime.toString(),
-        "end_time": endTime.toString()
+        "start_date": DateFormat("yyyy-MM-dd").format(startDate!),
+        "end_date": DateFormat("yyyy-MM-dd").format(endDate!),
+        "start_time": "${startTime?.hour}:${startTime?.minute}",
+        "end_time": "${endTime?.hour}:${endTime?.minute}",
       };
 
       bool? result = await EventService().createEvent(body);
