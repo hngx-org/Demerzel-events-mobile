@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../constants/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/models/event_model.dart';
 
-class EveryoneScreen extends StatelessWidget {
+import '../../provider/event_provider.dart';
+
+class EveryoneScreen extends ConsumerWidget {
   const EveryoneScreen({super.key});
 
   Widget bodyBuild(String title, String specifictime, String date,
@@ -90,15 +94,68 @@ class EveryoneScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding:  EdgeInsets.only(bottom: 90.h),
-      child: ListView.builder(
-          itemCount: 6,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(eventsProvider);
+
+    if (data.isRefreshing) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return data.when(
+      data: (data) {
+        if (data.data.events.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("No event was found", textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => ref.refresh(eventsProvider),
+                  child: const Text(
+                    "Tap to Retry",
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: data.data.events.length,
           itemBuilder: (BuildContext context, int index) {
-            return bodyBuild('Football game', 'May 20,2023', 'Friday 4 - 6 PM',
-                'Teslim Balogun Stadium', 'LIVE');
-          }),
+            final Event event = data.data.events[index];
+
+            return bodyBuild(
+              event.title,
+              event.startDate,
+              event.startTime,
+              event.location,
+              'LIVE',
+            );
+          },
+        );
+      },
+      error: (err, s) {
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(err.toString(), textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => ref.refresh(eventsProvider),
+                child: const Text(
+                  "Tap to Retry",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
   }
 }
