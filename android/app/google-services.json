@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425241698743",
+    "project_id": "demercel-f1421",
+    "storage_bucket": "demercel-f1421.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425241698743:android:3c01161e8b28a50e6b0832",
+        "android_client_info": {
+          "package_name": "com.example.hng_events_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaO17tVUfdgBbvKLQV7f-JYf4BXd4FRpA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
