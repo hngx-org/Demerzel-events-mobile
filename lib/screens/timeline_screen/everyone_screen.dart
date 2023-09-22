@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../constants/colors.dart';
 
 class EveryoneScreen extends StatelessWidget {
   const EveryoneScreen({super.key});
@@ -6,82 +9,96 @@ class EveryoneScreen extends StatelessWidget {
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time) {
     return Container(
-      height: 150,
-      width: 400,
-      padding: const EdgeInsets.all(15),
-      margin: const EdgeInsets.all(15),
-      decoration:  BoxDecoration(
-        color: const Color(0xFFFFFFFF),
-        boxShadow:  const [
+      height: 150.h,
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: ProjectColors.white,
+        boxShadow: const [
           BoxShadow(
             offset: Offset(4, 4),
-            color: Color(0xff000000),
+            color: ProjectColors.black,
           ),
         ],
-        borderRadius:  const BorderRadius.all(
-          Radius.circular(10),
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.r),
         ),
-        border: Border.all(color: const Color(0xff000000), width: 1),
+        border: Border.all(color: ProjectColors.black, width: 1),
       ),
-      child: Row(
+      child: Column(
         children: [
-          Image.asset(
-            'assets/images/emoji.png',
-            width: 80,
-            height: 80,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/images/emoji.png',
+                  fit: BoxFit.contain,
+                  width: 100.r,
+                  height: 100.r,
+                ),
+                SizedBox(
+                  width: 1.w,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(title,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 24.h)),
+                      SizedBox(height: 6.h),
+                      Text(date,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16.r)),
+                      Text(specifictime,
+                          style: TextStyle(
+                              fontSize: 12.r, color: ProjectColors.grey)),
+                      SizedBox(height: 6.h),
+                      Text(location,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 12.r)),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                const Column(
+                  children: [Icon(Icons.more_vert), Spacer()],
+                )
+              ],
+            ),
           ),
-          const SizedBox(
-            width: 10,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
             children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const Spacer(),
-              Text(
-                date,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(specifictime),
-              const Spacer(),
-              Text(
-                location,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              const Icon(Icons.more_vert),
               const Spacer(),
               Text(
                 time,
-                style: const TextStyle(
-                  color:Color(0xffE78DFB),
+                style: TextStyle(
+                  fontSize: 12.r,
+                  color: ProjectColors.purple,
                 ),
               ),
+              SizedBox(
+                width: 2.w,
+              )
             ],
           )
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: 6,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == 0) {
+    return Container(
+      padding:  EdgeInsets.only(bottom: 90.h),
+      child: ListView.builder(
+          itemCount: 6,
+          itemBuilder: (BuildContext context, int index) {
             return bodyBuild('Football game', 'May 20,2023', 'Friday 4 - 6 PM',
                 'Teslim Balogun Stadium', 'LIVE');
-          } else{
-            return  bodyBuild('Football game', 'May 20,2023', 'Friday 4 - 6 PM',
-                'Teslim Balogun Stadium', 'In 2  Weeks');
-          }
-        });
+          }),
+    );
   }
 }

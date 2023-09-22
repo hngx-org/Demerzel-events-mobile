@@ -9,6 +9,8 @@ class HngString{
   static const String calendar = "Calendar";
   static const String settings = "Settings";
   static const String timeLine = "Timeline";
+  static const String everyOne = "Everyone";
+  static const String friends = "Friends";
 
 
 
