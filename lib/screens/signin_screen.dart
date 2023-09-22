@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/riverpod/auth_provider.dart';
 import 'package:hng_events_app/screens/screen_util.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:hng_events_app/constants/colors.dart';
@@ -11,7 +13,7 @@ class SignIn extends StatelessWidget {
 
 void login() {
     // Login Logic Code here
-
+    
 
     Navigator.push(context, MaterialPageRoute(builder: (context){
       return const ScreenUtilInitScreen();
@@ -55,35 +57,47 @@ void login() {
                     const SizedBox(
                       height: 10,
                     ),
-                    ElevatedButton(
-                      onPressed: login,
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: ProjectColors.purple,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5)),
-                          padding: const EdgeInsets.symmetric(vertical: 9)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/google-color-icon.svg',
-                            height: 24,
-                            width: 24,
+                    Consumer(
+
+                      builder: (context, ref, child) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            // Login Logic Code here
+                            ref.read(authProvider.notifier).setCustomUser();
+
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return const ScreenUtilInitScreen();
+                            }));
+                          },
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: ProjectColors.purple,
+                              elevation: 5,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5)),
+                              padding: const EdgeInsets.symmetric(vertical: 9)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icons/google-color-icon.svg',
+                                height: 24,
+                                width: 24,
+                              ),
+                              const SizedBox(
+                                width: 20,
+                              ),
+                              const Text(
+                                'Continue with Google',
+                                style: TextStyle(
+                                    fontFamily: 'NotoSans',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    color: ProjectColors.black,),
+                              ),
+                            ],
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          const Text(
-                            'Continue with Google',
-                            style: TextStyle(
-                                fontFamily: 'NotoSans',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: ProjectColors.black,),
-                          ),
-                        ],
-                      ),
+                        );
+                      }
                     ),
                   ],
                 )

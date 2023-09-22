@@ -14,8 +14,10 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/riverpod/auth_provider.dart';
 import 'package:svg_flutter/svg.dart';
 
 import '../constants/colors.dart';
@@ -59,21 +61,26 @@ class SettingsPage extends StatelessWidget {
               child: Container(
                 height: 72,
                 decoration: ProjectConstants.appBoxDecoration,
-                child: ListTile(
-                  tileColor: Colors.white,
-                  leading: CircleAvatar(
-                      child: Image.asset(ProjectConstants.profileImage)),
-                  // TODO: change this to name of current user
-                  title: const Text(
-                    'Salome',
-                    style: largeTextStyle,
-                  ),
-                  subtitle: Text(
-                    'salome357@gmail.com',
-                    style: greyTextStyle.copyWith(
-                        fontSize: 17, fontWeight: FontWeight.w700),
-                  ),
-                  trailing: SvgPicture.asset(ProjectConstants.rightChevron),
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final user = ref.watch(authProvider);
+                    return ListTile(
+                      tileColor: Colors.white,
+                      leading: CircleAvatar(
+                          child: Image.asset(ProjectConstants.profileImage)),
+                      // TODO: change this to name of current user
+                      title: Text(
+                        user != null ? user.name : 'salome',
+                        style: largeTextStyle,
+                      ),
+                      subtitle: Text(
+                        user != null ? user.email : 'salome357@gmail.com',
+                        style: greyTextStyle.copyWith(
+                            fontSize: 17, fontWeight: FontWeight.w700),
+                      ),
+                      trailing: SvgPicture.asset(ProjectConstants.rightChevron),
+                    );
+                  }
                 ),
               ),
             ),

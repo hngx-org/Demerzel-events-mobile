@@ -43,6 +43,10 @@ dependencies:
   dio: ^5.3.2
   image_picker: ^1.0.4
 
+  url_launcher: ^6.1.14
+  webview_flutter: ^4.2.4
+  google_sign_in: ^6.1.5
+  firebase_core: ^2.16.0
 
 
 dev_dependencies:

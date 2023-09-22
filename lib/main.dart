@@ -4,6 +4,8 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/splash_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
