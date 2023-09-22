@@ -122,19 +122,22 @@ class EveryoneScreen extends ConsumerWidget {
           );
         }
 
-        return ListView.builder(
-          itemCount: data.data.events.length,
-          itemBuilder: (BuildContext context, int index) {
-            final Event event = data.data.events[index];
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(eventsProvider),
+          child: ListView.builder(
+            itemCount: data.data.events.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Event event = data.data.events[index];
 
-            return bodyBuild(
-              event.title,
-              event.startDate,
-              event.startTime,
-              event.location,
-              'LIVE',
-            );
-          },
+              return bodyBuild(
+                event.title,
+                event.startDate,
+                event.startTime,
+                event.location,
+                'LIVE',
+              );
+            },
+          ),
         );
       },
       error: (err, s) {

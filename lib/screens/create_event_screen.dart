@@ -497,6 +497,21 @@ class _CreateEventsState extends State<CreateEvents> {
 
       log("Done");
       isLoading = false;
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Event Uploaded Successfully",
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
     } catch (e, s) {
       isLoading = false;
       log(e.toString());

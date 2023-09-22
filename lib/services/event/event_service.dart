@@ -34,7 +34,7 @@ class EventService {
   }
 
   Future<bool> createEvent(Map<String, dynamic> body) async {
-    const String url = "https://api-s65g.onrender.com/api/events";
+    const String url = "https://api-s65g.onrender.com/api/events/";
     final header = {
       "Authorization":
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoib2xhbWlsZWthbmx5NjZAZ21haWwuY29tIiwiaWQiOiJhNmQwZjViZi1iOTIzLTQ3YTUtODQwNi03NDY1NTFkY2EzOTUiLCJuYW1lIjoiT2xhbWlsZWthbiBBZGVsZWtlIn0sImV4cCI6MTY5NTYzNjA4MH0.Rjr1FbwX0jFJ7y4OxVjwVhCq3XxuspHW1dezRuxAsjg"
