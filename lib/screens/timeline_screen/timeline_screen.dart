@@ -58,33 +58,71 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/everyone_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/friends_screen.dart';
 
-class TimelineScreen extends StatelessWidget {
+import '../../constants/string.dart';
+
+class TimelineScreen extends StatefulWidget {
   const TimelineScreen({super.key});
+
+  @override
+  State<TimelineScreen> createState() => _TimelineScreenState();
+}
+
+class _TimelineScreenState extends State<TimelineScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor:const Color(0xFFFFF8F5) ,
+        backgroundColor: const Color(0xFFFFF8F5),
         appBar: AppBar(
-          bottom: const TabBar(
+          bottom: TabBar(
+            controller: _tabController,
+            unselectedLabelColor: ProjectColors.grey,
             tabs: [
               Tab(
                 child: Text(
-                  "Friends",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  HngString.friends,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: _tabController.index == 0
+                          ? ProjectColors.black
+                          : ProjectColors.grey),
                 ),
               ),
               Tab(
                 child: Text(
-                  "Everyone",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  HngString.everyOne,
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: _tabController.index == 1
+                          ? ProjectColors.black
+                          : ProjectColors.grey),
                 ),
               ),
             ],
@@ -92,24 +130,37 @@ class TimelineScreen extends StatelessWidget {
         ),
         // ignore: prefer_const_constructors
         body: TabBarView(
+          controller: _tabController,
           children: const [FriendsScreen(), EveryoneScreen()],
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(
-            backgroundColor: const Color(0xffE78DFB),
-            shape: const CircleBorder(),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return CreateEvents();
-              }));
-            },
-            child: const Icon(
-              Icons.add,
-              size: 40,
-              color: Colors.black,
-            ),
-          ),
+              backgroundColor: ProjectColors.purple,
+              shape: const CircleBorder(),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return CreateEvents();
+                }));
+              },
+              child: Container(
+                height: 70.r,
+                width: 70.r,
+                decoration: BoxDecoration(
+                    color: ProjectColors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(50.r)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: ProjectColors.black,
+                          spreadRadius: 3,
+                          offset: Offset(0, 2)),
+                    ]),
+                child: const Icon(
+                  Icons.add,
+                  size: 40,
+                  color: Colors.black,
+                ),
+              )),
         ),
       ),
     );
