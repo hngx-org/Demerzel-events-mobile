@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../constants/colors.dart';
@@ -134,7 +135,7 @@ class EveryoneScreen extends ConsumerWidget {
                 event.startDate,
                 event.startTime,
                 event.location,
-                'LIVE',
+                timeLeft(DateTime.parse(event.startDate)),
               );
             },
           ),
@@ -160,5 +161,30 @@ class EveryoneScreen extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  static String timeLeft(DateTime date) {
+    final date2 = DateTime.now();
+    final difference = date.difference(date2);
+
+    if ((difference.inDays / 7).floor() >= 1) {
+      return '1 week Left';
+    } else if (difference.inDays >= 2) {
+      return '${difference.inDays} days Left';
+    } else if (difference.inDays >= 1) {
+      return '1 day Left';
+    } else if (difference.inHours >= 2) {
+      return '${difference.inHours} hours Left';
+    } else if (difference.inHours >= 1) {
+      return '1 hour Left';
+    } else if (difference.inMinutes >= 2) {
+      return '${difference.inMinutes} minutes Left';
+    } else if (difference.inMinutes >= 1) {
+      return '1 minute Left';
+    } else if (difference.inSeconds >= 3) {
+      return '${difference.inSeconds} seconds Left';
+    } else {
+      return 'Expired';
+    }
   }
 }
