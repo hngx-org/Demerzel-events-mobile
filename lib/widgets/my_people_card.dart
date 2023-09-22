@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 
 class MyPeopleCard extends StatelessWidget {
@@ -52,11 +53,13 @@ class MyPeopleCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Center(
-                  child: Image(
-                    image: image,
-                    width: double.infinity,
-                    height: 131,
+                Expanded(
+                  child: Center(
+                    child: Image(
+                      image: image,
+                      width: double.infinity,
+                      height: 131.h,
+                    ),
                   ),
                 )
               ],
