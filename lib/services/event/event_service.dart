@@ -45,7 +45,7 @@ class EventService {
           .post(Uri.parse(url), headers: header, body: json.encode(body))
           .timeout(const Duration(seconds: 60));
 
-      await Future.delayed(const Duration(seconds: 2));
+      // await Future.delayed(const Duration(seconds: 2));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
