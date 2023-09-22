@@ -52,6 +52,12 @@ class AuthNotifier extends StateNotifier<User?> {
       }
     }
   }
+
+  logout() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    state = null;
+  }
 }
 
   final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) => AuthNotifier(ref));
