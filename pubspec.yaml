@@ -36,12 +36,6 @@ dependencies:
   svg_flutter: ^0.0.1
   icon_decoration: ^2.0.2
   neubrutalism_ui: ^1.0.0
-  
-
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   flutter_riverpod: ^2.4.0
   shared_preferences: ^2.2.1
   jwt_decoder: ^2.0.1
