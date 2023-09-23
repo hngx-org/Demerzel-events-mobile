@@ -96,49 +96,71 @@ class EveryoneScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventNotifier = ref.watch(EventController.provider);
+    final data = ref.watch(asyncEventsProvider);
 
-    if (eventNotifier.isBusy) {
+    if (data.isRefreshing) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("No event was found", textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => eventNotifier.getAllEvent(),
-              child: const Text(
-                "Tap to Retry",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
+    return data.when(
+      data: (data) {
+        if (data.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("No event was found", textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => ref.refresh(asyncEventsProvider),
+                  child: const Text(
+                    "Tap to Retry",
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async => eventNotifier.getAllEvent(),
-      child: ListView.builder(
-        itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
-        itemBuilder: (BuildContext context, int index) {
-          final Event? event = eventNotifier.allEvents?.data.events[index];
-
-          return bodyBuild(
-            event?.title ?? "N/A",
-            event?.startDate ?? "N/A",
-            event?.startTime ?? "N/A",
-            event?.location ?? "N/A",
-            timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09')),
           );
-        },
-      ),
-    );
+        }
 
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(asyncEventsProvider),
+          child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Event event = data[index];
+
+              return bodyBuild(
+                event.title,
+                event.startDate,
+                event.startTime,
+                event.location,
+                timeLeft(DateTime.parse(event.startDate)),
+              );
+            },
+          ),
+        );
+      },
+      error: (err, s) {
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(err.toString(), textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => ref.refresh(asyncEventsProvider),
+                child: const Text(
+                  "Tap to Retry",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+    );
   }
 
   static String timeLeft(DateTime date) {

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,13 +7,15 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/widgets/calendar_widget.dart';
 
+import '../riverpod/event_provider.dart';
 
 class CalendarPage extends ConsumerWidget {
   const CalendarPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventProvider = ref.watch(EventController.provider);
+    final filteredEvent = ref.watch(eventListProvider);
+    final fromEvents = ref.watch(asyncEventsProvider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
@@ -44,24 +45,26 @@ class CalendarPage extends ConsumerWidget {
             ProjectConstants.sizedBox,
             //
             Visibility(
-              visible: eventProvider.isBusy,
+              visible: (fromEvents.isLoading ||
+                  fromEvents.isReloading ||
+                  fromEvents.isRefreshing),
               child: const Center(child: CircularProgressIndicator()),
             ),
-
+            const SizedBox(
+              height: 15,
+            ),
             Visibility(
-              visible: eventProvider.error.isNotEmpty,
+              visible: fromEvents.hasError,
               child: GestureDetector(
-                onTap: () => eventProvider.getEventByDate(
-                  DateFormat("yyyy-mm-dd").format(DateTime.now()),
-                ),
+                onTap: () => ref.refresh(asyncEventsProvider),
                 child: const Text(
-                  "Tap to Retry",
+                  "First Tap to Retry",
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
               ),
             ),
 
-            if (eventProvider.events != null && !eventProvider.isBusy)
+            if (filteredEvent.isEmpty && !fromEvents.isLoading)
               Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -72,9 +75,7 @@ class CalendarPage extends ConsumerWidget {
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(
-                      onTap: () => eventProvider.getEventByDate(
-                        DateFormat("yyyy-mm-dd").format(DateTime.now()),
-                      ),
+                      onTap: () => ref.refresh(asyncEventsProvider),
                       child: const Text(
                         "Tap to Retry",
                         style: TextStyle(decoration: TextDecoration.underline),
@@ -85,26 +86,39 @@ class CalendarPage extends ConsumerWidget {
               )
             else
               Flexible(
-                child: ListView.builder(
+                child: ListView.separated(
                   shrinkWrap: true,
                   // physics: const ,
-                  itemCount: eventProvider.events?.data.events.length ?? 0,
+                  itemCount: filteredEvent.length,
                   itemBuilder: (context, index) {
-                    final event = eventProvider.events?.data.events[index];
-
+                    final event = filteredEvent.elementAt(index);
+                    final time = _correctTimeFormat(event);
                     return EventCard(
-                      eventTitle: event?.title ?? "N/A",
-                      startTime: event?.startTime ?? "N/A",
-                      location: event?.location ?? "N/A",
-                      endTime: event?.endTime ?? "N/A",
+                      eventTitle: event.title,
+                      startTime: time.$1,
+                      location: event.location,
+                      endTime: time.$2,
                     );
                   },
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const SizedBox(
+                    height: 10,
+                  ),
                 ),
               ),
           ],
         ),
       ),
     );
+  }
+
+  (String, String) _correctTimeFormat(Event event) {
+    final startTime = DateFormat.jm()
+        .format(DateTime.parse("${event.startDate} ${event.startTime}:00"));
+
+    final endTime = DateFormat.jm()
+        .format(DateTime.parse("${event.endDate} ${event.endTime}:00"));
+    return (startTime, endTime);
   }
 }
 
