@@ -19,10 +19,16 @@ class _CalCardState extends ConsumerState<CalCard> {
 
   @override
   void initState() {
-    ref
-        .read(EventController.provider)
-        .getEventByDate(DateFormat("yyyy-mm-dd").format(_focusedDay));
     super.initState();
+  }
+
+  List<Event> _getEventsForDay(DateTime day) {
+    final events = ref.watch(asyncEventsProvider);
+    final data = DateFormat("yyyy-MM-dd").format(day);
+    return events.value
+            ?.where((element) => element.startDate == data)
+            .toList() ??
+        [];
   }
 
   @override
@@ -47,6 +53,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                 lastDay: DateTime.now().add(const Duration(days: 30)),
                 focusedDay: _selectedDay ?? _focusedDay,
                 currentDay: _selectedDay,
+                eventLoader: _getEventsForDay,
                 selectedDayPredicate: (day) {
                   return isSameDay(_selectedDay, day);
                 },
@@ -57,10 +64,8 @@ class _CalCardState extends ConsumerState<CalCard> {
                       _focusedDay = focusedDay;
                     });
                   }
-
-                  ref.read(EventController.provider).getEventByDate(
-                        DateFormat("yyyy-mm-dd").format(_focusedDay),
-                      );
+                  ref.read(asyncEventsProvider.notifier).getEventDate(
+                      DateFormat("yyyy-MM-dd").format(_focusedDay));
                 },
                 onPageChanged: (focusedDay) {
                   // No need to call `setState()` here
@@ -68,9 +73,11 @@ class _CalCardState extends ConsumerState<CalCard> {
                 },
                 calendarFormat: CalendarFormat.month,
                 headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                ),
+                    formatButtonVisible: false, titleCentered: true),
                 calendarStyle: const CalendarStyle(
+                  markerDecoration: BoxDecoration(
+                      color: ProjectColors.purple, shape: BoxShape.circle),
+                  markersMaxCount: 1,
                   todayDecoration: BoxDecoration(color: ProjectColors.purple),
                   selectedDecoration: BoxDecoration(
                     color: ProjectColors.purple,
