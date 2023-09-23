@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
-import 'package:hng_events_app/screens/event_list_screen.dart';
+import 'package:hng_events_app/screens/create_group.dart';
+import 'package:hng_events_app/screens/group_event_list_screen.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
 import 'package:hng_events_app/widgets/my_people_header.dart';
+import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class PeopleScreen extends ConsumerStatefulWidget {
   const PeopleScreen({super.key});
@@ -19,11 +22,69 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
     BuildContext context,
   ) {
     final groups = ref.watch(groupsProvider);
-    // ref.watch(groupListProvider);
+   ref.watch(createGroupProvider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: const MyPeopleHeader(),
+      appBar:  AppBar(
+        backgroundColor: ProjectColors.white,
+        centerTitle: false,
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4.0),
+            child: Container(
+              height: 1,
+              color: Colors.black,
+            )),
+        title:  Text(
+          'My People',
+          style: appBarTextStyle.copyWith(fontSize: 28, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+         Padding(
+           padding: const EdgeInsets.only(right: 24.0),
+           child: NeuTextButton(
+                    onPressed: () {
+                       Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CreateGroup(),
+                          ),
+                        );
+                    },
+                    buttonColor: ProjectColors.purple,
+                    buttonHeight: 40,
+                    borderRadius: BorderRadius.circular(8),
+                    
+                    child:  Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            const Text(
+                              'Create ',
+                              style: TextStyle(
+                                //fontFamily: 'NotoSans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 17,
+                                color: ProjectColors.black,
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                           
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Image.asset('assets/images/Vector (Stroke).png'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+         ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.only(
           left: 20,
@@ -37,17 +98,18 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                 //childAspectRatio: 3 / 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12),
-            itemCount: data.data.group.length,
+            itemCount: data.length,
             itemBuilder: (BuildContext context, int index) {
+              final currentGroup =data[index];
               return MyPeopleCard(
-                  title: data.data.group[index].name,
-                  image:  NetworkImage(data.data.group[index].groupImage!),
+                  title: currentGroup.name,
+                  image:  currentGroup.image,
                   bubbleVisible: true,
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const EventsScreen(),
+                          builder: (context) =>  EventsScreen( group: currentGroup,),
                         ));
                   });
             },

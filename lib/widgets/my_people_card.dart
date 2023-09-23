@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MyPeopleCard extends StatelessWidget {
   const MyPeopleCard({
@@ -12,7 +13,7 @@ class MyPeopleCard extends StatelessWidget {
   });
 
   final String title;
-  final ImageProvider image;
+  final String image;
   final bool bubbleVisible;
   final VoidCallback onPressed;
 
@@ -23,7 +24,6 @@ class MyPeopleCard extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            
             decoration: BoxDecoration(
               color: ProjectColors.white,
               border: Border.all(),
@@ -41,7 +41,11 @@ class MyPeopleCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10,),
+                  padding: const EdgeInsets.only(
+                    top: 10,
+                    left: 10,
+                    right: 10,
+                  ),
                   child: Text(
                     title,
                     maxLines: 1,
@@ -55,11 +59,13 @@ class MyPeopleCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Center(
-                    child: Image(
-                      image: image,
-                      width: double.infinity,
-                      height: 131.h,
-                    ),
+                    child: image == ''
+                        ? Image.asset(
+                            'assets/illustrations/dancers_illustration.png')
+                        : FadeInImage.memoryNetwork(
+                            placeholder: kTransparentImage,
+                            image: image,
+                          ),
                   ),
                 )
               ],
