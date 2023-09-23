@@ -1,25 +1,28 @@
 import 'dart:developer';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/screens/select_group.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/services/event/event_service.dart';
 
-class CreateEvents extends StatefulWidget {
+class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key});
 
   @override
-  State<CreateEvents> createState() => _CreateEventsState();
+  ConsumerState<CreateEvents> createState() => _CreateEventsState();
 }
 
-class _CreateEventsState extends State<CreateEvents> {
+class _CreateEventsState extends ConsumerState<CreateEvents> {
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   DateTime? startDate;
   DateTime? endDate;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
-
+  String? groupName;
   bool isLoading = false;
 
   bool isFormValid() =>
@@ -68,6 +71,7 @@ class _CreateEventsState extends State<CreateEvents> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(groupsProvider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ProjectColors.white,
@@ -398,7 +402,14 @@ class _CreateEventsState extends State<CreateEvents> {
                             color: ProjectColors.purple,
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              groupName = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SelectGroup(),
+                                ),
+                              );
+                            },
                             child: const Text(
                               'Select Groups',
                               style: TextStyle(

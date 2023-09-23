@@ -5,9 +5,11 @@ import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:http/http.dart' as http;
 
-
 class GroupRepository {
-  Future<GetGroupModel> getAllGroups() async {
+  List<Group> _groups = [];
+  List<Group> get groups => _groups;
+
+  Future<List<Group>> getAllGroups() async {
     final header = {
       "Authorization":
           "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoib2xhbWlsZWthbmx5NjZAZ21haWwuY29tIiwiaWQiOiJhNmQwZjViZi1iOTIzLTQ3YTUtODQwNi03NDY1NTFkY2EzOTUiLCJuYW1lIjoiT2xhbWlsZWthbiBBZGVsZWtlIn0sImV4cCI6MTY5NTYzNjA4MH0.Rjr1FbwX0jFJ7y4OxVjwVhCq3XxuspHW1dezRuxAsjg"
@@ -22,7 +24,10 @@ class GroupRepository {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
         log(data.toString());
-        return GetGroupModel.fromMap(data);
+        GroupListModel groupListModel = GroupListModel.fromJson(data);
+        _groups = groupListModel.groups;
+        return _groups;
+        //GetGroupModel.fromMap(data);
       } else {
         throw response.reasonPhrase ?? response.body;
       }
@@ -41,16 +46,11 @@ class GroupRepository {
     };
 
     try {
-
-
       final jsonData = jsonEncode({
         "name": name,
       });
 
-
-
-      var request = http.MultipartRequest(
-          'POST',ApiRoutes.groupURI)
+      var request = http.MultipartRequest('POST', ApiRoutes.groupURI)
         ..fields['jsonData'] = jsonData
         ..files.add(await http.MultipartFile.fromPath(
           'file',
@@ -81,11 +81,11 @@ class GroupRepository {
   }
 }
 
-List<Group> mockGroups = [
-  Group(
-      name: 'Techies',
-      groupImage: 'assets/illustrations/techies_illustration.png'),
-  Group(
-      name: 'YBNL MAFIA',
-      groupImage: 'assets/illustrations/dancers_illustration.png'),
-];
+// List<Group> mockGroups = [
+//   Group(
+//       name: 'Techies',
+//       groupImage: 'assets/illustrations/techies_illustration.png'),
+//   Group(
+//       name: 'YBNL MAFIA',
+//       groupImage: 'assets/illustrations/dancers_illustration.png'),
+// ];
