@@ -17,6 +17,7 @@ class CalendarPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filteredEvent = ref.watch(eventListProvider);
     final fromEvents = ref.watch(asyncEventsProvider);
+    final selectedDate = ref.watch(selectedDateProvider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
@@ -57,7 +58,12 @@ class CalendarPage extends ConsumerWidget {
             Visibility(
               visible: fromEvents.hasError,
               child: GestureDetector(
-                onTap: () => ref.refresh(asyncEventsProvider),
+                onTap: () {
+                  ref.invalidate(asyncEventsProvider);
+                  ref
+                      .read(asyncEventsProvider.notifier)
+                      .getEventDate(selectedDate);
+                },
                 child: const Text(
                   "First Tap to Retry",
                   style: TextStyle(decoration: TextDecoration.underline),
@@ -76,7 +82,12 @@ class CalendarPage extends ConsumerWidget {
                     ),
                     const SizedBox(height: 10),
                     GestureDetector(
-                      onTap: () => ref.refresh(asyncEventsProvider),
+                      onTap: () {
+                        ref.invalidate(asyncEventsProvider);
+                        ref
+                            .read(asyncEventsProvider.notifier)
+                            .getEventDate(selectedDate);
+                      },
                       child: const Text(
                         "Tap to Retry",
                         style: TextStyle(decoration: TextDecoration.underline),

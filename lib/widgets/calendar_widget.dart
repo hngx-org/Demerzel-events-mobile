@@ -65,8 +65,14 @@ class _CalCardState extends ConsumerState<CalCard> {
                       _focusedDay = focusedDay;
                     });
                   }
-                  ref.read(asyncEventsProvider.notifier).getEventDate(
-                      DateFormat("yyyy-MM-dd").format(_focusedDay));
+                  final formattedDate =
+                      DateFormat("yyyy-MM-dd").format(_focusedDay);
+                  ref
+                      .read(asyncEventsProvider.notifier)
+                      .getEventDate(formattedDate);
+                  ref
+                      .read(selectedDateProvider.notifier)
+                      .update((state) => formattedDate);
                 },
                 onPageChanged: (focusedDay) {
                   // No need to call `setState()` here

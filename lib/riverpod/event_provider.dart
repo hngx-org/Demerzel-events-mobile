@@ -23,6 +23,7 @@ class CalenderEventsController extends AsyncNotifier<List<Event>> {
             .toList() ??
         []);
   }
+  //void refreshData
 }
 
 final asyncEventsProvider =
@@ -33,8 +34,8 @@ final asyncEventsProvider =
 final eventListProvider = StateProvider<List<Event>>((ref) {
   final allEvents = ref.watch(asyncEventsProvider);
   return allEvents.value
-          ?.where((element) => _filterByDate(
-              element, DateFormat("yyyy-MM-dd").format(DateTime.now())))
+          ?.where((element) =>
+              _filterByDate(element, ref.watch(selectedDateProvider)))
           .toList() ??
       [];
 });
@@ -42,3 +43,7 @@ final eventListProvider = StateProvider<List<Event>>((ref) {
 bool _filterByDate(Event event, String date) {
   return event.startDate.split(" ").first == date;
 }
+
+final selectedDateProvider = StateProvider<String>((ref) {
+  return DateFormat("yyyy-MM-dd").format(DateTime.now());
+});
