@@ -1,12 +1,13 @@
 import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/select_group.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/services/event/event_service.dart';
+import 'package:hng_events_app/repositories/event_repository.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key});
@@ -71,7 +72,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(groupsProvider);
+    ref.watch(groupProvider);
+   final  eventNotifier = ref.watch(EventController.provider);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ProjectColors.white,
@@ -445,7 +447,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                             ],
                           ),
                           child: TextButton(
-                            onPressed: uploadEvent,
+                            onPressed: () => uploadEvent(eventNotifier),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
                                 isFormValid()
@@ -485,7 +487,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     );
   }
 
-  Future<void> uploadEvent() async {
+  Future<void> uploadEvent(EventController eventController) async {
     if (isFormValid() == false) return;
 
     try {
@@ -504,9 +506,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         "end_time": "${endTime?.hour}:${endTime?.minute}",
       };
 
-      bool? result = await EventService().createEvent(body);
-
-      log("Done");
+      bool? result = await eventController.createEvent(body);
       isLoading = false;
 
       // ignore: use_build_context_synchronously

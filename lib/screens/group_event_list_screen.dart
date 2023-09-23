@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:transparent_image/transparent_image.dart';
 

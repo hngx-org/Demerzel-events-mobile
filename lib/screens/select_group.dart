@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/repositories/group_repository.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 
 class SelectGroup extends ConsumerWidget {
@@ -10,7 +11,7 @@ class SelectGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groups = ref.watch(groupsProvider);
+    final groupsNotifier = ref.watch(GroupRepository.provider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -27,37 +28,41 @@ class SelectGroup extends ConsumerWidget {
           ),
         ),
       ),
-      body: groups.when(
-          data: (data) {
-            return Padding(
+      body:           Padding(
                 padding: ProjectConstants.bodyPadding,
                 child: ListView.separated(
-                  separatorBuilder: (context, index) => SizedBox(
+                  separatorBuilder: (context, index) => const SizedBox(
                     height: 8,
                   ),
                   itemBuilder: (context, index) {
                     return ListTile(
                       title: Text(
-                        data[index].name,
+                        groupsNotifier.groups[index].name,
                         style: settingsItemTextStyle,
                       ),
                       onTap: () => Navigator.pop(
                         context,
-                        data[index].name,
+                       groupsNotifier.groups[index].name,
                       ),
                       shape: RoundedRectangleBorder(
-                        side: BorderSide(),
+                        side: const BorderSide(),
                   borderRadius: BorderRadius.circular(8)),
                   
                     );
                   },
-                  itemCount: data.length,
-                ));
-          },
-          error: (error, stackTrace) => const Text('Error Loading Groups'),
-          loading: () {
-            return const CircularProgressIndicator();
-          }),
+                  itemCount: groupsNotifier.groups.length,
+                ))
+      
+      // groups.when(
+      //     data: (data) {
+      //       return 
+            
+  
+      //     },
+      //     error: (error, stackTrace) => const Text('Error Loading Groups'),
+      //     loading: () {
+      //       return const CircularProgressIndicator();
+      //     }),
     );
   }
 }

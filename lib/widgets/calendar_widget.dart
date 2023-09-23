@@ -20,7 +20,7 @@ class _CalCardState extends ConsumerState<CalCard> {
   @override
   void initState() {
     ref
-        .read(calenderEventControllerProvider)
+        .read(EventController.provider)
         .getEventByDate(DateFormat("yyyy-mm-dd").format(_focusedDay));
     super.initState();
   }
@@ -58,7 +58,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                     });
                   }
 
-                  ref.read(calenderEventControllerProvider).getEventByDate(
+                  ref.read(EventController.provider).getEventByDate(
                         DateFormat("yyyy-mm-dd").format(_focusedDay),
                       );
                 },

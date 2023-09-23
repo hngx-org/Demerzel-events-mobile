@@ -4,4 +4,5 @@ class ApiRoutes{
 
   static final authGoogleURI = Uri.parse('$baseUrl/auth/verify');
   static final groupURI = Uri.parse('$baseUrl/groups');
+  static final eventURI = Uri.parse('$baseUrl/events');
 }

@@ -96,71 +96,49 @@ class EveryoneScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final data = ref.watch(eventsProvider);
+    final eventNotifier = ref.watch(EventController.provider);
 
-    if (data.isRefreshing) {
+    if (eventNotifier.isBusy) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return data.when(
-      data: (data) {
-        if (data.data.events.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text("No event was found", textAlign: TextAlign.center),
-                const SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () => ref.refresh(eventsProvider),
-                  child: const Text(
-                    "Tap to Retry",
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async => ref.refresh(eventsProvider),
-          child: ListView.builder(
-            itemCount: data.data.events.length,
-            itemBuilder: (BuildContext context, int index) {
-              final Event event = data.data.events[index];
-
-              return bodyBuild(
-                event.title,
-                event.startDate,
-                event.startTime,
-                event.location,
-                timeLeft(DateTime.parse(event.startDate)),
-              );
-            },
-          ),
-        );
-      },
-      error: (err, s) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(err.toString(), textAlign: TextAlign.center),
-              const SizedBox(height: 10),
-              GestureDetector(
-                onTap: () => ref.refresh(eventsProvider),
-                child: const Text(
-                  "Tap to Retry",
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
+    if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("No event was found", textAlign: TextAlign.center),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => eventNotifier.getAllEvent(),
+              child: const Text(
+                "Tap to Retry",
+                style: TextStyle(decoration: TextDecoration.underline),
               ),
-            ],
-          ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async => eventNotifier.getAllEvent(),
+      child: ListView.builder(
+        itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
+        itemBuilder: (BuildContext context, int index) {
+          final Event? event = eventNotifier.allEvents?.data.events[index];
+
+          return bodyBuild(
+            event?.title ?? "N/A",
+            event?.startDate ?? "N/A",
+            event?.startTime ?? "N/A",
+            event?.location ?? "N/A",
+            timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09')),
+          );
+        },
+      ),
     );
+
   }
 
   static String timeLeft(DateTime date) {

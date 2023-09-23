@@ -6,56 +6,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/group_repository.dart';
 
-
-final groupRepoProvider = Provider((ref) => GroupRepository());
-
-
-final groupsProvider = FutureProvider<List<Group>>((ref) async {
-  try {
-    final groupRepo = ref.read(groupRepoProvider);
-    
-    return groupRepo.getAllGroups(); 
-  } catch (e, s) {
-    log(e.toString());
-    log(s.toString());
-
-    rethrow;
-  }
-});
-
-
-
-
-// final createGroupProvider = FutureProvider<GetGroupModel>((ref) async {
-//   try {
-//     final groupRepo = ref.read(groupRepoProvider);
-//    // groupRepo.createGroup();
-//     return groupRepo.getAllGroups();
-//   } catch (e, s) {
-//     log(e.toString());
-//     log(s.toString());
-
-//     rethrow;
-//   }
-// });
-
 class CreateGroupHandler extends ChangeNotifier {
-  final groupRepo = GroupRepository();
-
+  final GroupRepository groupRepo;
+  CreateGroupHandler({required this.groupRepo}){
+   groupsProvider();
+  }
 
   String _error = "";
   String get error => _error;
 
+  bool _isBusy = false;
+  bool get isBusy => _isBusy;
+
+  List<Group> groups = [];
+
   Future<bool> createGroup(String name, File image) async {
-    // _isBusy = true;
-     _error = "";
+     _isBusy = true;
+    _error = "";
     notifyListeners();
 
     try {
-   await groupRepo.createGroup(name, image);
-   await groupRepo.getAllGroups();
-
-      // events = result;
+      await groupRepo.createGroup(name, image);
+      await groupRepo.getAllGroups();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -65,15 +37,33 @@ class CreateGroupHandler extends ChangeNotifier {
       return false;
     }
 
-    // _isBusy = false;
+     _isBusy = false;
     notifyListeners();
     return true;
-    
+  }
+
+  Future<void> groupsProvider() async {
+    _isBusy = true;
+    _error = "";
+     notifyListeners();
+    try {
+      final result = await groupRepo.getAllGroups();
+      groups = result;
+      notifyListeners();
+    } catch (e, s) {
+      _error = e.toString();
+      log(e.toString());
+      log(s.toString());
+
+      rethrow;
+    }
+    _isBusy =false;
+    notifyListeners();
   }
 }
 
-
-final createGroupProvider =
-    ChangeNotifierProvider<CreateGroupHandler>(
-  (ref) => CreateGroupHandler(),
+final groupProvider = ChangeNotifierProvider<CreateGroupHandler>(
+  (ref) => CreateGroupHandler(
+    groupRepo: ref.read(GroupRepository.provider),
+  ),
 );

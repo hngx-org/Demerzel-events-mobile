@@ -20,7 +20,6 @@ class HttpService {
   Future<dynamic> post(String path, Map<dynamic, dynamic> body) async {
     final String url = baseUrl + path;
 
-    print('URL:: $url, body:: ${json.encode(body)}');
 
     final response = await http
         .post(Uri.parse(url), body: json.encode(body))

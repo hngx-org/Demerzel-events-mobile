@@ -129,7 +129,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                       pressed = true;
                     });
                     final result = await ref
-                        .read(createGroupProvider)
+                        .read(groupProvider)
                         .createGroup(groupNameController.text, image!);
                     // ref.read(groupsProvider).createGroup(Group(
                     //     name: groupNameController.text,
