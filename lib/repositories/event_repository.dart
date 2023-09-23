@@ -65,8 +65,9 @@ class EventRepository {
   }
 
   Future<GetListEventModel> getEventsByDate(String date) async {
-    final header = await authRepository.getAuthHeader();
 
+      final header = await authRepository.getAuthHeader();
+    
     try {
       final http.Response response = await http
           .get(ApiRoutes.eventByDateURI(date), headers: header)

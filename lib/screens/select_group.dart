@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/group_repository.dart';
-import 'package:hng_events_app/riverpod/group_provider.dart';
 
 class SelectGroup extends ConsumerWidget {
   const SelectGroup({super.key});
@@ -52,17 +50,6 @@ class SelectGroup extends ConsumerWidget {
                   },
                   itemCount: groupsNotifier.groups.length,
                 ))
-      
-      // groups.when(
-      //     data: (data) {
-      //       return 
-            
-  
-      //     },
-      //     error: (error, stackTrace) => const Text('Error Loading Groups'),
-      //     loading: () {
-      //       return const CircularProgressIndicator();
-      //     }),
     );
   }
 }

@@ -17,7 +17,7 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: AppHeader(title: group.name ?? ''),
+      appBar: AppHeader(title: group.name),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
