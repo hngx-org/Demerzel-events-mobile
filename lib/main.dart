@@ -7,7 +7,7 @@ import 'package:hng_events_app/screens/splash_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: ProviderScope(child: MyApp())));
 }
 
 class MyApp extends StatelessWidget {

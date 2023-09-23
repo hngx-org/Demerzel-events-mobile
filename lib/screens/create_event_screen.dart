@@ -1,5 +1,9 @@
+import 'dart:developer';
+import 'package:intl/intl.dart';
+
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/services/event/event_service.dart';
 
 class CreateEvents extends StatefulWidget {
   const CreateEvents({super.key});
@@ -9,15 +13,28 @@ class CreateEvents extends StatefulWidget {
 }
 
 class _CreateEventsState extends State<CreateEvents> {
-  DateTime? startDate = DateTime.now();
-  DateTime? endDate = DateTime.now();
-  TimeOfDay? startTime = TimeOfDay.now();
-  TimeOfDay? endTime = TimeOfDay.now();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController bodyController = TextEditingController();
+  DateTime? startDate;
+  DateTime? endDate;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+
+  bool isLoading = false;
+
+  bool isFormValid() =>
+      titleController.text.isNotEmpty &&
+      bodyController.text.isNotEmpty &&
+      startDate != null &&
+      startTime != null &&
+      endDate != null &&
+      endTime != null;
 
   Future<void> _selectDate(BuildContext context, bool isStart) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStart ? startDate! : endDate!,
+      initialDate:
+          isStart ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
@@ -35,7 +52,8 @@ class _CreateEventsState extends State<CreateEvents> {
   Future<void> _selectTime(BuildContext context, bool isStart) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isStart ? startTime! : endTime!,
+      initialTime:
+          isStart ? startTime ?? TimeOfDay.now() : endTime ?? TimeOfDay.now(),
     );
     if (picked != null) {
       setState(() {
@@ -54,16 +72,8 @@ class _CreateEventsState extends State<CreateEvents> {
       appBar: AppBar(
         backgroundColor: ProjectColors.white,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: ProjectColors.black,
-          ),
-          onPressed: () {
-            // Add the action you want when the return icon is pressed.
-            // Typically, you'd use Navigator.pop(context) to navigate back.
-
-            Navigator.pop(context);
-          },
+          icon: const Icon(Icons.arrow_back_ios, color: ProjectColors.black),
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Center(
           child: Padding(
@@ -86,13 +96,35 @@ class _CreateEventsState extends State<CreateEvents> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: titleController,
+                  cursorColor: ProjectColors.black,
+                  textAlignVertical: TextAlignVertical.top,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    fillColor: ProjectColors.white,
+                    labelText: 'Event Title',
+                    labelStyle:
+                        TextStyle(color: ProjectColors.black, fontSize: 15),
+                    alignLabelWithHint: true,
+                    hintText: 'Type Event Title',
+                    hintStyle: TextStyle(fontSize: 15),
+                    border: OutlineInputBorder(borderSide: BorderSide()),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
+                  ),
+                  onChanged: (value) => setState(() {}),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Stack(
                   children: [
-                    const TextField(
+                    TextField(
+                      controller: bodyController,
                       cursorColor: ProjectColors.black,
                       maxLines: 3,
                       textAlignVertical: TextAlignVertical.top,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         filled: true,
                         fillColor: ProjectColors.white,
                         labelText: 'Event Description',
@@ -118,21 +150,18 @@ class _CreateEventsState extends State<CreateEvents> {
                           bottom: 50,
                         ),
                       ),
+                      onChanged: (value) => setState(() {}),
                     ),
                     Positioned(
                       bottom: 0,
                       child: IconButton(
-                        icon: const Icon(
-                          Icons.image,
-                        ),
-                        onPressed: () {
-                          // Add the action you want when the IconButton is pressed.
-                        },
+                        icon: const Icon(Icons.image),
+                        onPressed: () {},
                       ),
                     ),
                   ],
                 ),
-              ), // Add spacing between the text field and other widgets
+              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -140,10 +169,7 @@ class _CreateEventsState extends State<CreateEvents> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.all(8.0),
-                      child: Divider(
-                        thickness: 1, // Set the thickness of the line
-                        color: Colors.black, // Set the color of the line
-                      ),
+                      child: Divider(thickness: 1, color: Colors.black),
                     ),
                     Row(
                       children: [
@@ -152,13 +178,14 @@ class _CreateEventsState extends State<CreateEvents> {
                           child: Text(
                             'Starts',
                             style: TextStyle(
-                                fontFamily: 'NotoSans',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
+                              fontFamily: 'NotoSans',
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 110.0),
+                          padding: const EdgeInsets.only(left: 80.0),
                           child: Container(
                             height: 35,
                             width: 100,
@@ -167,11 +194,10 @@ class _CreateEventsState extends State<CreateEvents> {
                               borderRadius: BorderRadius.circular(5.0),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black, // Shadow color
-                                  spreadRadius: 0, // Spread radius
-                                  blurRadius: 0, // Blur radius
-                                  offset: Offset(
-                                      4, 5), // Offset in x and y directions
+                                  color: Colors.black,
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
+                                  offset: Offset(4, 5),
                                 ),
                               ],
                             ),
@@ -199,11 +225,10 @@ class _CreateEventsState extends State<CreateEvents> {
                               borderRadius: BorderRadius.circular(5.0),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black, // Shadow color
-                                  spreadRadius: 0, // Spread radius
-                                  blurRadius: 0, // Blur radius
-                                  offset: Offset(
-                                      4, 5), // Offset in x and y directions
+                                  color: Colors.black,
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
+                                  offset: Offset(4, 5),
                                 ),
                               ],
                             ),
@@ -227,8 +252,8 @@ class _CreateEventsState extends State<CreateEvents> {
                     const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Divider(
-                        thickness: 1, // Set the thickness of the line
-                        color: Colors.black, // Set the color of the line
+                        thickness: 1,
+                        color: Colors.black,
                       ),
                     ),
                     Row(
@@ -245,26 +270,18 @@ class _CreateEventsState extends State<CreateEvents> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 120.0),
+                          padding: const EdgeInsets.only(left: 80.0),
                           child: Container(
                             height: 35,
                             decoration: BoxDecoration(
                               color: ProjectColors.purple,
                               borderRadius: BorderRadius.circular(5.0),
                               boxShadow: const [
-                                // BoxShadow(
-                                //   color: Colors.black, // Shadow color
-                                //   spreadRadius: 4, // Spread radius
-                                //   blurRadius: 4, // Blur radius
-                                //   offset: Offset(
-                                //       0, 2), // Offset in x and y directions
-                                // ),
                                 BoxShadow(
-                                  color: Colors.black, // Shadow color
-                                  spreadRadius: 0, // Spread radius
-                                  blurRadius: 0, // Blur radius
-                                  offset: Offset(
-                                      4, 5), // Offset in x and y directions
+                                  color: Colors.black,
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
+                                  offset: Offset(4, 5),
                                 ),
                               ],
                             ),
@@ -292,13 +309,13 @@ class _CreateEventsState extends State<CreateEvents> {
                               borderRadius: BorderRadius.circular(5.0),
                               boxShadow: const [
                                 BoxShadow(
-                                  color: Colors.black, // Shadow color
-                                  spreadRadius: 0, // Spread radius
-                                  blurRadius: 0, // Blur radius
+                                  color: Colors.black,
+                                  spreadRadius: 0,
+                                  blurRadius: 0,
                                   offset: Offset(
                                     4,
                                     5,
-                                  ), // Offset in x and y directions
+                                  ),
                                 ),
                               ],
                             ),
@@ -398,64 +415,116 @@ class _CreateEventsState extends State<CreateEvents> {
                   ],
                 ),
               ),
-              SizedBox(
-                width: 300,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 128.0),
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black, // Shadow color
-                            spreadRadius: 0, // Spread radius
-                            blurRadius: 0, // Blur radius
-                            offset:
-                                Offset(4, 5), // Offset in x and y directions
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                      width: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40.0),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                spreadRadius: 0,
+                                blurRadius: 0,
+                                offset: Offset(4, 5),
+                              ),
+                            ],
                           ),
-                        ]),
-                    child: TextButton(
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const CreateEvents(),
-                        //   ),
-                        // );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(ProjectColors.purple),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+                          child: TextButton(
+                            onPressed: uploadEvent,
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                isFormValid()
+                                    ? ProjectColors.purple
+                                    : ProjectColors.purple.withOpacity(0.6),
+                              ),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                              ),
+                              side: MaterialStateProperty.all(
+                                const BorderSide(
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              'Create Event',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: ProjectColors.black,
+                                fontFamily: 'NotoSans',
+                                fontSize: 20,
+                              ),
+                            ),
                           ),
-                        ),
-                        side: MaterialStateProperty.all(
-                          const BorderSide(
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Create Event',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: ProjectColors.black,
-                          fontFamily: 'NotoSans',
-                          fontSize: 20,
                         ),
                       ),
                     ),
-                  ),
-                ),
-              )
+              const SizedBox(height: 40),
             ],
           ),
-          // Set your desired background color here
         ),
       ),
     );
+  }
+
+  Future<void> uploadEvent() async {
+    if (isFormValid() == false) return;
+
+    try {
+      isLoading = true;
+      setState(() {});
+
+      final body = {
+        "thumbnail":
+            "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
+        "location": "Uyo, Nigeria",
+        "title": titleController.text,
+        "description": bodyController.text,
+        "start_date": DateFormat("yyyy-MM-dd").format(startDate!),
+        "end_date": DateFormat("yyyy-MM-dd").format(endDate!),
+        "start_time": "${startTime?.hour}:${startTime?.minute}",
+        "end_time": "${endTime?.hour}:${endTime?.minute}",
+      };
+
+      bool? result = await EventService().createEvent(body);
+
+      log("Done");
+      isLoading = false;
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Event Uploaded Successfully",
+            style: TextStyle(color: Colors.white),
+          ),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pop();
+    } catch (e, s) {
+      isLoading = false;
+      log(e.toString());
+      log(s.toString());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+
+    setState(() {});
   }
 }

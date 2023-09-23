@@ -453,12 +453,12 @@ class ChatCard extends StatelessWidget {
   }
 }
 
-List<Chat> chats = [
-  Chat(
+List<Comment> chats = [
+  Comment(
     text: "I will be there, no matter what.",
   ),
-  Chat(text: "I defo won’t miss this", attachemt: ProjectConstants.chatPicture),
-  Chat(
+  Comment(text: "I defo won’t miss this", attachemt: ProjectConstants.chatPicture),
+  Comment(
       text: "Snippet of the race, more picture coming",
       attachemt: ProjectConstants.chatPicture2),
 ];

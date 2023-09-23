@@ -34,21 +34,24 @@ class AuthRepository {
 
         print('----> Firebase token: $token');
 
-        await saveToken(token ?? '');
+        await signUpUserInBackend('Bearer $token');
       } catch (e) {
         print(e);
       }
     }
   }
 
-  Future<void> signUpUserInBackend(String token){
-    return http.post(
+  Future<void> signUpUserInBackend(String token) async{
+   final response = await http.post(
       ApiRoutes.authGoogleURI,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': token,
-      },
+     body: {
+        'token': token,
+     }
     );
+
+    print(response.body);
+
+    
   }
 
   Future<User> getUser() async {
