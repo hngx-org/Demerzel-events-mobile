@@ -1,4 +1,4 @@
-package com.example.hng_events_app
+package com.example.demerzel_event_app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,4 +1,4 @@
-# hng_events_app
+# demerzel_event_app
 
 A new Flutter project.
 

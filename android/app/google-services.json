@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:425241698743:android:3c01161e8b28a50e6b0832",
+        "mobilesdk_app_id": "1:425241698743:android:02b46b9d17d3945d6b0832",
         "android_client_info": {
-          "package_name": "com.example.hng_events_app"
+          "package_name": "com.example.demerzel_event_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "425241698743-pgshb7ge0qf4r2ka4nhenafkb77g3em5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demerzel_event_app",
+            "certificate_hash": "a275f396d83a470a77e9dcfa4bdfd829e0952837"
+          }
+        },
+        {
+          "client_id": "425241698743-fq629u8svm135gdndom90uvmhhf2u6uk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAaO17tVUfdgBbvKLQV7f-JYf4BXd4FRpA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425241698743-fq629u8svm135gdndom90uvmhhf2u6uk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

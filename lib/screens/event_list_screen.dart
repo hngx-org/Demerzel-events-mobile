@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
-import 'package:hng_events_app/widgets/event_list_header.dart';
+import 'package:hng_events_app/widgets/app_header.dart';
 
 class EventsScreen extends StatelessWidget {
   const EventsScreen({super.key});
@@ -10,36 +10,7 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: const EventListHeader(),
-      // appBar: AppBar(
-      //   toolbarHeight: 80,
-      //   backgroundColor: ProjectColors.white,
-      //   title: ListTile(
-      //     leading: IconButton(
-      //       icon: const Icon(Icons.chevron_left),
-      //       onPressed: () {},
-      //     ),
-      //     title: const Center(
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         mainAxisAlignment: MainAxisAlignment.center,
-      //         children: [
-      //           Text(
-      //             'Techies',
-      //             style: TextStyle(
-      //                 fontFamily: 'inter',
-      //                 fontWeight: FontWeight.w700,
-      //                 fontSize: 24),
-      //           ),
-      //           Text('12 Members')
-      //         ],
-      //       ),
-      //     ),
-      //     trailing: const CircleAvatar(
-      //       backgroundImage: AssetImage('assets/images/img4.png'),
-      //     ),
-      //   ),
-      // ),
+      appBar: const AppHeader( title: 'Techies 💻'),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

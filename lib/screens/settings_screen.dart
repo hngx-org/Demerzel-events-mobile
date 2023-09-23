@@ -1,32 +1,23 @@
-// import 'package:flutter/material.dart';
-// class SettingsScreen extends StatefulWidget {
-//   const SettingsScreen({super.key});
 
-//   @override
-//   State<SettingsScreen> createState() => _SettingsScreenState();
-// }
-
-// class _SettingsScreenState extends State<SettingsScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Text("Setting");
-//   }
-// }
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
-import 'package:hng_events_app/riverpod/auth_provider.dart';
+import 'package:hng_events_app/repositories/auth_repository.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
+
 import 'package:svg_flutter/svg.dart';
 
 import '../constants/colors.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userRef = ref.watch(UserProvider.notifier);
+      final authRef = ref.read(AuthRepository.provider);
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
@@ -63,18 +54,16 @@ class SettingsPage extends StatelessWidget {
                 decoration: ProjectConstants.appBoxDecoration,
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final user = ref.watch(authProvider);
                     return ListTile(
                       tileColor: Colors.white,
                       leading: CircleAvatar(
                           child: Image.asset(ProjectConstants.profileImage)),
-                      // TODO: change this to name of current user
                       title: Text(
-                        user != null ? user.name : 'salome',
+                       userRef.user?.displayName?? 'salome',
                         style: largeTextStyle,
                       ),
                       subtitle: Text(
-                        user != null ? user.email : 'salome357@gmail.com',
+                         userRef.user?.email ?? 'salome357@gmail.com',
                         style: greyTextStyle.copyWith(
                             fontSize: 17, fontWeight: FontWeight.w700),
                       ),
@@ -134,7 +123,7 @@ class SettingsPage extends StatelessWidget {
             ),
             ProjectConstants.sizedBox,
             InkWell(
-              onTap: () {},
+              onTap:authRef.signOut,
               child: Row(
                 children: [
                   SvgPicture.asset(ProjectConstants.logoutIcon),
