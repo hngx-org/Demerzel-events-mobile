@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hng_events_app/models/event_model.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';

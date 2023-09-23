@@ -80,10 +80,10 @@ class Event {
         location: json["location"],
         title: json["title"],
         description: json["description"],
-        startDate: json["start_date"],
-        endDate: json["end_date"],
-        startTime: json["start_time"],
-        endTime: json["end_time"],
+        startDate: _rearrangeDate(json["start_date"]),
+        endDate: _rearrangeDate(json["end_date"]),
+        startTime: _fixTimeFormat(json["start_time"]),
+        endTime: _fixTimeFormat(json["end_time"]),
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
         creator: Creator.fromMap(json["creator"]),
@@ -144,4 +144,32 @@ class Creator {
         "InterestedEvents": interestedEvents,
         "user_group": userGroup,
       };
+}
+
+/// This function adds a trailing 0 to the given time
+String _fixTimeFormat(String time) {
+  if (time.length < 5) return "${time}0";
+  return time;
+}
+
+/// This function cuts out unwanted parts of the date
+String _cutDate(String date) {
+  if (date.contains(" ")) return date.split(" ").first;
+  return date;
+}
+
+/// Replace forward slash with dash
+String _replaceSlash(String date) {
+  return date.replaceAll("/", "-");
+}
+
+/// Arrange the date to enable parsing
+String _rearrangeDate(String date) {
+  final newDate = _replaceSlash(_cutDate(date));
+  if (newDate.endsWith(DateTime.now().year.toString())) {
+    final splitString = newDate.split("-");
+    //yyyy-mm-dd
+    return splitString[2] + splitString[1] + splitString[0];
+  }
+  return newDate;
 }
