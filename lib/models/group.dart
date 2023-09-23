@@ -8,7 +8,7 @@ class Group {
   DateTime createdAt;
   DateTime updatedAt;
   List<User>? members; // You can change the type of members as needed
-  List<Event> events ;
+  List<Event> events;
 
   Group({
     required this.id,
@@ -22,15 +22,15 @@ class Group {
 
   factory Group.fromJson(Map<String, dynamic> json) {
     List<User>? members;
-    List<Event> events= [];
+    List<Event> events = [];
     if (json['members'] != null) {
       members = List<User>.from(
           json['members'].map((member) => User.fromJson(member)));
     }
 
     if (json['events'] != null) {
-      events = List<Event>.from(
-          json['events'].map((event) => Event.fromMap(event)));
+      events =
+          List<Event>.from(json['events'].map((event) => Event.fromMap(event)));
     }
     return Group(
       id: json['id'],
