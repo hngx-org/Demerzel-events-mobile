@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../constants/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/models/event_model.dart';
 
-class EveryoneScreen extends StatelessWidget {
+import '../../provider/event_provider.dart';
+
+class EveryoneScreen extends ConsumerWidget {
   const EveryoneScreen({super.key});
 
   Widget bodyBuild(String title, String specifictime, String date,
@@ -90,15 +95,96 @@ class EveryoneScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding:  EdgeInsets.only(bottom: 90.h),
-      child: ListView.builder(
-          itemCount: 6,
-          itemBuilder: (BuildContext context, int index) {
-            return bodyBuild('Football game', 'May 20,2023', 'Friday 4 - 6 PM',
-                'Teslim Balogun Stadium', 'LIVE');
-          }),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final data = ref.watch(eventsProvider);
+
+    if (data.isRefreshing) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return data.when(
+      data: (data) {
+        if (data.data.events.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("No event was found", textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => ref.refresh(eventsProvider),
+                  child: const Text(
+                    "Tap to Retry",
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async => ref.refresh(eventsProvider),
+          child: ListView.builder(
+            itemCount: data.data.events.length,
+            itemBuilder: (BuildContext context, int index) {
+              final Event event = data.data.events[index];
+
+              return bodyBuild(
+                event.title,
+                event.startDate,
+                event.startTime,
+                event.location,
+                timeLeft(DateTime.parse(event.startDate)),
+              );
+            },
+          ),
+        );
+      },
+      error: (err, s) {
+        return Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(err.toString(), textAlign: TextAlign.center),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => ref.refresh(eventsProvider),
+                child: const Text(
+                  "Tap to Retry",
+                  style: TextStyle(decoration: TextDecoration.underline),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
     );
+  }
+
+  static String timeLeft(DateTime date) {
+    final date2 = DateTime.now();
+    final difference = date.difference(date2);
+
+    if ((difference.inDays / 7).floor() >= 1) {
+      return '1 week Left';
+    } else if (difference.inDays >= 2) {
+      return '${difference.inDays} days Left';
+    } else if (difference.inDays >= 1) {
+      return '1 day Left';
+    } else if (difference.inHours >= 2) {
+      return '${difference.inHours} hours Left';
+    } else if (difference.inHours >= 1) {
+      return '1 hour Left';
+    } else if (difference.inMinutes >= 2) {
+      return '${difference.inMinutes} minutes Left';
+    } else if (difference.inMinutes >= 1) {
+      return '1 minute Left';
+    } else if (difference.inSeconds >= 3) {
+      return '${difference.inSeconds} seconds Left';
+    } else {
+      return 'Expired';
+    }
   }
 }
