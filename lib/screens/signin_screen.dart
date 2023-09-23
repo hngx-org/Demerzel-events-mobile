@@ -63,9 +63,9 @@ void login() {
                         return ElevatedButton(
                           onPressed: () {
                             // Login Logic Code here
-                            ref.read(authProvider.notifier).setCustomUser();
+                            // ref.read(authProvider.notifier).signin(context);
 
-                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
                               return const ScreenUtilInitScreen();
                             }));
                           },

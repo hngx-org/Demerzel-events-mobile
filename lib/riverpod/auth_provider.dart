@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/screens/signin_webview.dart';
+import 'package:hng_events_app/screens/event_comment_screen.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,24 +15,23 @@ class AuthNotifier extends StateNotifier<User?> {
   AuthRepository repo = AuthRepository();
   
   final Ref ref;
+  
 
   setCustomUser(){
     state = User.custom();
   }
 
-  Future signin (BuildContext context) async{
-    await repo.signin().then(
-      (value) {
-        showDialog(context: context, builder: (context){return const Center(child: CircularProgressIndicator(),);});
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context){
-            return SigninWebView(url: value.toString());
-          })
-        );
-        // ref.read(userProvider.notifier).state = value;
-      }
-    );
-  }
+  // Future signin (BuildContext context) async{
+  //   await repo.signin().then(
+  //     (value) async{
+        
+  //       showDialog(context: context, builder: (context){return const Center(child: CircularProgressIndicator(),);});
+  //       SharedPreferences prefs = await SharedPreferences.getInstance();
+  //       prefs.setString('userToken', value);
+  //       setUser(value);
+  //     }
+  //   );
+  // }
 
   Future setUser(String token) async{
     repo.getUser(token).then((value) {

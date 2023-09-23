@@ -10,18 +10,32 @@ class AuthRepository {
   String baseUrl = 'https://api-s65g.onrender.com';
 
   Future<String> signin () async{
-    final response = await http.get(Uri.parse('$baseUrl/oauth/initialize'));
-    if (response.statusCode == 200) {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-      final token = googleAuth!.accessToken;
-      final redirectUrl = jsonDecode(response.body)['data']['redirectUrl'];
-      // http.get(Uri.parse(redirectUrl));
-      return redirectUrl;
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    if (googleAuth != null) {
+      log(googleAuth.idToken!);
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/verify'),
+        body: jsonEncode(
+          {
+            'token': googleAuth.idToken
+          }
+        )
+      );
+      if (response.statusCode == 200) {
+        log(jsonDecode(response.body)['data']['token']);
+        return jsonDecode(response.body)['data']['token'];
+            
+      } else {
+        log(response.statusCode.toString());
+        throw Exception('failed to initialize auth: ${response.statusCode}');
+      }
+
     } else {
-      log(response.statusCode.toString());
-      throw Exception('failed to initialize auth: ${response.statusCode}');
+      throw Exception('failed to sign in with google: gooogleAuthAccount = null');
     }
+    
 
   }
 
