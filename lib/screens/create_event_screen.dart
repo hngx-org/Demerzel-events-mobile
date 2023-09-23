@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/repositories/event_repository.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key});
@@ -506,7 +505,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         "end_time": "${endTime?.hour}:${endTime?.minute}",
       };
 
-      bool? result = await eventController.createEvent(body);
+      await eventController.createEvent(body);
       isLoading = false;
 
       // ignore: use_build_context_synchronously
