@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,26 +34,31 @@ class AuthRepository {
 
         final token = await userCredential.user!.getIdToken();
 
-        print('----> Firebase token: $token');
-
-        await signUpUserInBackend('Bearer $token');
+        await signUpUserInBackend(token ?? '');
       } catch (e) {
         print(e);
       }
     }
   }
 
-  Future<void> signUpUserInBackend(String token) async{
-   final response = await http.post(
+  Future<void> signUpUserInBackend(String token) async {
+    final body = jsonEncode({
+      "token": token,
+    });
+
+    final response = await http.post(
       ApiRoutes.authGoogleURI,
-     body: {
-        'token': token,
-     }
+      body: body,
     );
 
-    print(response.body);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final String token = data['data']['token'];
+      await saveToken(token);
+    }
 
-    
+    final authHeader = await getAuthHeader();
+    print(authHeader);
   }
 
   Future<User> getUser() async {
@@ -67,6 +74,13 @@ class AuthRepository {
   Future<String?> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
     return 'Bearer $token';
+  }
+
+  Future<Map<String, String>> getAuthHeader() async{
+    final token = await getToken();
+    return {
+      'Authorization': token ?? '',
+    };
   }
 
   Future<void> removeToken() async {

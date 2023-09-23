@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
-import 'package:hng_events_app/screens/event_list_screen.dart';
+import 'package:hng_events_app/screens/create_group.dart';
+import 'package:hng_events_app/screens/group_event_list_screen.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
-import 'package:hng_events_app/widgets/my_people_header.dart';
+import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class PeopleScreen extends ConsumerStatefulWidget {
   const PeopleScreen({super.key});
@@ -18,50 +20,104 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
   Widget build(
     BuildContext context,
   ) {
-    final groups = ref.watch(groupsProvider);
-    // ref.watch(groupListProvider);
+    final groupsNotifier = ref.watch(groupProvider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: const MyPeopleHeader(),
-      body: Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 20,
+      appBar: AppBar(
+        backgroundColor: ProjectColors.white,
+        centerTitle: false,
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4.0),
+            child: Container(
+              height: 1,
+              color: Colors.black,
+            )),
+        title: Text(
+          'My People',
+          style: appBarTextStyle.copyWith(
+              fontSize: 28, fontWeight: FontWeight.w700),
         ),
-        child: groups.when(data: (data) {
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                //childAspectRatio: 3 / 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12),
-            itemCount: data.data.group.length,
-            itemBuilder: (BuildContext context, int index) {
-              return MyPeopleCard(
-                  title: data.data.group[index].name,
-                  image:  NetworkImage(data.data.group[index].groupImage!),
-                  bubbleVisible: true,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const EventsScreen(),
-                        ));
-                  });
-            },
-          );
-        }, error: (error, stackTrace) {
-          return const Center(
-            child: Text('Error loading groups'),
-          );
-        }, loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 24.0),
+            child: NeuTextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateGroup(),
+                  ),
+                );
+              },
+              buttonColor: ProjectColors.purple,
+              buttonHeight: 40,
+              borderRadius: BorderRadius.circular(8),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      const Text(
+                        'Create ',
+                        style: TextStyle(
+                          //fontFamily: 'NotoSans',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                          color: ProjectColors.black,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Image.asset('assets/images/Vector (Stroke).png'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
+      body: Padding(
+          padding: const EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
+          child: Visibility(
+            visible: !groupsNotifier.isBusy,
+            replacement: const Center(child: CircularProgressIndicator()),
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  //childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12),
+              itemCount: groupsNotifier.groups.length,
+              itemBuilder: (BuildContext context, int index) {
+                final currentGroup = groupsNotifier.groups[index];
+                return MyPeopleCard(
+                    title: currentGroup.name,
+                    image: currentGroup.image,
+                    bubbleVisible: true,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EventsScreen(
+                              group: currentGroup,
+                            ),
+                          ));
+                    });
+              },
+            ),
+          )),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,14 +8,13 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/widgets/calendar_widget.dart';
 
-import '../riverpod/event_provider.dart';
 
 class CalendarPage extends ConsumerWidget {
   const CalendarPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventProvider = ref.watch(calenderEventControllerProvider);
+    final eventProvider = ref.watch(EventController.provider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,

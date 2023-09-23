@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
-import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:svg_flutter/svg.dart';
@@ -17,12 +16,10 @@ class CreateGroup extends ConsumerStatefulWidget {
 }
 
 class _CreateGroupState extends ConsumerState<CreateGroup> {
-
-  
+  bool pressed = false;
   String imagePath = '';
   File? image;
 
-  
   _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -31,7 +28,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     );
     if (pickedFile != null) {
       setState(() {
-        image =File(pickedFile.path);
+        image = File(pickedFile.path);
         imagePath = File(pickedFile.path).path;
         imagePath.split('/').last;
       });
@@ -41,7 +38,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   TextEditingController groupNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
           backgroundColor: Colors.white,
@@ -52,8 +48,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               color: Colors.black,
             ),
             onPressed: () {
-              
-               Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
           ),
           centerTitle: true,
@@ -128,14 +123,34 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {
-                  ref.read(createGroupProvider).createGroup(groupNameController.text, image!);
-                  // ref.read(groupsProvider).createGroup(Group(
-                  //     name: groupNameController.text,
-                  //     groupImage:
-                  //         "assets/illustrations/techies_illustration.png"), image!);
-               
-                  Navigator.pop(context,);
+                onTap: () async {
+                  if (groupNameController.text.isNotEmpty) {
+                    setState(() {
+                      pressed = true;
+                    });
+                    final result = await ref
+                        .read(groupProvider)
+                        .createGroup(groupNameController.text, image!);
+                    // ref.read(groupsProvider).createGroup(Group(
+                    //     name: groupNameController.text,
+                    //     groupImage:
+                    //         "assets/illustrations/techies_illustration.png"), image!);
+                    if (result) {
+                      setState(() {
+                        pressed = false;
+                      });
+                      Navigator.pop(
+                        context,
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text('Group name can not be empty'),
+                    ));
+
+                    return;
+                  }
                 },
                 child: Container(
                   width: double.infinity,
@@ -152,17 +167,23 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                     color: const Color(0xffE78DFB),
                     border: Border.all(width: 2),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
                     child: Center(
-                      child: Text(
-                        'Create Group',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black, // Text color
-                        ),
-                      ),
+                      child: pressed
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Create Group',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black, // Text color
+                              ),
+                            ),
                     ),
                   ),
                 ),

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/screens/chat_screen.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 
 class EventsCard extends StatelessWidget {
-  const EventsCard({super.key});
+  const EventsCard({super.key, required this.event});
 
+
+final Event event;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,9 +37,9 @@ class EventsCard extends StatelessWidget {
                       AssetImage("assets/illustrations/smiley_face.png"),
                   radius: 15,
                 ),
-                title: const Text(
-                  'Football game',
-                  style: TextStyle(
+                title:  Text(
+                  event.title,
+                  style: const TextStyle(
                       fontFamily: 'inter',
                       fontWeight: FontWeight.w800,
                       fontSize: 24),
@@ -53,10 +56,10 @@ class EventsCard extends StatelessWidget {
                           color: ProjectColors.black, offset: Offset(2, 2))
                     ],
                   ),
-                  child: const Center(
+                  child:  Center(
                     child: Text(
-                      "May 20",
-                      style: TextStyle(
+                      event.startDate,
+                      style: const TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w600,
                       ),
@@ -65,21 +68,21 @@ class EventsCard extends StatelessWidget {
                 ),
               ),
               //location
-              const Padding(
-                padding: EdgeInsets.only(left: 16),
+               Padding(
+                padding: const EdgeInsets.only(left: 16),
                 child: Row(children: [
-                  DecoratedIcon(
+                  const DecoratedIcon(
                     icon: Icon(Icons.location_pin, color: ProjectColors.white),
                     decoration: IconDecoration(
                       border: IconBorder(width: 1, color: ProjectColors.black),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    'Teslim Balogun Stadium',
-                    style: TextStyle(
+                    event.location,
+                    style: const TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w700,
                         fontSize: 18),
@@ -90,21 +93,21 @@ class EventsCard extends StatelessWidget {
                 height: 5,
               ),
               //time
-              const Padding(
-                padding: EdgeInsets.only(left: 16),
+               Padding(
+                padding: const EdgeInsets.only(left: 16),
                 child: Row(children: [
-                  DecoratedIcon(
+                  const DecoratedIcon(
                     icon: Icon(Icons.timer, color: ProjectColors.white),
                     decoration: IconDecoration(
                         border:
                             IconBorder(width: 1, color: ProjectColors.black)),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
-                    'Friday 4 -7 PM',
-                    style: TextStyle(
+                    '${event.startTime} - ${event.endTime}',
+                    style: const TextStyle(
                       fontFamily: 'inter',
                       fontWeight: FontWeight.w600,
                     ),
@@ -202,7 +205,7 @@ class _InputFieldState extends State<InputField> {
                             builder: (context) => const CommentScreen(),
                           ),
                         );
-          }, icon:Icon( Icons.chevron_right))),
+          }, icon:const Icon( Icons.chevron_right))),
     );
   }
 }
