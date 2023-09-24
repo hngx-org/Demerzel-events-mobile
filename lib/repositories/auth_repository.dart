@@ -1,55 +1,98 @@
 import 'dart:convert';
-import 'dart:developer'; 
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
-import '../classes/user.dart';
+import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {
-  String baseUrl = 'https://api-s65g.onrender.com';
+  final LocalStorageService localStorageService;
 
-  Future<String> signin () async{
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+  AuthRepository({required this.localStorageService});
 
-    if (googleAuth != null) {
-      log(googleAuth.idToken!);
-      final response = await http.post(
-        Uri.parse('$baseUrl/api/auth/verify'),
-        body: jsonEncode(
-          {
-            'token': googleAuth.idToken
-          }
-        )
+  FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  Future<void> signInWithGoogle() async {
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
       );
-      if (response.statusCode == 200) {
-        log(jsonDecode(response.body)['data']['token']);
-        return jsonDecode(response.body)['data']['token'];
-            
-      } else {
-        log(response.statusCode.toString());
-        throw Exception('failed to initialize auth: ${response.statusCode}');
+
+      try {
+        final UserCredential userCredential =
+            await auth.signInWithCredential(credential);
+
+        final token = await userCredential.user!.getIdToken();
+
+        await signUpUserInBackend(token ?? '');
+      } catch (e) {
+        print(e);
       }
-
-    } else {
-      throw Exception('failed to sign in with google: gooogleAuthAccount = null');
     }
-    
-
   }
 
-  Future<User> getUser(String token) async{
-    final response = await http.get(Uri.parse('$baseUrl/api/users/current')).catchError((error){
-      throw Exception('failed to retrieve User : $error');
+  Future<void> signUpUserInBackend(String token) async {
+    final body = jsonEncode({
+      "token": token,
     });
-    
-    if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('failed to retrieve User : ${response.statusCode}');
+
+    final response = await http.post(
+      ApiRoutes.authGoogleURI,
+      body: body,
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      final String token = data['data']['token'];
+      await saveToken(token);
     }
+
+    final authHeader = await getAuthHeader();
+    print(authHeader);
   }
 
-  
+  Future<User> getUser() async {
+    return auth.currentUser!;
+  }
+
+  static const _user = 'userToken';
+
+  Future<void> saveToken(String token) async {
+    await localStorageService.saveToDisk(_user, token);
+  }
+
+  Future<String?> getToken() async {
+    final token = await localStorageService.getFromDisk(_user) as String?;
+    return 'Bearer $token';
+  }
+
+  Future<Map<String, String>> getAuthHeader() async{
+    final token = await getToken();
+    return {
+      'Authorization': token ?? '',
+    };
+  }
+
+  Future<void> removeToken() async {
+    await localStorageService.removeFromDisk(_user);
+  }
+
+  Future<void> signOut() async {
+    await googleSignIn.signOut();
+    await auth.signOut();
+    await removeToken();
+  }
+
+  static final provider = Provider<AuthRepository>((ref) => AuthRepository(
+      localStorageService: ref.read(LocalStorageService.provider)));
 }

@@ -1,14 +1,41 @@
-import 'package:flutter/material.dart';
-import 'package:hng_events_app/constants/colors.dart';
+import 'dart:io';
 
-class CreateGroup extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/constants/constants.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:svg_flutter/svg.dart';
+
+class CreateGroup extends ConsumerStatefulWidget {
   const CreateGroup({super.key});
 
   @override
-  State<CreateGroup> createState() => _CreateGroupState();
+  ConsumerState<CreateGroup> createState() => _CreateGroupState();
 }
 
-class _CreateGroupState extends State<CreateGroup> {
+class _CreateGroupState extends ConsumerState<CreateGroup> {
+  bool pressed = false;
+  String imagePath = '';
+  File? image;
+
+  _getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+        imagePath = File(pickedFile.path).path;
+        imagePath.split('/').last;
+      });
+    }
+  }
+
+  TextEditingController groupNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,47 +57,6 @@ class _CreateGroupState extends State<CreateGroup> {
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 22, color: Colors.black),
           )),
-      // bottomNavigationBar:Container(
-      //   decoration: const BoxDecoration(
-      //     borderRadius: BorderRadius.only(
-      //       bottomLeft: Radius.circular(20.0),
-      //       bottomRight: Radius.circular(20.0),
-      //     ),
-      //   ),
-      //   child: BottomNavigationBar(
-      //     items: const [
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.timeline),
-      //         label: 'Timeline',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.people_outline),
-      //         label: 'My People',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.calendar_month_outlined),
-      //         label: 'Calendar',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.settings),
-      //         label: 'Settings',
-      //       ),
-      //     ],
-      //     selectedItemColor: const Color(0xffE78DFB),
-      //     unselectedItemColor: Colors.grey,
-      //     selectedLabelStyle: const TextStyle(
-      //       fontWeight: FontWeight.bold,
-      //       fontSize: 14,
-      //     ),
-      //     unselectedLabelStyle: const TextStyle(
-      //       fontWeight: FontWeight.normal, // Custom style for unselected labels
-      //       fontSize: 12,
-      //     ),
-      //     showSelectedLabels: true, // Show labels for selected items
-      //     showUnselectedLabels: true, // Show labels for unselected items
-      //   ),
-      // )
-      // ,
       backgroundColor: const Color(0xffFFF8F5),
       body: SafeArea(
         child: Padding(
@@ -89,6 +75,7 @@ class _CreateGroupState extends State<CreateGroup> {
                 height: 8,
               ),
               TextField(
+                controller: groupNameController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: ProjectColors.white,
@@ -114,32 +101,57 @@ class _CreateGroupState extends State<CreateGroup> {
               const SizedBox(
                 height: 8,
               ),
-              TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: ProjectColors.white,
-                  hintStyle: const TextStyle(
-                    fontSize: 15,
-                  ),
-                  hintText: 'Select Image',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide:
-                        const BorderSide(color: Color(0xff84838B), width: 1.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  suffixIcon: InkWell(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.photo,
-                      color: ProjectColors.black,
+              InkWell(
+                onTap: () {
+                  _getFromGallery();
+                },
+                child: Container(
+                  height: 50,
+                  decoration: ProjectConstants.appBoxDecoration
+                      .copyWith(color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(imagePath.split('/').last),
+                        SvgPicture.asset(ProjectConstants.imagePicker),
+                      ],
                     ),
                   ),
                 ),
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {},
+                onTap: () async {
+                  if (groupNameController.text.isNotEmpty) {
+                    setState(() {
+                      pressed = true;
+                    });
+                    final result = await ref
+                        .read(groupProvider)
+                        .createGroup(groupNameController.text, image!);
+                    // ref.read(groupsProvider).createGroup(Group(
+                    //     name: groupNameController.text,
+                    //     groupImage:
+                    //         "assets/illustrations/techies_illustration.png"), image!);
+                    if (result) {
+                      setState(() {
+                        pressed = false;
+                      });
+                      Navigator.pop(
+                        context,
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      backgroundColor: Colors.red,
+                      content: Text('Group name can not be empty'),
+                    ));
+
+                    return;
+                  }
+                },
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -155,17 +167,23 @@ class _CreateGroupState extends State<CreateGroup> {
                     color: const Color(0xffE78DFB),
                     border: Border.all(width: 2),
                   ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
                     child: Center(
-                      child: Text(
-                        'Create Group',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black, // Text color
-                        ),
-                      ),
+                      child: pressed
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : const Text(
+                              'Create Group',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black, // Text color
+                              ),
+                            ),
                     ),
                   ),
                 ),

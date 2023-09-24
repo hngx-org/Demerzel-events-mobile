@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "hng_events_app" "\0"
+            VALUE "FileDescription", "demerzel_event_app" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "hng_events_app" "\0"
+            VALUE "InternalName", "demerzel_event_app" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "hng_events_app.exe" "\0"
-            VALUE "ProductName", "hng_events_app" "\0"
+            VALUE "OriginalFilename", "demerzel_event_app.exe" "\0"
+            VALUE "ProductName", "demerzel_event_app" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

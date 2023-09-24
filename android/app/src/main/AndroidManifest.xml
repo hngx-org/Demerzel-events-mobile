@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="hng_events_app"
+        android:label="demerzel_event_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

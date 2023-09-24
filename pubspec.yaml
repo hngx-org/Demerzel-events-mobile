@@ -2,7 +2,7 @@ name: hng_events_app
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.0 <4.0.0'
+  sdk: '>=3.0.6 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,7 +28,6 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
   flutter_screenutil: ^5.9.0
@@ -40,14 +39,17 @@ dependencies:
   shared_preferences: ^2.2.1
   jwt_decoder: ^2.0.1
   http: ^1.1.0
-  url_launcher: ^6.1.14
-  webview_flutter: ^4.2.4
   google_sign_in: ^6.1.5
   firebase_core: ^2.16.0
+  firebase_auth: ^4.10.0
+  dio: ^5.3.2
+  image_picker: ^1.0.4
+  cached_network_image: ^3.2.3
+  transparent_image: ^2.0.1
+  flutter_native_splash: ^2.3.2
 
 
 dev_dependencies:
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -57,11 +59,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_native_splash:
+  image: "assets/illustrations/splash_screen_icon.png"
+  color: "#FFF8F5"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -108,7 +113,7 @@ flutter:
       fonts:
         - asset: fonts/Lato/Lato-Bold.ttf
           weight: 700
-        
+
     # - family: Schyler
     #   fonts:
     #     - asset: fonts/Schyler-Regular.ttf

@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/riverpod/auth_provider.dart';
-import 'package:hng_events_app/screens/screen_util.dart';
+import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:hng_events_app/constants/colors.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends ConsumerWidget {
   const SignIn({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
 
-void login() {
-    // Login Logic Code here
-    
+    final authReader = ref.read(AuthRepository.provider);
 
-    Navigator.push(context, MaterialPageRoute(builder: (context){
-      return const ScreenUtilInitScreen();
-    }));
-  }
+
 
 
     return Scaffold(
@@ -62,12 +56,7 @@ void login() {
                       builder: (context, ref, child) {
                         return ElevatedButton(
                           onPressed: () {
-                            // Login Logic Code here
-                            // ref.read(authProvider.notifier).signin(context);
-
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                              return const ScreenUtilInitScreen();
-                            }));
+                            authReader.signInWithGoogle();
                           },
                           style: ElevatedButton.styleFrom(
                               backgroundColor: ProjectColors.purple,
