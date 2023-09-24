@@ -29,12 +29,7 @@ class AuthRepository {
       );
 
       try {
-        final UserCredential userCredential =
-            await auth.signInWithCredential(credential);
-
-        final token = await userCredential.user!.getIdToken();
-
-        await signUpUserInBackend(token ?? '');
+        await auth.signInWithCredential(credential);
       } catch (e) {
         print(e);
       }
@@ -73,13 +68,13 @@ class AuthRepository {
 
   Future<String?> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
-    return 'Bearer $token';
+    return token;
   }
 
-  Future<Map<String, String>> getAuthHeader() async{
+  Future<Map<String, String>> getAuthHeader() async {
     final token = await getToken();
     return {
-      'Authorization': token ?? '',
+      'Authorization': 'Bearer $token',
     };
   }
 

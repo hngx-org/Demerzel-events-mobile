@@ -4,20 +4,19 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/models/event_model.dart';
-import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 import 'package:svg_flutter/svg.dart';
 
 class CommentPageCard extends ConsumerStatefulWidget {
-  final String eventTitle, dateAndTime, location, day;
   final Event event;
+  final bool joined;
+  final void Function()? onSubscribe;
   const CommentPageCard({
     super.key,
-    required this.eventTitle,
-    required this.dateAndTime,
-    required this.location,
-    required this.day,
     required this.event,
+    required this.joined,
+    this.onSubscribe,
   });
 
   @override
@@ -27,7 +26,6 @@ class CommentPageCard extends ConsumerStatefulWidget {
 class _CommentPageCardState extends ConsumerState<CommentPageCard> {
   @override
   Widget build(BuildContext context) {
-    final eventNotifier = ref.watch(EventProvider.provider);
 
     bool? isChecked = false;
     return Container(
@@ -49,7 +47,7 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     width: MediaQuery.sizeOf(context).width * 0.02,
                   ),
                   Text(
-                    widget.eventTitle,
+                    widget.event.title,
                     style: mediumTextStyle,
                   ),
                   SizedBox(
@@ -62,7 +60,8 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
-                        widget.day,
+                        DateFormatter.formatDateDayAndMonth(
+                            widget.event.startDate),
                         style: normalTextStyle,
                       ),
                     ),
@@ -79,7 +78,7 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     width: MediaQuery.sizeOf(context).width * 0.02,
                   ),
                   Text(
-                    widget.location,
+                    widget.event.location,
                     style: greyTextStyle,
                   ),
                 ],
@@ -94,33 +93,30 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     width: MediaQuery.sizeOf(context).width * 0.02,
                   ),
                   Text(
-                    widget.dateAndTime,
+                    '${widget.event.startTime} - ${widget.event.endTime}',
                     style: greyTextStyle,
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Checkbox(
-                      value: isChecked,
-                      onChanged: (value) {
-                        setState(() {
-                          isChecked = value;
-                        });
-                      }),
-                  const Text('Check box to invite to Techies'),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Checkbox(
+              //         value: isChecked,
+              //         onChanged: (value) {
+              //           setState(() {
+              //             isChecked = value;
+              //           });
+              //         }),
+              //     const Text('Check box to invite to Techies'),
+              //   ],
+              // ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Visibility(
-                  visible: !eventNotifier.userEvents
-                      .any((element) => element.id == widget.event.id),
-                  replacement: const Text('Already Joined 👍🏼'),
+                  visible: widget.joined,
+                  replacement: const Center(child: Text('Already Joined 👍🏼')),
                   child: NeuTextButton(
-                    onPressed: () {
-                      eventNotifier.subscribeToEvent(widget.event.id);
-                    },
+                    onPressed: widget.onSubscribe,
                     buttonColor: ProjectColors.purple,
                     buttonHeight: 40,
                     borderRadius: BorderRadius.circular(5),

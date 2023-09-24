@@ -7,6 +7,7 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/comment_card.dart';
 import 'package:hng_events_app/widgets/date_card.dart';
@@ -61,6 +62,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
   @override
   Widget build(BuildContext context) {
     final commentNotifier = ref.watch(CommentProvider.provider);
+    final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,114 +81,123 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
           ),
         ),
       ),
-      body: SizedBox(
-        height: MediaQuery.sizeOf(context).height,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Center(child: DateCard()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: CommentPageCard(
-                        eventTitle: widget.event.title,
-                        event: widget.event,
-                        dateAndTime:
-                            '${widget.event.startTime} - ${widget.event.endTime}',
-                        location: widget.event.location,
-                        day: DateFormatter.formatDateDayAndMonth(
-                            widget.event.startDate),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
+      body: Visibility(
+        visible: !commentNotifier.isBusy,
+        replacement: const Center(
+          child: CircularProgressIndicator(),
+        ),
+        child: SizedBox(
+          height: MediaQuery.sizeOf(context).height,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Center(child: DateCard()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: CommentPageCard(
+                          event: widget.event,
+                          joined: !eventNotifier.userEvents
+                              .any((element) => element.id == widget.event.id),
+                          onSubscribe: () async {
+                            await eventNotifier
+                                .subscribeToEvent(widget.event.id);
+                            await eventNotifier.getUserEvent();
+                            await commentNotifier
+                                .getEventComments(widget.event.id);
+                          },
                         ),
-                        itemCount: commentNotifier.comments.length,
-                        itemBuilder: (context, index) {
-                          return ChatCard(
-                            userName:
-                                commentNotifier.comments[index].creator.name,
-                            text: commentNotifier.comments[index].body,
-                            profilePic:
-                                commentNotifier.comments[index].creator.avatar,
-                            chatPicture: commentNotifier
-                                    .comments[index].images.isNotEmpty
-                                ? commentNotifier.comments[index].images[0]
-                                : null,
-                          );
-                        },
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            height: 10,
+                          ),
+                          itemCount: commentNotifier.comments.length,
+                          itemBuilder: (context, index) {
+                            return ChatCard(
+                              userName:
+                                  commentNotifier.comments[index].creator.name,
+                              text: commentNotifier.comments[index].body,
+                              profilePic: commentNotifier
+                                  .comments[index].creator.avatar,
+                              chatPicture: commentNotifier
+                                      .comments[index].images.isNotEmpty
+                                  ? commentNotifier.comments[index].images[0]
+                                  : null,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                height: 80,
-                child: Column(
-                  children: [
-                    Text(imagePath.split('/').last),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          InkWell(
-                            onTap: _getFromGallery,
-                            child: SvgPicture.asset(
-                              ProjectConstants.imagePicker,
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: 80,
+                  child: Column(
+                    children: [
+                      Text(imagePath.split('/').last),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: _getFromGallery,
+                              child: SvgPicture.asset(
+                                ProjectConstants.imagePicker,
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width * 0.7,
-                            height: 45,
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
-                              controller: controller,
-                              decoration: InputDecoration(
-                                hintText: 'Type a message here',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.7,
+                              height: 45,
+                              child: TextField(
+                                textAlignVertical: TextAlignVertical.center,
+                                controller: controller,
+                                decoration: InputDecoration(
+                                  hintText: 'Type a message here',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () {
-                              commentNotifier
-                                  .createComment(
-                                      controller.text, widget.event.id, image)
-                                  .then((value) => {controller.clear()});
-                            },
-                            child: const Icon(
-                              Icons.send,
-                              color: ProjectColors.grey,
+                            const SizedBox(
+                              width: 10,
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: () {
+                                commentNotifier
+                                    .createComment(
+                                        controller.text, widget.event.id, image)
+                                    .then((value) => {controller.clear()});
+                              },
+                              child: const Icon(
+                                Icons.send,
+                                color: ProjectColors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
