@@ -19,9 +19,7 @@ class _CalCardState extends ConsumerState<CalCard> {
 
   @override
   void initState() {
-    ref
-        .read(EventController.provider)
-        .getEventByDate(DateFormat("yyyy-mm-dd").format(_focusedDay));
+    ref.read(EventProvider.provider.notifier).getEventByDate(DateTime.now());
     super.initState();
   }
 
@@ -58,9 +56,9 @@ class _CalCardState extends ConsumerState<CalCard> {
                     });
                   }
 
-                  ref.read(EventController.provider).getEventByDate(
-                        DateFormat("yyyy-mm-dd").format(_focusedDay),
-                      );
+                  ref
+                      .read(EventProvider.provider)
+                      .getEventByDate(_selectedDay!);
                 },
                 onPageChanged: (focusedDay) {
                   // No need to call `setState()` here

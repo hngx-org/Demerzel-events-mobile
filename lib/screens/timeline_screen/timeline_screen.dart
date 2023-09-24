@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/everyone_screen.dart';
-import 'package:hng_events_app/widgets/app_header.dart';
+import 'package:hng_events_app/screens/timeline_screen/friends_screen.dart';
 
 class TimelineScreen extends StatefulWidget {
   const TimelineScreen({super.key});
@@ -19,8 +19,30 @@ class _TimelineScreenState extends State<TimelineScreen> {
       length: 2,
       child: Scaffold(
         backgroundColor: const Color(0xFFFFF8F5),
-        appBar: const AppHeader(title: 'Everyone', backButton: false),
-        body: const EveryoneScreen(),
+        appBar: AppBar(
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                child: Text(
+                  "All Events",
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "My Events",
+                  style: TextStyle(fontSize: 20, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            EveryoneScreen(),
+            MyEventScreen(),
+          ],
+        ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(

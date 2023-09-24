@@ -55,7 +55,7 @@ class Event {
   final String endTime;
   final String createdAt;
   final String updatedAt;
-  final Creator creator;
+  final Creator? creator;
 
   Event({
     required this.id,
@@ -70,7 +70,7 @@ class Event {
     required this.endTime,
     required this.createdAt,
     required this.updatedAt,
-    required this.creator,
+    this.creator,
   });
 
   factory Event.fromMap(Map<String, dynamic> json) => Event(
@@ -86,7 +86,8 @@ class Event {
         endTime: json["end_time"],
         createdAt: json["created_at"],
         updatedAt: json["updated_at"],
-        creator: Creator.fromMap(json["creator"]),
+        creator:
+            json["creator"] == null ? null : Creator.fromMap(json["creator"]),
       );
 
   Map<String, dynamic> toMap() => {
@@ -102,7 +103,7 @@ class Event {
         "end_time": endTime,
         "created_at": createdAt,
         "updated_at": updatedAt,
-        "creator": creator.toMap(),
+        "creator": creator?.toMap(),
       };
 }
 
@@ -126,13 +127,13 @@ class Creator {
   });
 
   factory Creator.fromMap(Map<String, dynamic> json) => Creator(
-        id: json["id"],
-        name: json["name"],
-        email: json["email"],
-        avatar: json["avatar"],
-        events: json["Events"],
-        interestedEvents: json["InterestedEvents"],
-        userGroup: json["user_group"],
+        id: json["id"] ?? '',
+        name: json["name"] ?? '',
+        email: json["email"] ?? '',
+        avatar: json["avatar"] ?? '',
+        events: json["Events"] ?? '',
+        interestedEvents: json["InterestedEvents"] ?? '',
+        userGroup: json["user_group"] ?? '',
       );
 
   Map<String, dynamic> toMap() => {

@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/models/event_model.dart';
-import 'package:hng_events_app/screens/chat_screen.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:icon_decoration/icon_decoration.dart';
 
-class EventsCard extends StatelessWidget {
+class EventsCard extends ConsumerWidget {
   const EventsCard({super.key, required this.event});
 
-
-final Event event;
+  final Event event;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventNotifier = ref.watch(EventProvider.provider);
     return SafeArea(
       child: Material(
         child: Container(
@@ -32,12 +35,18 @@ final Event event;
             children: [
               //football game listile
               ListTile(
-                leading: const CircleAvatar(
-                  backgroundImage:
-                      AssetImage("assets/illustrations/smiley_face.png"),
-                  radius: 15,
-                ),
-                title:  Text(
+                leading: event.thumbnail.isEmpty
+                    ? const CircleAvatar(
+                        backgroundImage:
+                            AssetImage("assets/illustrations/smiley_face.png"),
+                        radius: 15,
+                      )
+                    : CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(event.thumbnail),
+                        radius: 15,
+                      ),
+                title: Text(
                   event.title,
                   style: const TextStyle(
                       fontFamily: 'inter',
@@ -56,9 +65,9 @@ final Event event;
                           color: ProjectColors.black, offset: Offset(2, 2))
                     ],
                   ),
-                  child:  Center(
+                  child: Center(
                     child: Text(
-                      event.startDate,
+                      DateFormatter.formatDateDayAndMonth(event.startDate),
                       style: const TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w600,
@@ -68,7 +77,7 @@ final Event event;
                 ),
               ),
               //location
-               Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Row(children: [
                   const DecoratedIcon(
@@ -93,7 +102,7 @@ final Event event;
                 height: 5,
               ),
               //time
-               Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Row(children: [
                   const DecoratedIcon(
@@ -118,10 +127,13 @@ final Event event;
                 height: 8,
               ),
               //button widget
-              Button(
-                onPressed: () {
-                 
-                },
+              Visibility(
+                visible: eventNotifier.userEvents
+                    .any((element) => element.id == event.id),
+                replacement: JoinButton(
+                  onPressed: () => eventNotifier.subscribeToEvent(event.id),
+                ),
+                child: const Text('Already Subscribed 👍🏼'),
               ),
               const SizedBox(
                 height: 16,
@@ -129,7 +141,9 @@ final Event event;
               const Divider(height: 0, thickness: 2, color: ProjectColors.grey),
 
               //inpuField widget
-              const InputField()
+              InputField(
+                event: event,
+              )
             ],
           ),
         ),
@@ -139,8 +153,8 @@ final Event event;
 }
 
 //button widget add gesture detector to add functionality
-class Button extends StatelessWidget {
-  const Button({super.key, required this.onPressed});
+class JoinButton extends StatelessWidget {
+  const JoinButton({super.key, required this.onPressed});
   final VoidCallback onPressed;
   @override
   Widget build(BuildContext context) {
@@ -178,7 +192,8 @@ class Button extends StatelessWidget {
 
 //inutfield widget
 class InputField extends StatefulWidget {
-  const InputField({super.key});
+  final Event event;
+  const InputField({super.key, required this.event});
 
   @override
   State<InputField> createState() => _InputFieldState();
@@ -191,21 +206,19 @@ class _InputFieldState extends State<InputField> {
       padding: const EdgeInsets.all(0),
       child: ListTile(
           leading: const Icon(Icons.comment),
+          onTap: () =>  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommentScreen(
+                      event: widget.event,
+                    ),
+                  ),
+                ),
           title: SizedBox(
             width: MediaQuery.of(context).size.width * 0.2,
-            child: const TextField(
-              decoration: InputDecoration(
-                  hintText: 'Leave a comment', border: InputBorder.none),
-            ),
+            child: const Text('Leave a comment')
           ),
-          trailing:  IconButton(onPressed: (){
-            Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CommentScreen(),
-                          ),
-                        );
-          }, icon:const Icon( Icons.chevron_right))),
+          trailing: const Icon(Icons.chevron_right)),
     );
   }
 }

@@ -6,9 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/group_repository.dart';
 
-class CreateGroupHandler extends ChangeNotifier {
+class GroupProvider extends ChangeNotifier {
   final GroupRepository groupRepo;
-  CreateGroupHandler({required this.groupRepo}){
+  GroupProvider({required this.groupRepo}){
    groupsProvider();
   }
 
@@ -27,7 +27,7 @@ class CreateGroupHandler extends ChangeNotifier {
 
     try {
       await groupRepo.createGroup(name, image);
-      await groupRepo.getAllGroups();
+     groups = await groupRepo.getAllGroups();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -62,8 +62,8 @@ class CreateGroupHandler extends ChangeNotifier {
   }
 }
 
-final groupProvider = ChangeNotifierProvider<CreateGroupHandler>(
-  (ref) => CreateGroupHandler(
+final groupProvider = ChangeNotifierProvider<GroupProvider>(
+  (ref) => GroupProvider(
     groupRepo: ref.read(GroupRepository.provider),
   ),
 );

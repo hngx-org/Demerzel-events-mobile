@@ -16,9 +16,6 @@ class GroupRepository {
     return GroupRepository(authRepository: authRepository);
   });
 
-  List<Group> _groups = [];
-  List<Group> get groups => _groups;
-
   Future<List<Group>> getAllGroups() async {
     final header = await authRepository.getAuthHeader();
 
@@ -27,13 +24,12 @@ class GroupRepository {
           .get(ApiRoutes.groupURI, headers: header)
           .timeout(const Duration(seconds: 60));
 
-      // await Future.delayed(const Duration(seconds: 2));
+      log(response.body);
+      
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
         GroupListModel groupListModel = GroupListModel.fromJson(data);
-        _groups = groupListModel.groups;
-        return _groups;
-        //GetGroupModel.fromMap(data);
+        return groupListModel.groups;
       } else {
         throw response.reasonPhrase ?? response.body;
       }

@@ -9,17 +9,22 @@ import '../repositories/event_repository.dart';
 
 
 
-class EventController extends ChangeNotifier {
+class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
-  EventController({required this.eventRepository}){
+  EventProvider({required this.eventRepository}){
     getAllEvent();
+    getUserEvent();
   }
 
   GetListEventModel? events;
+  GetListEventModel? eventsByDate;
   GetListEventModel? allEvents;
+  GetListEventModel? allGroupEvents;
+  List<Event> userEvents = [];
 
-  static final provider = ChangeNotifierProvider<EventController>((ref) {
-    return EventController(eventRepository: ref.read(EventRepository.provider));
+
+  static final provider = ChangeNotifierProvider<EventProvider>((ref) {
+    return EventProvider(eventRepository: ref.read(EventRepository.provider));
   });
 
   bool _isBusy = false;
@@ -27,6 +32,30 @@ class EventController extends ChangeNotifier {
 
   String _error = "";
   String get error => _error;
+
+
+   Future<void> getUserEvent() async{
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      final result = await eventRepository.getAllUserEvents();
+      userEvents = result;
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+   }
+
+
 
   Future<void> getAllEvent() async {
     _isBusy = true;
@@ -49,7 +78,51 @@ class EventController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getEventByDate(String date) async {
+  Future<void> subscribeToEvent(String eventId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await eventRepository.subscribeToEvent(eventId);
+      await getAllEvent();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
+
+
+
+  Future<void> getAllGroupEvent(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      final result = await eventRepository.getAllGroupEvent(groupId);
+      allGroupEvents = result;
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
+
+
+  Future<void> getEventByDate(DateTime date) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -57,7 +130,7 @@ class EventController extends ChangeNotifier {
     try {
       final result = await eventRepository.getEventsByDate(date);
 
-      events = result;
+      eventsByDate = result;
     } catch (e, s) {
       log(e.toString());
       log(s.toString());

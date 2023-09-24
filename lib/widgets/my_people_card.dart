@@ -9,12 +9,14 @@ class MyPeopleCard extends StatelessWidget {
     required this.image,
     required this.bubbleVisible,
     required this.onPressed,
+    required this.eventLength,
   });
 
   final String title;
   final String image;
   final bool bubbleVisible;
   final VoidCallback onPressed;
+  final int eventLength;
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +87,9 @@ class MyPeopleCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                     color: ProjectColors.purple,
                   ),
-                  child: const Text(
-                    "2 events",
-                    style: TextStyle(
+                  child:  Text(
+                    "$eventLength events",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
                     ),

@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/models/event_model.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 import 'package:svg_flutter/svg.dart';
 
-class CommentPageCard extends StatefulWidget {
+class CommentPageCard extends ConsumerStatefulWidget {
   final String eventTitle, dateAndTime, location, day;
+  final Event event;
   const CommentPageCard({
     super.key,
     required this.eventTitle,
     required this.dateAndTime,
     required this.location,
     required this.day,
+    required this.event,
   });
 
   @override
-  State<CommentPageCard> createState() => _CommentPageCardState();
+  ConsumerState<CommentPageCard> createState() => _CommentPageCardState();
 }
 
-class _CommentPageCardState extends State<CommentPageCard> {
+class _CommentPageCardState extends ConsumerState<CommentPageCard> {
   @override
   Widget build(BuildContext context) {
+    final eventNotifier = ref.watch(EventProvider.provider);
+
     bool? isChecked = false;
     return Container(
       decoration: ProjectConstants.appBoxDecoration.copyWith(),
@@ -38,12 +45,16 @@ class _CommentPageCardState extends State<CommentPageCard> {
                     height: 20,
                     width: 20,
                   ),
-                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.02,
+                  ),
                   Text(
                     widget.eventTitle,
                     style: mediumTextStyle,
                   ),
-                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.25,),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.25,
+                  ),
                   Container(
                     decoration: ProjectConstants.appBoxDecoration.copyWith(
                         color: Colors.white,
@@ -64,20 +75,24 @@ class _CommentPageCardState extends State<CommentPageCard> {
               Row(
                 children: [
                   SvgPicture.asset(ProjectConstants.locationIcon),
-                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.02,
+                  ),
                   Text(
                     widget.location,
                     style: greyTextStyle,
                   ),
                 ],
-              ),const SizedBox(
+              ),
+              const SizedBox(
                 height: 5,
               ),
-
               Row(
                 children: [
                   SvgPicture.asset(ProjectConstants.clockIcon),
-                  SizedBox(width: MediaQuery.sizeOf(context).width * 0.02,),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.02,
+                  ),
                   Text(
                     widget.dateAndTime,
                     style: greyTextStyle,
@@ -98,25 +113,26 @@ class _CommentPageCardState extends State<CommentPageCard> {
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
-                child: NeuTextButton(
-                  onPressed: () {},
-                  buttonColor: ProjectColors.purple,
-                  buttonHeight: 40,
-                  borderRadius: BorderRadius.circular(5),
-                  // style: ElevatedButton.styleFrom(
-                  //     backgroundColor: ProjectColors.purple,
-                  //     elevation: 5,
-                  //     shape: RoundedRectangleBorder(
-                  //         borderRadius: BorderRadius.circular(5)),
-                  //     padding: const EdgeInsets.symmetric(vertical: 9)),
-                  child: const Center(
-                    child: Text(
-                      'Share',
-                      style: TextStyle(
-                        //fontFamily: 'NotoSans',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                        color: ProjectColors.black,
+                child: Visibility(
+                  visible: !eventNotifier.userEvents
+                      .any((element) => element.id == widget.event.id),
+                  replacement: const Text('Already Joined 👍🏼'),
+                  child: NeuTextButton(
+                    onPressed: () {
+                      eventNotifier.subscribeToEvent(widget.event.id);
+                    },
+                    buttonColor: ProjectColors.purple,
+                    buttonHeight: 40,
+                    borderRadius: BorderRadius.circular(5),
+                    child: const Center(
+                      child: Text(
+                        'I will join',
+                        style: TextStyle(
+                          //fontFamily: 'NotoSans',
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: ProjectColors.black,
+                        ),
                       ),
                     ),
                   ),

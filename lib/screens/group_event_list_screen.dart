@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/models/group.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
-class EventsScreen extends StatelessWidget {
+class EventsScreen extends ConsumerStatefulWidget {
   const EventsScreen({
     super.key,
     required this.group,
@@ -14,10 +17,24 @@ class EventsScreen extends StatelessWidget {
   final Group group;
 
   @override
+  ConsumerState<EventsScreen> createState() => _EventsScreenState();
+}
+
+class _EventsScreenState extends ConsumerState<EventsScreen> {
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      ref.read(EventProvider.provider.notifier).getAllGroupEvent(widget.group.id);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: AppHeader(title: group.name),
+      appBar: AppHeader(title: widget.group.name),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,7 +57,7 @@ class EventsScreen extends StatelessWidget {
               // flex: 6,
               child: SizedBox(
                 height: 400,
-                child: group.events.isEmpty
+                child: (eventNotifier.allEvents?.data.events ?? []).isEmpty
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -48,10 +65,13 @@ class EventsScreen extends StatelessWidget {
                         ],
                       )
                     : ListView.builder(
-                        itemCount: group.events.length,
+                        itemCount:
+                            eventNotifier.allEvents?.data.events.length ??
+                                0,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
-                          event: group.events[index],
+                          event:
+                              eventNotifier.allEvents!.data.events[index],
                         ),
                       ),
               ),
@@ -60,7 +80,7 @@ class EventsScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: NeuIconButton(
-        icon: Icon(Icons.add),
+        icon: const Icon(Icons.add),
         borderRadius: BorderRadius.circular(50),
         buttonColor: ProjectColors.purple,
         onPressed: () => Navigator.push(
@@ -73,9 +93,3 @@ class EventsScreen extends StatelessWidget {
     );
   }
 }
-
-
-  // EventsCard(),
-  //                   EventsCard(),
-  //                   EventsCard(),
-  //                   EventsCard(),

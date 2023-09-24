@@ -1,12 +1,16 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/constants/constants.dart';
+import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
-import 'package:hng_events_app/screens/select_group.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key});
@@ -17,6 +21,7 @@ class CreateEvents extends ConsumerStatefulWidget {
 
 class _CreateEventsState extends ConsumerState<CreateEvents> {
   TextEditingController titleController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   DateTime? startDate;
   DateTime? endDate;
@@ -25,9 +30,16 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   String? groupName;
   bool isLoading = false;
 
+  String imagePath = '';
+  File? image;
+
+  Group? selectedGroup;
+
   bool isFormValid() =>
       titleController.text.isNotEmpty &&
       bodyController.text.isNotEmpty &&
+      locationController.text.isNotEmpty &&
+      selectedGroup != null &&
       startDate != null &&
       startTime != null &&
       endDate != null &&
@@ -69,10 +81,28 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     }
   }
 
+  _getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        image = File(pickedFile.path);
+        imagePath = File(pickedFile.path).path;
+        imagePath.split('/').last;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.watch(groupProvider);
-   final  eventNotifier = ref.watch(EventController.provider);
+
+    final eventNotifier = ref.watch(EventProvider.provider);
+    final groupsNotifier = ref.watch(groupProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ProjectColors.white,
@@ -122,6 +152,27 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: locationController,
+                  cursorColor: ProjectColors.black,
+                  textAlignVertical: TextAlignVertical.top,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    fillColor: ProjectColors.white,
+                    labelText: 'Add a Location',
+                    labelStyle:
+                        TextStyle(color: ProjectColors.black, fontSize: 15),
+                    alignLabelWithHint: true,
+                    hintText: 'Type The Location of the Event',
+                    hintStyle: TextStyle(fontSize: 15),
+                    border: OutlineInputBorder(borderSide: BorderSide()),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
+                  ),
+                  onChanged: (value) => setState(() {}),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Stack(
                   children: [
                     TextField(
@@ -157,14 +208,32 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       ),
                       onChanged: (value) => setState(() {}),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      child: IconButton(
-                        icon: const Icon(Icons.image),
-                        onPressed: () {},
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: InkWell(
+                  onTap: () {
+                    _getFromGallery();
+                  },
+                  child: Container(
+                    height: 50,
+                    decoration: ProjectConstants.appBoxDecoration
+                        .copyWith(color: Colors.white),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(imagePath.split('/').last.isEmpty
+                              ? 'Add a Image'
+                              : imagePath.split('/').last),
+                          SvgPicture.asset(ProjectConstants.imagePicker),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
               Padding(
@@ -353,71 +422,46 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       child: Row(
                         children: [
                           const Icon(
-                            Icons.location_on,
-                            color: ProjectColors.purple,
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Add a Location',
-                              style: TextStyle(
-                                color: ProjectColors.black,
-                                fontSize: 18,
-                                fontFamily: 'NotoSans',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.group_add,
-                            color: ProjectColors.purple,
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              'Create a group',
-                              style: TextStyle(
-                                color: ProjectColors.black,
-                                fontFamily: 'NotoSans',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
                             Icons.group,
                             color: ProjectColors.purple,
                           ),
-                          TextButton(
-                            onPressed: () async {
-                              groupName = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SelectGroup(),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: DropdownButton<Group>(
+                                value: selectedGroup,
+
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    selectedGroup = newValue;
+                                  });
+                                },
+                                items: groupsNotifier.groups.map((group) {
+                                  return DropdownMenuItem(
+                                    value: group,
+                                    child: Text(
+                                      group.name,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                hint: const Text(
+                                  'Select a Group',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                  ),
+                                ), // Optional hint text
+                                isExpanded:
+                                    true, // Makes the dropdown button expand to the available width
+                                underline: Container(
+                                  height:
+                                      1, // Add an underline with custom styling
+                                  color: Colors.black,
                                 ),
-                              );
-                            },
-                            child: const Text(
-                              'Select Groups',
-                              style: TextStyle(
-                                color: ProjectColors.black,
-                                fontFamily: 'NotoSans',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -486,7 +530,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     );
   }
 
-  Future<void> uploadEvent(EventController eventController) async {
+  Future<void> uploadEvent(EventProvider eventController) async {
     if (isFormValid() == false) return;
 
     try {
@@ -494,15 +538,15 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       setState(() {});
 
       final body = {
-        "thumbnail":
-            "https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80",
-        "location": "Uyo, Nigeria",
+        "image": image,
+        "location": locationController.text,
         "title": titleController.text,
         "description": bodyController.text,
         "start_date": DateFormat("yyyy-MM-dd").format(startDate!),
         "end_date": DateFormat("yyyy-MM-dd").format(endDate!),
         "start_time": "${startTime?.hour}:${startTime?.minute}",
         "end_time": "${endTime?.hour}:${endTime?.minute}",
+        "group_id": [selectedGroup!.id],
       };
 
       await eventController.createEvent(body);

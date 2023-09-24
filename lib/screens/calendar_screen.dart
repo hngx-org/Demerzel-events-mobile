@@ -1,20 +1,21 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
-import 'package:intl/intl.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/widgets/calendar_widget.dart';
-
 
 class CalendarPage extends ConsumerWidget {
   const CalendarPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final eventProvider = ref.watch(EventController.provider);
+    final eventProvider = ref.watch(EventProvider.provider);
 
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
@@ -52,7 +53,7 @@ class CalendarPage extends ConsumerWidget {
               visible: eventProvider.error.isNotEmpty,
               child: GestureDetector(
                 onTap: () => eventProvider.getEventByDate(
-                  DateFormat("yyyy-mm-dd").format(DateTime.now()),
+                  DateTime.now(),
                 ),
                 child: const Text(
                   "Tap to Retry",
@@ -73,7 +74,7 @@ class CalendarPage extends ConsumerWidget {
                     const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () => eventProvider.getEventByDate(
-                        DateFormat("yyyy-mm-dd").format(DateTime.now()),
+                        DateTime.now(),
                       ),
                       child: const Text(
                         "Tap to Retry",
@@ -88,15 +89,29 @@ class CalendarPage extends ConsumerWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   // physics: const ,
-                  itemCount: eventProvider.events?.data.events.length ?? 0,
+                  itemCount:
+                      eventProvider.eventsByDate?.data.events.length ?? 0,
                   itemBuilder: (context, index) {
-                    final event = eventProvider.events?.data.events[index];
+                    final event =
+                        eventProvider.eventsByDate?.data.events[index];
 
-                    return EventCard(
-                      eventTitle: event?.title ?? "N/A",
-                      startTime: event?.startTime ?? "N/A",
-                      location: event?.location ?? "N/A",
-                      endTime: event?.endTime ?? "N/A",
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CommentScreen(
+                                event: event!,
+                              ),
+                            )),
+                        child: EventCard(
+                          eventTitle: event?.title ?? "N/A",
+                          startTime: event?.startTime ?? "N/A",
+                          location: event?.location ?? "N/A",
+                          endTime: event?.endTime ?? "N/A",
+                        ),
+                      ),
                     );
                   },
                 ),

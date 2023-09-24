@@ -105,6 +105,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                 return MyPeopleCard(
                     title: currentGroup.name,
                     image: currentGroup.image,
+                    eventLength: currentGroup.events.length,
                     bubbleVisible: true,
                     onPressed: () {
                       Navigator.push(

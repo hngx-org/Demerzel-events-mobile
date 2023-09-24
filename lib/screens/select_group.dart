@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
-import 'package:hng_events_app/repositories/group_repository.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
 
 class SelectGroup extends ConsumerWidget {
   const SelectGroup({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groupsNotifier = ref.watch(GroupRepository.provider);
+    final groupsNotifier = ref.watch(groupProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
