@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "425241698743-nvrtsbcaniipkfcp997nslksifhubkf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demerzel_event_app",
+            "certificate_hash": "ccec7bfbda6fcb349eed58e1149be23bf247b068"
+          }
+        },
+        {
           "client_id": "425241698743-pgshb7ge0qf4r2ka4nhenafkb77g3em5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

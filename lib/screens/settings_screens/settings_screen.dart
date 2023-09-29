@@ -6,10 +6,11 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
+import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
 
 import 'package:svg_flutter/svg.dart';
 
-import '../constants/colors.dart';
+import '../../constants/colors.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -19,9 +20,9 @@ class SettingsPage extends ConsumerWidget {
     final userRef = ref.watch(UserProvider.notifier);
       final authRef = ref.read(AuthRepository.provider);
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
+      // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
-        backgroundColor: ProjectColors.white,
+        // backgroundColor: ProjectColors.white,
         centerTitle: false,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4.0),
@@ -29,16 +30,16 @@ class SettingsPage extends ConsumerWidget {
               height: 1,
               color: Colors.black,
             )),
-        title: const Text(
+        title: Text(
           'Settings',
-          style: appBarTextStyle,
+          style: appBarTextStyle.copyWith(),
         ),
         actions: [
           IconButton(
             onPressed: () {},
             icon: const Icon(
               Icons.more_vert,
-              color: ProjectColors.black,
+              // color: ProjectColors.black,
             ),
           ),
         ],
@@ -55,7 +56,7 @@ class SettingsPage extends ConsumerWidget {
                 child: Consumer(
                   builder: (context, ref, child) {
                     return ListTile(
-                      tileColor: Colors.white,
+                      tileColor: Theme.of(context).cardColor,
                       leading: CircleAvatar(
                           child: Image.asset(ProjectConstants.profileImage)),
                       title: Text(
@@ -65,7 +66,9 @@ class SettingsPage extends ConsumerWidget {
                       subtitle: Text(
                          userRef.user?.email ?? 'salome357@gmail.com',
                         style: greyTextStyle.copyWith(
-                            fontSize: 17, fontWeight: FontWeight.w700),
+                            fontSize: 17,
+                            overflow: TextOverflow.ellipsis, 
+                            fontWeight: FontWeight.w700),
                       ),
                       trailing: SvgPicture.asset(ProjectConstants.rightChevron),
                     );
@@ -91,7 +94,13 @@ class SettingsPage extends ConsumerWidget {
                   SettingItem(
                     title: 'Appearance',
                     leading: ProjectConstants.appearanceIcon,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context)=> const ThemeSettingScreen()
+                        )
+                      );
+                    },
                   ),
                   SettingItem(
                     title: 'Language and Region',
@@ -126,7 +135,7 @@ class SettingsPage extends ConsumerWidget {
               onTap:authRef.signOut,
               child: Row(
                 children: [
-                  SvgPicture.asset(ProjectConstants.logoutIcon),
+                  SvgPicture.asset(ProjectConstants.logoutIcon, color: Theme.of(context).colorScheme.primary,),
                   const SizedBox(
                     width: 10,
                   ),
@@ -164,13 +173,13 @@ class SettingItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: ListTile(
-        tileColor: Colors.white,
-        leading: SvgPicture.asset(leading),
+        // tileColor: Colors.white,
+        leading: SvgPicture.asset(leading, color: Theme.of(context).colorScheme.primary,),
         title: Text(
           title,
           style: settingsItemTextStyle,
         ),
-        trailing: SvgPicture.asset(ProjectConstants.rightChevron),
+        trailing: const Icon(Icons.chevron_right),
         shape: shape,
         onTap: onPressed,
       ),

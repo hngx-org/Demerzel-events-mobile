@@ -18,20 +18,26 @@ class _TimelineScreenState extends State<TimelineScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFF8F5),
+        // backgroundColor: const Color(0xFFFFF8F5),
         appBar: AppBar(
           bottom: const TabBar(
             tabs: [
               Tab(
                 child: Text(
                   "All Events",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 20, 
+                    // color: Colors.black
+                    ),
                 ),
               ),
               Tab(
                 child: Text(
                   "My Events",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 20, 
+                    // color: Colors.black
+                    ),
                 ),
               ),
             ],
@@ -46,7 +52,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(
-              backgroundColor: ProjectColors.purple,
+              // backgroundColor: ProjectColors.purple,
               shape: const CircleBorder(),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -57,18 +63,18 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 height: 70.r,
                 width: 70.r,
                 decoration: BoxDecoration(
-                    color: ProjectColors.purple,
+                    color: Theme.of(context).primaryColor,
                     borderRadius: BorderRadius.all(Radius.circular(50.r)),
                     boxShadow: const [
                       BoxShadow(
-                          color: ProjectColors.black,
+                          // color: ProjectColors.black,
                           spreadRadius: 3,
                           offset: Offset(0, 2)),
                     ]),
                 child: const Icon(
                   Icons.add,
                   size: 40,
-                  color: Colors.black,
+                  // color: Colors.black,
                 ),
               )),
         ),

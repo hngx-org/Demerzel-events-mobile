@@ -68,18 +68,18 @@ class _CalCardState extends ConsumerState<CalCard> {
                 headerStyle: const HeaderStyle(
                   formatButtonVisible: false,
                 ),
-                calendarStyle: const CalendarStyle(
-                  todayDecoration: BoxDecoration(color: ProjectColors.purple),
+                calendarStyle: CalendarStyle(
+                  todayDecoration: BoxDecoration(color: Theme.of(context).primaryColor),
                   selectedDecoration: BoxDecoration(
-                    color: ProjectColors.purple,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 calendarBuilders: CalendarBuilders(
                   selectedBuilder: (context, date, events) => Container(
                       margin: const EdgeInsets.all(4.0),
                       alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: ProjectColors.purple,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor,
                         shape: BoxShape.circle,
                       ),
                       child: Text(
@@ -89,13 +89,13 @@ class _CalCardState extends ConsumerState<CalCard> {
                   todayBuilder: (context, date, events) => Container(
                     margin: const EdgeInsets.all(4.0),
                     alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      color: ProjectColors.purple,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                     child: Text(
                       date.day.toString(),
-                      style: const TextStyle(color: Colors.white),
+                      style:  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ),

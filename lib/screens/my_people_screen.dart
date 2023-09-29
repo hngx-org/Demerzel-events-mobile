@@ -23,9 +23,9 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
     final groupsNotifier = ref.watch(groupProvider);
 
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
+      // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
-        backgroundColor: ProjectColors.white,
+        // backgroundColor: ProjectColors.white,
         centerTitle: false,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(4.0),
@@ -35,8 +35,13 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
             )),
         title: Text(
           'My People',
-          style: appBarTextStyle.copyWith(
-              fontSize: 28, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onBackground
+          ),
+          // style: appBarTextStyle.copyWith(
+          //     fontSize: 24, fontWeight: FontWeight.w700),
         ),
         actions: [
           Padding(
@@ -50,7 +55,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                   ),
                 );
               },
-              buttonColor: ProjectColors.purple,
+              buttonColor: Theme.of(context).primaryColor,
               buttonHeight: 40,
               borderRadius: BorderRadius.circular(8),
               child: Center(
@@ -60,13 +65,13 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      const Text(
+                      Text(
                         'Create ',
                         style: TextStyle(
                           //fontFamily: 'NotoSans',
                           fontWeight: FontWeight.w700,
                           fontSize: 17,
-                          color: ProjectColors.black,
+                          color: Theme.of(context).colorScheme.onBackground,
                         ),
                       ),
                       const SizedBox(

@@ -13,14 +13,14 @@ class EveryoneScreen extends ConsumerWidget {
   const EveryoneScreen({super.key});
 
   Widget bodyBuild(String title, String specifictime, String date,
-      String location, String time, String image) {
+      String location, String time, String image, BuildContext context) {
     return GestureDetector(
       child: Container(
         height: 150.h,
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: ProjectColors.white,
+          color: Theme.of(context).cardColor,
           boxShadow: const [
             BoxShadow(
               offset: Offset(4, 4),
@@ -92,7 +92,7 @@ class EveryoneScreen extends ConsumerWidget {
                   time,
                   style: TextStyle(
                     fontSize: 12.r,
-                    color: ProjectColors.purple,
+                    // color: ProjectColors.purple,
                   ),
                 ),
                 SizedBox(
@@ -153,7 +153,7 @@ class EveryoneScreen extends ConsumerWidget {
               event?.startTime ?? "N/A",
               event?.location ?? "N/A",
               timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09'),),
-              event?.thumbnail ?? "",
+              event?.thumbnail ?? "", context
             ),
           );
         },

@@ -26,7 +26,7 @@ class MyPeopleCard extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: ProjectColors.white,
+              color: Theme.of(context).cardColor,
               border: Border.all(),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               boxShadow: const [
@@ -85,7 +85,7 @@ class MyPeopleCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(4),
-                    color: ProjectColors.purple,
+                    color: Theme.of(context).primaryColor,
                   ),
                   child:  Text(
                     "$eventLength events",

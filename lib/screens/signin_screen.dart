@@ -17,7 +17,7 @@ class SignIn extends ConsumerWidget {
 
     return Scaffold(
       body: Container(
-        color: ProjectColors.bgColor,
+        // color: ProjectColors.bgColor,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -59,7 +59,7 @@ class SignIn extends ConsumerWidget {
                             authReader.signInWithGoogle();
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: ProjectColors.purple,
+                              backgroundColor: Theme.of(context).colorScheme.primary,
                               elevation: 5,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5)),
