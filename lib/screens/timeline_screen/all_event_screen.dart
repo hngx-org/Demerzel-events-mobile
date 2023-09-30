@@ -149,7 +149,6 @@ class AllEventsScreen extends ConsumerWidget {
                 builder: (context) => CommentScreen(event: event!),
               ),
             ),
-
             // child: bodyBuild(
             //   event?.title ?? "N/A",
             //   event?.startDate ?? "N/A",
