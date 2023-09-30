@@ -9,18 +9,18 @@ import 'package:hng_events_app/models/event_model.dart';
 
 import '../../riverpod/event_provider.dart';
 
-class EveryoneScreen extends ConsumerWidget {
-  const EveryoneScreen({super.key});
+class AllEventsScreen extends ConsumerWidget {
+  const AllEventsScreen({super.key});
 
   Widget bodyBuild(String title, String specifictime, String date,
-      String location, String time, String image, BuildContext context) {
+      String location, String time, String image) {
     return GestureDetector(
       child: Container(
         height: 150.h,
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: ProjectColors.white,
           boxShadow: const [
             BoxShadow(
               offset: Offset(4, 4),
@@ -93,7 +93,7 @@ class EveryoneScreen extends ConsumerWidget {
                   time,
                   style: TextStyle(
                     fontSize: 12.r,
-                    // color: ProjectColors.purple,
+                    color: ProjectColors.purple,
                   ),
                 ),
                 SizedBox(
@@ -149,6 +149,7 @@ class EveryoneScreen extends ConsumerWidget {
                 builder: (context) => CommentScreen(event: event!),
               ),
             ),
+
             // child: bodyBuild(
             //   event?.title ?? "N/A",
             //   event?.startDate ?? "N/A",

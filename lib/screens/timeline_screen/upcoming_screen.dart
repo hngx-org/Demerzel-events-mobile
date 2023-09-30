@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +10,23 @@ import 'package:hng_events_app/models/event_model.dart';
 
 import '../../riverpod/event_provider.dart';
 
-class MyEventScreen extends ConsumerWidget {
-  const MyEventScreen({super.key});
+class UpcomingEventScreen extends ConsumerStatefulWidget {
+  const UpcomingEventScreen({super.key});
+
+  @override
+  ConsumerState<UpcomingEventScreen> createState() => _CreateGroupState();
+}
+
+class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
+  @override
+  void initState() {
+
+    super.initState();
+    //ref.read(EventProvider.provider).getUpcomingEvent();
+    // getUpcomingEvent();    
+  }
+
+  //Future getUpcomingEvent() async => await ref.read(EventProvider.provider).getUpcomingEvent();
 
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
@@ -20,7 +36,7 @@ class MyEventScreen extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          // color: ProjectColors.white,
+          color: ProjectColors.white,
           boxShadow: const [
             BoxShadow(
               offset: Offset(4, 4),
@@ -38,9 +54,9 @@ class MyEventScreen extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                 Visibility(
+                  Visibility(
                     visible: image.isEmpty,
-                    replacement:  Image.network(
+                    replacement: Image.network(
                       image,
                       fit: BoxFit.contain,
                       width: 100.r,
@@ -92,7 +108,7 @@ class MyEventScreen extends ConsumerWidget {
                   time,
                   style: TextStyle(
                     fontSize: 12.r,
-                    // color: ProjectColors.purple,
+                    color: ProjectColors.purple,
                   ),
                 ),
                 SizedBox(
@@ -107,14 +123,16 @@ class MyEventScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(
+    BuildContext context,
+  ) {
     final eventNotifier = ref.watch(EventProvider.provider);
 
     if (eventNotifier.isBusy) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (eventNotifier.userEvents.isEmpty) {
+    if (eventNotifier.upcomingEvents.isEmpty) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,7 +140,7 @@ class MyEventScreen extends ConsumerWidget {
             const Text("No event was found", textAlign: TextAlign.center),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => eventNotifier.getUserEvent(),
+              onTap: () => eventNotifier.getUpcomingEvent(),
               child: const Text(
                 "Tap to Retry",
                 style: TextStyle(decoration: TextDecoration.underline),
@@ -134,59 +152,32 @@ class MyEventScreen extends ConsumerWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: () async => eventNotifier.getAllEvent(),
-      child: Visibility(
-        visible: eventNotifier.userEvents.isNotEmpty,
-        replacement: const SizedBox.shrink(),
-        child: ListView.builder(
-          itemCount: eventNotifier.userEvents.length,
-          itemBuilder: (BuildContext context, int index) {
-            final Event event = eventNotifier.userEvents[index];
-      
-            return GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CommentScreen(event: event),
-                ),
+      onRefresh: () async => eventNotifier.getUpcomingEvent(),
+      child: ListView.builder(
+        itemCount: eventNotifier.upcomingEvents.length,
+        itemBuilder: (BuildContext context, int index) {
+          final Event event = eventNotifier.upcomingEvents[index];
+
+          return GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommentScreen(event: event),
               ),
-              child: bodyBuild(
-                event.title, 
-                event.startDate,
-                event.startTime,
-                event.location,
-                timeLeft(DateTime.parse(event.startDate)),
-                event.thumbnail,
+            ),
+            child: bodyBuild(
+              event.title,
+              event.startDate,
+              event.startTime,
+              event.location,
+              timeLeft(
+                DateTime.parse(event.startDate),
               ),
-            );
-          },
-        ),
+              event.thumbnail,
+            ),
+          );
+        },
       ),
     );
-  }
-
-  static String timeLeft(DateTime date) {
-    final date2 = DateTime.now();
-    final difference = date.difference(date2);
-
-    if ((difference.inDays / 7).floor() >= 1) {
-      return '1 week Left';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days Left';
-    } else if (difference.inDays >= 1) {
-      return '1 day Left';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours Left';
-    } else if (difference.inHours >= 1) {
-      return '1 hour Left';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes Left';
-    } else if (difference.inMinutes >= 1) {
-      return '1 minute Left';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds Left';
-    } else {
-      return 'Expired';
-    }
   }
 }

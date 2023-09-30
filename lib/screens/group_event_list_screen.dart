@@ -10,11 +10,13 @@ import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
-  const EventsScreen({
+  const EventsScreen( {
     super.key,
     required this.group,
+   
   });
   final Group group;
+  
 
   @override
   ConsumerState<EventsScreen> createState() => _EventsScreenState();
@@ -31,7 +33,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final eventNotifier = ref.watch(EventProvider.provider);
+    // final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
       appBar: AppHeader(title: widget.group.name),
@@ -39,25 +41,25 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              margin: const EdgeInsets.all(20),
-              width: 60,
-              height: 30,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  border: Border.all(),
-                  color: ProjectColors.purple),
-              child: const Center(
-                child: Text(
-                  "Today",
-                ),
-              ),
-            ),
+            // Container(
+            //   margin: const EdgeInsets.all(20),
+            //   width: 60,
+            //   height: 30,
+            //   decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(5),
+            //       border: Border.all(),
+            //       color: ProjectColors.purple),
+            //   child: const Center(
+            //     child: Text(
+            //       "Today",
+            //     ),
+            //   ),
+            // ),
             Expanded(
               // flex: 6,
               child: SizedBox(
                 height: 400,
-                child: (eventNotifier.allEvents?.data.events ?? []).isEmpty
+                child: (widget.group.events).isEmpty
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -66,12 +68,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                       )
                     : ListView.builder(
                         itemCount:
-                            eventNotifier.allEvents?.data.events.length ??
-                                0,
+                            widget.group.events.length ,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
                           event:
-                              eventNotifier.allEvents!.data.events[index],
+                              widget.group.events[index],
                         ),
                       ),
               ),
