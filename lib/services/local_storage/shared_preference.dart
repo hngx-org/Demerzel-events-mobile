@@ -9,33 +9,33 @@ class LocalStorageService {
   );
 
   Future<void> saveToDisk<T>(String key, T content) async {
-    final _preferences = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
     if (content is String) {
-      await _preferences.setString(key, content);
+      await preferences.setString(key, content);
     }
     if (content is bool) {
-      await _preferences.setBool(key, content);
+      await preferences.setBool(key, content);
     }
     if (content is int) {
-      await _preferences.setInt(key, content);
+      await preferences.setInt(key, content);
     }
     if (content is double) {
-      await _preferences.setDouble(key, content);
+      await preferences.setDouble(key, content);
     }
     if (content is List<String>) {
-      await _preferences.setStringList(key, content);
+      await preferences.setStringList(key, content);
     }
   }
 
   Future<Object?> getFromDisk(String key) async {
-    final _preferences = await SharedPreferences.getInstance();
-    final value = _preferences.get(key);
+    final preferences = await SharedPreferences.getInstance();
+    final value = preferences.get(key);
     return value;
   }
 
   Future<bool> removeFromDisk(String key) async {
-    final _preferences = await SharedPreferences.getInstance();
-    final value = await _preferences.remove(key);
+    final preferences = await SharedPreferences.getInstance();
+    final value = await preferences.remove(key);
     return value;
   }
 }
