@@ -20,7 +20,7 @@ class HngPrimaryButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: isEnabled && !isLoading ? onPressed : null,
         style: ElevatedButton.styleFrom(
-            backgroundColor: ProjectColors.purple,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             elevation: 0.0,
             minimumSize: const Size(262, 52),
             padding: const EdgeInsets.all(0.0)),

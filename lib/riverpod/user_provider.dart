@@ -12,6 +12,12 @@ class UserProvider extends ChangeNotifier {
   final AuthRepository authRepository;
 
   User? user;
+  updateUserProfile(String username, String image) async{
+    await authRepository.updateUserProfile(
+      username, 
+      ''
+    );
+  }
 
   Future<void> getUser() async {
     user = await authRepository.getUser();
@@ -21,3 +27,4 @@ class UserProvider extends ChangeNotifier {
   static final notifier = ChangeNotifierProvider<UserProvider>((ref) =>
       UserProvider(authRepository: ref.watch(AuthRepository.provider)));
 }
+

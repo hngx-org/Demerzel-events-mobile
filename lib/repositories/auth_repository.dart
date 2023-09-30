@@ -1,19 +1,23 @@
 import 'dart:convert';
+import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthRepository {
   final LocalStorageService localStorageService;
 
   AuthRepository({required this.localStorageService});
-
   FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
+  static const _user = 'userToken';
+  String baseUrl = ApiRoutes.baseUrl;
 
   Future<void> signInWithGoogle() async {
     final GoogleSignInAccount? googleSignInAccount =
@@ -56,11 +60,9 @@ class AuthRepository {
     print(authHeader);
   }
 
-  Future<User> getUser() async {
-    return auth.currentUser!;
+  Future<User?> getUser() async {
+    return auth.currentUser;
   }
-
-  static const _user = 'userToken';
 
   Future<void> saveToken(String token) async {
     await localStorageService.saveToDisk(_user, token);
@@ -76,6 +78,35 @@ class AuthRepository {
     return {
       'Authorization': 'Bearer $token',
     };
+  }
+
+  Future<String> getUserid() async{
+    String? token = await getToken();
+    if (token != null) {
+      Map<String, dynamic> userMap = JwtDecoder.decode(token);
+      log(userMap.toString());
+      return userMap["data"]["id"];
+    } else {
+      throw Exception("No user token");
+    }    
+  }
+
+  Future updateUserProfile(String userName, String image) async{
+    String userid = await getUserid();
+    Map<String, String> headerMap = await getAuthHeader();
+    // header = Headers.fromMap(headerMap)
+    final response = await http.put(
+      Uri.parse('$baseUrl/api/users/$userid'),
+      headers: headerMap,
+      body: jsonEncode(<String, String>
+        {
+          'name': userName,          
+        }
+      )
+    );
+    if (response.statusCode != 200) {
+      throw Exception("failed to update userProfile");
+    }
   }
 
   Future<void> removeToken() async {
