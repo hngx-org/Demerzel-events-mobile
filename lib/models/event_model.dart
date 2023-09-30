@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 class GetListEventModel {
   final Data data;
   final String message;
@@ -42,7 +44,7 @@ class Data {
   }
 }
 
-class Event {
+class Event extends Equatable{
   final String id;
   final String creatorId;
   final String thumbnail;
@@ -57,7 +59,10 @@ class Event {
   final String updatedAt;
   final Creator? creator;
 
-  Event({
+  @override
+  List<Object> get props => [id];
+
+const  Event({
     required this.id,
     required this.creatorId,
     required this.thumbnail,
