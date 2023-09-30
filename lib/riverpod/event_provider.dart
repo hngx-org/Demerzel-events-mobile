@@ -3,17 +3,16 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
+import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 import '../repositories/event_repository.dart';
 
-
-
-
 class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
-  EventProvider({required this.eventRepository}){
+  EventProvider({required this.eventRepository}) {
     getAllEvent();
     getUserEvent();
+    getUpcomingEvent();
   }
 
   GetListEventModel? events;
@@ -21,7 +20,7 @@ class EventProvider extends ChangeNotifier {
   GetListEventModel? allEvents;
   GetListEventModel? allGroupEvents;
   List<Event> userEvents = [];
-
+  List<Event> upcomingEvents = [];
 
   static final provider = ChangeNotifierProvider<EventProvider>((ref) {
     return EventProvider(eventRepository: ref.read(EventRepository.provider));
@@ -33,8 +32,7 @@ class EventProvider extends ChangeNotifier {
   String _error = "";
   String get error => _error;
 
-
-   Future<void> getUserEvent() async{
+  Future<void> getUserEvent() async {
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -53,9 +51,7 @@ class EventProvider extends ChangeNotifier {
 
     _isBusy = false;
     notifyListeners();
-   }
-
-
+  }
 
   Future<void> getAllEvent() async {
     _isBusy = true;
@@ -65,6 +61,49 @@ class EventProvider extends ChangeNotifier {
     try {
       final result = await eventRepository.getAllEvent();
       allEvents = result;
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
+
+  Future<void> getUpcomingEvent() async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+    final newUpcoming = <Event>[];
+    try {
+      final result = await eventRepository.getAllEvent();
+      allEvents = result;
+
+      if (upcomingEvents.isEmpty) {
+        upcomingEvents.addAll(allEvents!.data.events.where((event) =>
+            timeLeft(
+              DateTime.parse(event.startDate),
+            ) !=
+            'Expired'));
+      } else {
+        newUpcoming.addAll(allEvents!.data.events.where((event) =>
+            timeLeft(
+              DateTime.parse(event.startDate),
+            ) !=
+            'Expired'));
+        for (var i = 0; i < newUpcoming.length; i++) {
+          if (!upcomingEvents.contains(newUpcoming[i])) {
+            upcomingEvents.add(newUpcoming[i]);
+          }
+        }
+      }
+
+
+      log(upcomingEvents.toString());
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -98,8 +137,6 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   Future<void> getAllGroupEvent(String groupId) async {
     _isBusy = true;
     _error = "";
@@ -108,6 +145,7 @@ class EventProvider extends ChangeNotifier {
     try {
       final result = await eventRepository.getAllGroupEvent(groupId);
       allGroupEvents = result;
+      
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -120,7 +158,6 @@ class EventProvider extends ChangeNotifier {
     _isBusy = false;
     notifyListeners();
   }
-
 
   Future<void> getEventByDate(DateTime date) async {
     _isBusy = true;

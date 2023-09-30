@@ -20,7 +20,7 @@ class MyEventScreen extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          // color: ProjectColors.white,
+          color: ProjectColors.white,
           boxShadow: const [
             BoxShadow(
               offset: Offset(4, 4),
@@ -92,7 +92,7 @@ class MyEventScreen extends ConsumerWidget {
                   time,
                   style: TextStyle(
                     fontSize: 12.r,
-                    // color: ProjectColors.purple,
+                    color: ProjectColors.purple,
                   ),
                 ),
                 SizedBox(
@@ -165,7 +165,11 @@ class MyEventScreen extends ConsumerWidget {
     );
   }
 
-  static String timeLeft(DateTime date) {
+
+}
+
+
+   String timeLeft(DateTime date) {
     final date2 = DateTime.now();
     final difference = date.difference(date2);
 
@@ -189,4 +193,3 @@ class MyEventScreen extends ConsumerWidget {
       return 'Expired';
     }
   }
-}
