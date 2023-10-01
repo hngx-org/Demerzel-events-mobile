@@ -312,7 +312,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                               },
                               child: Text(
                                 startTime != null
-                                    ? "${startTime!.hour}:${startTime!.minute}"
+                                    ? "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}"
                                     : 'Select Time',
                                 style: const TextStyle(
                                   color: ProjectColors.black,
@@ -399,7 +399,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                               },
                               child: Text(
                                 endTime != null
-                                    ? "${endTime!.hour}:${endTime!.minute}"
+                                    ? "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}"
                                     : 'Select Time',
                                 style: const TextStyle(
                                   color: ProjectColors.black,
@@ -544,8 +544,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         "description": bodyController.text,
         "start_date": DateFormat("yyyy-MM-dd").format(startDate!),
         "end_date": DateFormat("yyyy-MM-dd").format(endDate!),
-        "start_time": "${startTime?.hour}:${startTime?.minute}",
-        "end_time": "${endTime?.hour}:${endTime?.minute}",
+        "start_time": "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}",
+        "end_time": "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}",
         "group_id": [selectedGroup!.id],
       };
 

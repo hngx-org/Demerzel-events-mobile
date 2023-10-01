@@ -127,7 +127,9 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
     BuildContext context,
   ) {
     final eventNotifier = ref.watch(EventProvider.provider);
-
+    print(DateTime.parse('2023-09-30T21:43'));
+    print(DateTime.now());
+ print( DateTime.parse('2023-09-30T21:43').difference(DateTime.now()));
     if (eventNotifier.isBusy) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -171,7 +173,7 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
               event.startTime,
               event.location,
               timeLeft(
-                DateTime.parse(event.startDate),
+               event.startDate, event.startTime
               ),
               event.thumbnail,
             ),

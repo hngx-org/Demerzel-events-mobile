@@ -86,13 +86,13 @@ class EventProvider extends ChangeNotifier {
       if (upcomingEvents.isEmpty) {
         upcomingEvents.addAll(allEvents!.data.events.where((event) =>
             timeLeft(
-              DateTime.parse(event.startDate),
+             event.startDate, event.startTime
             ) !=
             'Expired'));
       } else {
         newUpcoming.addAll(allEvents!.data.events.where((event) =>
             timeLeft(
-              DateTime.parse(event.startDate),
+             event.startDate, event.startTime
             ) !=
             'Expired'));
         for (var i = 0; i < newUpcoming.length; i++) {

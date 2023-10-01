@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:intl/intl.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,9 +39,9 @@ class MyEventScreen extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                 Visibility(
+                  Visibility(
                     visible: image.isEmpty,
-                    replacement:  Image.network(
+                    replacement: Image.network(
                       image,
                       fit: BoxFit.contain,
                       width: 100.r,
@@ -142,7 +143,7 @@ class MyEventScreen extends ConsumerWidget {
           itemCount: eventNotifier.userEvents.length,
           itemBuilder: (BuildContext context, int index) {
             final Event event = eventNotifier.userEvents[index];
-      
+
             return GestureDetector(
               onTap: () => Navigator.push(
                 context,
@@ -151,11 +152,11 @@ class MyEventScreen extends ConsumerWidget {
                 ),
               ),
               child: bodyBuild(
-                event.title, 
+                event.title,
                 event.startDate,
                 event.startTime,
                 event.location,
-                timeLeft(DateTime.parse(event.startDate)),
+                timeLeft(event.startDate, event.startTime),
                 event.thumbnail,
               ),
             );
@@ -164,32 +165,47 @@ class MyEventScreen extends ConsumerWidget {
       ),
     );
   }
-
-
 }
 
+String timeLeft(String startDate, String startTime) {
+  //final formatter =DateFormat('HH:mm');
+final DateTime date;
 
-   String timeLeft(DateTime date) {
-    final date2 = DateTime.now();
-    final difference = date.difference(date2);
-
-    if ((difference.inDays / 7).floor() >= 1) {
-      return '1 week Left';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days Left';
-    } else if (difference.inDays >= 1) {
-      return '1 day Left';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours Left';
-    } else if (difference.inHours >= 1) {
-      return '1 hour Left';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes Left';
-    } else if (difference.inMinutes >= 1) {
-      return '1 minute Left';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds Left';
-    } else {
-      return 'Expired';
-    }
+  if (RegExp(r'^[0-9]{2}:[0-9]$').hasMatch(startTime)) {
+    startTime = '${startTime.substring(0, 3)}0${startTime.substring(3)}';
+    date = DateTime.parse("${startDate}T$startTime");
+  
+  }else if (RegExp('^[0-9]:[0-9]{2}').hasMatch(startTime)) {
+      
+    startTime =  '0${startTime.substring(0)}';
+    date = DateTime.parse("${startDate}T$startTime");
+  }else {
+date = DateTime.parse("${startDate}T$startTime");
   }
+ 
+
+ 
+
+  final date2 = DateTime.now();
+  final difference = date.difference(date2);
+
+  if ((difference.inDays / 7).floor() >= 1) {
+    return '1 week Left';
+  } else if (difference.inDays >= 2) {
+    return '${difference.inDays} days Left';
+  } else if (difference.inDays >= 1) {
+    return '1 day Left';
+  } else if (difference.inHours >= 2) {
+    return '${difference.inHours} hours Left';
+  } else if (difference.inHours >= 1) {
+    return '1 hour Left';
+  } else if (difference.inMinutes >= 2) {
+    return '${difference.inMinutes} minutes Left';
+  } else if (difference.inMinutes >= 1) {
+    return '1 minute Left';
+  } else if (difference.inSeconds >= 3) {
+    return '${difference.inSeconds} seconds Left';
+  } else {
+    return 'Expired';
+  }
+}
