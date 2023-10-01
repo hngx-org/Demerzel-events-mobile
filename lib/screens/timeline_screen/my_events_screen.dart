@@ -12,7 +12,8 @@ import 'package:hng_events_app/models/event_model.dart';
 import '../../riverpod/event_provider.dart';
 
 class MyEventScreen extends ConsumerWidget {
-  const MyEventScreen({super.key});
+  final Key key;
+  const MyEventScreen({required this.key});
 
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
@@ -110,7 +111,7 @@ class MyEventScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     Size screensize = MediaQuery.of(context).size;
+    Size screensize = MediaQuery.of(context).size;
     final eventNotifier = ref.watch(EventProvider.provider);
 
     if (eventNotifier.isBusy) {
@@ -154,15 +155,15 @@ class MyEventScreen extends ConsumerWidget {
                 ),
               ),
               child: TimelineEventCard(
-              context: context, 
-              screensize: screensize, 
-              image: event.thumbnail, 
-              title: event.title , 
-              time: event.startTime ,
-              location: event.location ,
-              date: event.startDate ,
-              activity:  timeLeft(event.startDate, event.startTime),
-            ),
+                context: context,
+                screensize: screensize,
+                image: event.thumbnail,
+                title: event.title,
+                time: event.startTime,
+                location: event.location,
+                date: event.startDate,
+                activity: timeLeft(event.startDate, event.startTime),
+              ),
             );
           },
         ),
@@ -173,22 +174,17 @@ class MyEventScreen extends ConsumerWidget {
 
 String timeLeft(String startDate, String startTime) {
   //final formatter =DateFormat('HH:mm');
-final DateTime date;
+  final DateTime date;
 
   if (RegExp(r'^[0-9]{2}:[0-9]$').hasMatch(startTime)) {
     startTime = '${startTime.substring(0, 3)}0${startTime.substring(3)}';
     date = DateTime.parse("${startDate}T$startTime");
-  
-  }else if (RegExp('^[0-9]:[0-9]{2}').hasMatch(startTime)) {
-      
-    startTime =  '0${startTime.substring(0)}';
+  } else if (RegExp('^[0-9]:[0-9]{2}').hasMatch(startTime)) {
+    startTime = '0${startTime.substring(0)}';
     date = DateTime.parse("${startDate}T$startTime");
-  }else {
-date = DateTime.parse("${startDate}T$startTime");
+  } else {
+    date = DateTime.parse("${startDate}T$startTime");
   }
- 
-
- 
 
   final date2 = DateTime.now();
   final difference = date.difference(date2);
