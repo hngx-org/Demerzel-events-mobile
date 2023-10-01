@@ -54,7 +54,7 @@ class SettingsPage extends ConsumerWidget {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) => EditProfileScreen(
                     name: userRef.user?.displayName?? 'salome', 
-                    image: null,
+                    image: userRef.user?.photoURL?? '',
                     email: userRef.user?.email ?? 'salome357@gmail.com',
                     )
                   )
@@ -66,9 +66,11 @@ class SettingsPage extends ConsumerWidget {
                 child: Consumer(
                   builder: (context, ref, child) {
                     return ListTile(
+                     
                       tileColor: Theme.of(context).cardColor,
-                      leading: CircleAvatar(
-                          child: Image.asset(ProjectConstants.profileImage)),
+                      leading:  CircleAvatar(
+                backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
+              ),
                       title: Text(
                        userRef.user?.displayName?? 'salome',
                         style: largeTextStyle,

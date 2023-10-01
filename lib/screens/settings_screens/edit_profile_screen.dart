@@ -9,7 +9,7 @@ class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key, required this.name, required this.image, required this.email});
   final String name;
   final String email;
-  final String? image;
+  final String image;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -24,6 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     namectrl.text = widget.name;
     emailctrl.text = widget.email;
+    image = widget.image;
     super.initState();
   }
 
@@ -43,8 +44,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    const CircleAvatar(
-                      // backgroundImage: ,
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(image),
                       radius: 100,
                     ),
                      Align(

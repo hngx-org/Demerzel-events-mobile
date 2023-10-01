@@ -4,8 +4,6 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
-import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class TimelineScreen extends StatefulWidget {
   const TimelineScreen({super.key});
@@ -18,25 +16,23 @@ class _TimelineScreenState extends State<TimelineScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
+              // Tab(
+              //   child: Padding(
+              //     padding: EdgeInsets.all(8.0),
+              //     child: Text(
+              //       "Upcoming Events",
+              //       style: TextStyle(fontSize: 17, color: Colors.black),
+              //     ),
+              //   ),
+              // ),
               Tab(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    "Upcoming Events",
-                    style: TextStyle(
-                      fontSize: 17, 
-                      // color: Colors.black
-                    ),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Text(
+                key: UniqueKey(),
+                child: const Text(
                   "My Events",
                   style: TextStyle(
                     fontSize: 17, 
@@ -45,7 +41,8 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 ),
               ),
               Tab(
-                child: Text(
+                key: UniqueKey(),
+                child: const Text(
                   "All Events",
                   style: TextStyle(
                     fontSize: 17, 
@@ -56,16 +53,18 @@ class _TimelineScreenState extends State<TimelineScreen> {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            UpcomingEventScreen(),
-            MyEventScreen(),
-            AllEventsScreen(),
+            // UpcomingEventScreen(),
+            MyEventScreen(
+              key: UniqueKey(),
+            ),
+            AllEventsScreen(
+              key: UniqueKey(),
+            ),
           ],
         ),
-        floatingActionButton: 
-        
-        Padding(
+        floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(
               backgroundColor: Theme.of(context).colorScheme.primary,

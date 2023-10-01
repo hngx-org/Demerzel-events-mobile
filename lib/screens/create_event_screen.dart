@@ -541,28 +541,47 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         "description": bodyController.text,
         "start_date": DateFormat("yyyy-MM-dd").format(startDate!),
         "end_date": DateFormat("yyyy-MM-dd").format(endDate!),
-        "start_time": "${startTime?.hour}:${startTime?.minute}",
-        "end_time": "${endTime?.hour}:${endTime?.minute}",
+        "start_time":
+            "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}",
+        "end_time":
+            "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}",
         "group_id": [selectedGroup!.id],
       };
 
-      await eventController.createEvent(body);
+      final result = await eventController.createEvent(body);
+      await Future.delayed(const Duration(seconds: 5));
       isLoading = false;
 
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Event Uploaded Successfully",
-            style: TextStyle(color: Colors.white),
+      if (result) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Event Uploaded Successfully",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
           ),
-          duration: Duration(seconds: 2),
-          backgroundColor: Colors.green,
-        ),
-      );
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
 
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pop();
+        await eventController.getAllEvent();
+        eventController.getUserEvent();
+      } else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Event Upload Failed",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } catch (e, s) {
       isLoading = false;
       log(e.toString());
@@ -575,7 +594,5 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         ),
       );
     }
-
-    setState(() {});
   }
 }

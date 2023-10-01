@@ -70,6 +70,8 @@ class EventProvider extends ChangeNotifier {
       notifyListeners();
     }
 
+    print('-------------> called ${allEvents?.data.events.length}');
+
     _isBusy = false;
     notifyListeners();
   }
@@ -86,13 +88,13 @@ class EventProvider extends ChangeNotifier {
       if (upcomingEvents.isEmpty) {
         upcomingEvents.addAll(allEvents!.data.events.where((event) =>
             timeLeft(
-              DateTime.parse(event.startDate),
+             event.startDate, event.startTime
             ) !=
             'Expired'));
       } else {
         newUpcoming.addAll(allEvents!.data.events.where((event) =>
             timeLeft(
-              DateTime.parse(event.startDate),
+             event.startDate, event.startTime
             ) !=
             'Expired'));
         for (var i = 0; i < newUpcoming.length; i++) {
@@ -187,7 +189,7 @@ class EventProvider extends ChangeNotifier {
 
     try {
       await eventRepository.createEvent(body);
-      await getAllEvent();
+      
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
