@@ -18,7 +18,6 @@ class _TimelineScreenState extends State<TimelineScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFF8F5),
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
@@ -35,14 +34,20 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 key: UniqueKey(),
                 child: const Text(
                   "My Events",
-                  style: TextStyle(fontSize: 17, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 17, 
+                    // color: Colors.black
+                  ),
                 ),
               ),
               Tab(
                 key: UniqueKey(),
                 child: const Text(
                   "All Events",
-                  style: TextStyle(fontSize: 17, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 17, 
+                    // color: Colors.black
+                  ),
                 ),
               ),
             ],
@@ -62,7 +67,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(
-              backgroundColor: ProjectColors.purple,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: const CircleBorder(),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
