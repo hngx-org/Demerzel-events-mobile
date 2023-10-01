@@ -31,9 +31,11 @@ class ScreenUtilInitScreen extends ConsumerWidget {
             ),
 
             theme: ThemeData(
+              scaffoldBackgroundColor: ProjectColors.bgColor,
               colorScheme: ColorScheme.fromSeed(
                 seedColor: ProjectColors.purple,
                 primary: ProjectColors.purple,
+                
                 // secondary: const Color(0xFFF97316),
               ),
               useMaterial3: true,
