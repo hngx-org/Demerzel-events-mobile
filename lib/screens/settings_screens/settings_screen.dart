@@ -6,6 +6,7 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
+import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
 
 import 'package:svg_flutter/svg.dart';
@@ -56,9 +57,11 @@ class SettingsPage extends ConsumerWidget {
                 child: Consumer(
                   builder: (context, ref, child) {
                     return ListTile(
+                     
                       tileColor: Theme.of(context).cardColor,
-                      leading: CircleAvatar(
-                          child: Image.asset(ProjectConstants.profileImage)),
+                      leading:  CircleAvatar(
+                backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
+              ),
                       title: Text(
                        userRef.user?.displayName?? 'salome',
                         style: largeTextStyle,

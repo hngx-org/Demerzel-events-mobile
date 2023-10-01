@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
 import '../../riverpod/event_provider.dart';
+import '../../widgets/timeline_event_card.dart';
 
 class UpcomingEventScreen extends ConsumerStatefulWidget {
   const UpcomingEventScreen({super.key});
@@ -127,9 +128,8 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
     BuildContext context,
   ) {
     final eventNotifier = ref.watch(EventProvider.provider);
-    print(DateTime.parse('2023-09-30T21:43'));
-    print(DateTime.now());
- print( DateTime.parse('2023-09-30T21:43').difference(DateTime.now()));
+     Size screensize = MediaQuery.of(context).size;
+  
     if (eventNotifier.isBusy) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -167,15 +167,15 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
                 builder: (context) => CommentScreen(event: event),
               ),
             ),
-            child: bodyBuild(
-              event.title,
-              event.startDate,
-              event.startTime,
-              event.location,
-              timeLeft(
-               event.startDate, event.startTime
-              ),
-              event.thumbnail,
+            child: TimelineEventCard(
+              context: context, 
+              screensize: screensize, 
+              image: event.thumbnail, 
+              title: event.title , 
+              time: event.startTime ,
+              location: event.location ,
+              date: event.startDate ,
+              activity:  timeLeft(event.startDate, event.startTime),
             ),
           );
         },

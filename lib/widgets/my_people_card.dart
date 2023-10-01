@@ -63,10 +63,19 @@ class MyPeopleCard extends StatelessWidget {
                     child: image == ''
                         ? Image.asset(
                             'assets/illustrations/dancers_illustration.png')
-                        : FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: image,
+                        : Container(
+                          height: 110,
+                          width: 160,
+                          
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: image,
+                                fit: BoxFit.fill,
+                              ),
                           ),
+                        ),
                   ),
                 )
               ],

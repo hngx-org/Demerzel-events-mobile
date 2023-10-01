@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/colors.dart';
@@ -109,6 +110,7 @@ class MyEventScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+     Size screensize = MediaQuery.of(context).size;
     final eventNotifier = ref.watch(EventProvider.provider);
 
     if (eventNotifier.isBusy) {
@@ -151,14 +153,16 @@ class MyEventScreen extends ConsumerWidget {
                   builder: (context) => CommentScreen(event: event),
                 ),
               ),
-              child: bodyBuild(
-                event.title,
-                event.startDate,
-                event.startTime,
-                event.location,
-                timeLeft(event.startDate, event.startTime),
-                event.thumbnail,
-              ),
+              child: TimelineEventCard(
+              context: context, 
+              screensize: screensize, 
+              image: event.thumbnail, 
+              title: event.title , 
+              time: event.startTime ,
+              location: event.location ,
+              date: event.startDate ,
+              activity:  timeLeft(event.startDate, event.startTime),
+            ),
             );
           },
         ),
