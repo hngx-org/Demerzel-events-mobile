@@ -217,6 +217,9 @@ Widget eventCard({required BuildContext context,
           value: 'delete',
           child: Text('Delete'),
         ),
+        PopupMenuItem<String>(
+            value: 'edit',
+            child: Text("edit"))
       ],
     ).then((String? value) {
       if (value == 'delete') {
@@ -320,11 +323,26 @@ Widget eventCard({required BuildContext context,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
-                  onTap:(){
-                    _showPopupMenu();
-                  },
-                    child: const Icon(Icons.more_vert)),
+            PopupMenuButton<String>(
+            onSelected: (String value) {
+          if (value == 'delete') {
+          print('Delete item selected');
+          } else if (value == 'edit') {
+          print('Edit item selected');
+          }
+          },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'delete',
+                child: Text('Delete'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'edit',
+                child: Text('Edit'),
+              ),
+            ],
+            child: const Icon(Icons.more_vert),
+          ),
                 Text(activity)
               ],
             )
