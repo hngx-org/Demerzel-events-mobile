@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,7 +41,7 @@ class AllEventsScreen extends ConsumerWidget {
                 children: [
                   Visibility(
                     visible: image.isEmpty,
-                    replacement:  Image.network(
+                    replacement: Image.network(
                       image,
                       fit: BoxFit.fill,
                       width: 100.r,
@@ -146,7 +147,7 @@ class AllEventsScreen extends ConsumerWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CommentScreen(event: event!),
+                builder: (context) => CommentScreen(event: event),
               ),
             ),
             // child: bodyBuild(
@@ -165,7 +166,7 @@ class AllEventsScreen extends ConsumerWidget {
               time: event?.startTime ?? "N/A",
               location: event?.location ?? "N/A",
               date: event?.startDate ?? "N/A",
-              activity: timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09'),),
+              activity:  timeLeft(event!.startDate, event.startTime),
             ),
           );
         },
@@ -173,30 +174,30 @@ class AllEventsScreen extends ConsumerWidget {
     );
   }
 
-  static String timeLeft(DateTime date) {
-    final date2 = DateTime.now();
-    final difference = date.difference(date2);
+  // static String timeLeft(DateTime date) {
+  //   final date2 = DateTime.now();
+  //   final difference = date.difference(date2);
 
-    if ((difference.inDays / 7).floor() >= 1) {
-      return '1 week Left';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days Left';
-    } else if (difference.inDays >= 1) {
-      return '1 day Left';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours Left';
-    } else if (difference.inHours >= 1) {
-      return '1 hour Left';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes Left';
-    } else if (difference.inMinutes >= 1) {
-      return '1 minute Left';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds Left';
-    } else {
-      return 'Expired';
-    }
-  }
+  //   if ((difference.inDays / 7).floor() >= 1) {
+  //     return '1 week Left';
+  //   } else if (difference.inDays >= 2) {
+  //     return '${difference.inDays} days Left';
+  //   } else if (difference.inDays >= 1) {
+  //     return '1 day Left';
+  //   } else if (difference.inHours >= 2) {
+  //     return '${difference.inHours} hours Left';
+  //   } else if (difference.inHours >= 1) {
+  //     return '1 hour Left';
+  //   } else if (difference.inMinutes >= 2) {
+  //     return '${difference.inMinutes} minutes Left';
+  //   } else if (difference.inMinutes >= 1) {
+  //     return '1 minute Left';
+  //   } else if (difference.inSeconds >= 3) {
+  //     return '${difference.inSeconds} seconds Left';
+  //   } else {
+  //     return 'Expired';
+  //   }
+  // }
 }
 
 Widget eventCard({required BuildContext context, required Size screensize, required String? image, required String title, required String time, required String location, required String date, required String activity}){
