@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -199,7 +200,30 @@ class AllEventsScreen extends ConsumerWidget {
   }
 }
 
-Widget eventCard({required BuildContext context, required Size screensize, required String? image, required String title, required String time, required String location, required String date, required String activity}){
+Widget eventCard({required BuildContext context,
+  required Size screensize,
+  required String? image,
+  required String title,
+  required String time,
+  required String location,
+  required String date,
+  required String activity}){
+  void  _showPopupMenu() {
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(0, 0, 0, 0), // Adjust position as needed
+      items: [
+        PopupMenuItem<String>(
+          value: 'delete',
+          child: Text('Delete'),
+        ),
+      ],
+    ).then((String? value) {
+      if (value == 'delete') {
+        print('Delete item selected');
+      }
+    });
+  }
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -296,7 +320,11 @@ Widget eventCard({required BuildContext context, required Size screensize, requi
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.more_vert),
+                InkWell(
+                  onTap:(){
+                    _showPopupMenu();
+                  },
+                    child: const Icon(Icons.more_vert)),
                 Text(activity)
               ],
             )
