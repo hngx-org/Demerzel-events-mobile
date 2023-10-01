@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';

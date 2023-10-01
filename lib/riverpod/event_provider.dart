@@ -70,6 +70,8 @@ class EventProvider extends ChangeNotifier {
       notifyListeners();
     }
 
+    print('-------------> called ${allEvents?.data.events.length}');
+
     _isBusy = false;
     notifyListeners();
   }
@@ -187,7 +189,7 @@ class EventProvider extends ChangeNotifier {
 
     try {
       await eventRepository.createEvent(body);
-      await getAllEvent();
+      
     } catch (e, s) {
       log(e.toString());
       log(s.toString());

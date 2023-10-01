@@ -26,14 +26,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        backgroundColor: Theme.of(context).colorScheme.background,
-        resizeToAvoidBottomInset: false,
-        body: _pages.elementAt(_currentIndex),
-        bottomNavigationBar: _buildBottomBar(),
-      ),
+    return Scaffold(
+      extendBody: true,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      resizeToAvoidBottomInset: false,
+      body: _pages.elementAt(_currentIndex),
+      bottomNavigationBar: _buildBottomBar(),
     );
   }
 

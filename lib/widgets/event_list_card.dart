@@ -73,28 +73,7 @@ class EventsCard extends ConsumerWidget {
                     ),
                   ),
                 ),
-                //location
-                // Padding(
-                //   padding: const EdgeInsets.only(left: 16),
-                //   child: Row(children: [
-                //     const DecoratedIcon(
-                //       icon: Icon(Icons.location_pin, color: ProjectColors.white),
-                //       decoration: IconDecoration(
-                //         border: IconBorder(width: 1, color: ProjectColors.black),
-                //       ),
-                //     ),
-                //     const SizedBox(
-                //       width: 10,
-                //     ),
-                //     Text(
-                //       event!.location,
-                //       style: const TextStyle(
-                //           fontFamily: 'inter',
-                //           fontWeight: FontWeight.w700,
-                //           fontSize: 18),
-                //     )
-                //   ]),
-                // ),
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -133,24 +112,7 @@ class EventsCard extends ConsumerWidget {
                   ),
                 ],
               ),
-                  // Row(children: [
-                  //   const DecoratedIcon(
-                  //     icon: Icon(Icons.timer, color: ProjectColors.white),
-                  //     decoration: IconDecoration(
-                  //         border:
-                  //             IconBorder(width: 1, color: ProjectColors.black)),
-                  //   ),
-                  //   const SizedBox(
-                  //     width: 10,
-                  //   ),
-                  //   Text(
-                  //     '${event!.startTime} - ${event!.endTime}',
-                      // style: const TextStyle(
-                      //   fontFamily: 'inter',
-                      //   fontWeight: FontWeight.w600,
-                  //     ),
-                  //   )
-                  // ]),
+  
                 ),
                 const SizedBox(
                   height: 8,
@@ -297,21 +259,6 @@ class _InputFieldState extends ConsumerState<InputField> {
             ),
           )
           
-          // ListTile(
-          //     leading: const Icon(Icons.comment),
-              // onTap: () =>  Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => CommentScreen(
-              //             event: widget.event,
-              //           ),
-              //         ),
-              //       ),
-          //     title: SizedBox(
-          //       width: MediaQuery.of(context).size.width * 0.2,
-          //       child: const Text('Leave a comment')
-          //     ),
-          //     trailing: const Icon(Icons.chevron_right)),
         ),
       ),
     );

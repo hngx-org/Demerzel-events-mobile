@@ -141,32 +141,22 @@ class AllEventsScreen extends ConsumerWidget {
       child: ListView.builder(
         itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
         itemBuilder: (BuildContext context, int index) {
-          final Event? event = eventNotifier.allEvents?.data.events[index];
-
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CommentScreen(event: event!),
+                builder: (context) => CommentScreen(event:  eventNotifier.allEvents!.data.events[index]),
               ),
             ),
-            // child: bodyBuild(
-            //   event?.title ?? "N/A",
-            //   event?.startDate ?? "N/A",
-            //   event?.startTime ?? "N/A",
-            //   event?.location ?? "N/A",
-            //   timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09'),),
-            //   event?.thumbnail ?? "", context
-            // ),
-            child: eventCard(
+            child: TimelineEventCard(
               context: context, 
               screensize: screensize, 
-              image: event?.thumbnail, 
-              title: event?.title ?? "N/A", 
-              time: event?.startTime ?? "N/A",
-              location: event?.location ?? "N/A",
-              date: event?.startDate ?? "N/A",
-              activity: timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09'),),
+              image:  eventNotifier.allEvents?.data.events[index].thumbnail, 
+              title:  eventNotifier.allEvents?.data.events[index].title ?? "N/A", 
+              time:  eventNotifier.allEvents?.data.events[index].startTime ?? "N/A",
+              location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
+              date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
+              activity:  timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
             ),
           );
         },
