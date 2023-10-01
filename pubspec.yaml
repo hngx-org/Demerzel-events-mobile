@@ -50,7 +50,7 @@ dependencies:
   intl: ^0.18.1
   logger: ^2.0.2+1
   equatable: ^2.0.5
-
+  dropdown_button2: ^2.3.8
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
