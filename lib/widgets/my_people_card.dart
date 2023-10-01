@@ -26,7 +26,7 @@ class MyPeopleCard extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: ProjectColors.white,
+              color: Theme.of(context).cardColor,
               border: Border.all(),
               borderRadius: const BorderRadius.all(Radius.circular(10)),
               boxShadow: const [
@@ -63,10 +63,19 @@ class MyPeopleCard extends StatelessWidget {
                     child: image == ''
                         ? Image.asset(
                             'assets/illustrations/dancers_illustration.png')
-                        : FadeInImage.memoryNetwork(
-                            placeholder: kTransparentImage,
-                            image: image,
+                        : Container(
+                          height: 110,
+                          width: 160,
+                          
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: FadeInImage.memoryNetwork(
+                                placeholder: kTransparentImage,
+                                image: image,
+                                fit: BoxFit.fill,
+                              ),
                           ),
+                        ),
                   ),
                 )
               ],
@@ -85,7 +94,7 @@ class MyPeopleCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(4),
-                    color: ProjectColors.purple,
+                    color: Theme.of(context).primaryColor,
                   ),
                   child:  Text(
                     "$eventLength events",

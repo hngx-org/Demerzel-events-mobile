@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/riverpod/theme_provider.dart';
 import 'package:hng_events_app/screens/splash_screen.dart';
 
 void main() async{
@@ -10,16 +11,34 @@ void main() async{
   runApp(const ProviderScope(child: ProviderScope(child: MyApp())));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',
-      theme: ThemeData(primaryColor: ProjectColors.purple),
+      themeMode: ref.watch(themeProvider),
+            darkTheme: ThemeData.dark(
+              
+              useMaterial3: true
+            ).copyWith(
+              colorScheme: const ColorScheme.dark(
+                primary: ProjectColors.purple
+              )
+            ),
+
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: ProjectColors.purple,
+                primary: ProjectColors.purple,
+                // secondary: const Color(0xFFF97316),
+              ),
+              useMaterial3: true,
+            ),
+      // theme: ThemeData(primaryColor: ProjectColors.purple),
       home: const SplashScreen(),
     );
   }

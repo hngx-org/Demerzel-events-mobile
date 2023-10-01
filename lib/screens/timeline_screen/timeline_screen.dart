@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen/everyone_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen/friends_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 class TimelineScreen extends StatefulWidget {
   const TimelineScreen({super.key});
@@ -20,27 +20,43 @@ class _TimelineScreenState extends State<TimelineScreen> {
       child: Scaffold(
         backgroundColor: const Color(0xFFFFF8F5),
         appBar: AppBar(
-          bottom: const TabBar(
+          bottom: TabBar(
             tabs: [
+              // Tab(
+              //   child: Padding(
+              //     padding: EdgeInsets.all(8.0),
+              //     child: Text(
+              //       "Upcoming Events",
+              //       style: TextStyle(fontSize: 17, color: Colors.black),
+              //     ),
+              //   ),
+              // ),
               Tab(
-                child: Text(
-                  "All Events",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                key: UniqueKey(),
+                child: const Text(
+                  "My Events",
+                  style: TextStyle(fontSize: 17, color: Colors.black),
                 ),
               ),
               Tab(
-                child: Text(
-                  "My Events",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
+                key: UniqueKey(),
+                child: const Text(
+                  "All Events",
+                  style: TextStyle(fontSize: 17, color: Colors.black),
                 ),
               ),
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            EveryoneScreen(),
-            MyEventScreen(),
+            // UpcomingEventScreen(),
+            MyEventScreen(
+              key: UniqueKey(),
+            ),
+            AllEventsScreen(
+              key: UniqueKey(),
+            ),
           ],
         ),
         floatingActionButton: Padding(

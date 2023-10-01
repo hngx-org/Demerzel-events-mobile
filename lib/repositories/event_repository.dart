@@ -54,7 +54,16 @@ class EventRepository {
           .timeout(const Duration(seconds: 60));
 
       final Map<String, dynamic> data = json.decode(response.body);
-      return GetListEventModel.fromMap(data);
+
+      log(data['data']['events'].length.toString());
+
+      
+      final result = GetListEventModel.fromMap(data);
+
+      print('-------> ${result.data.events.length}');
+
+      return result;
+
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -73,7 +82,7 @@ class EventRepository {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
-        log(data.toString());
+       // log(data.toString());
 
         return data['data']['Result'] != null
             ? GetListEventModel.fromMap(data)
@@ -97,11 +106,11 @@ class EventRepository {
     body["thumbnail"] = imageUrl;
     body.remove("image");
 
-    log(body.toString());
+   // log(body.toString());
 
     final result =
         apiService.post(url: ApiRoutes.eventURI, body: body, headers: header);
-    log(result.toString());
+   // log(result.toString());
 
     return true;
   }
@@ -128,7 +137,7 @@ class EventRepository {
       // await Future.delayed(const Duration(seconds: 2));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
-        log(data.toString());
+       // log(data.toString());
         return GetListEventModel.fromMap(data);
       } else {
         throw response.reasonPhrase ?? response.body;

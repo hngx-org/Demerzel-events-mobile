@@ -21,6 +21,7 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
         right: 20,
       ),
       child: Row(
+        
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -33,15 +34,16 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
                 },
                 icon: const Icon(Icons.chevron_left)),
           ),
-           Center(
-            child:  Text(
-                  title,
-                  style: const TextStyle(
-                      fontFamily: 'inter',
-                      fontWeight: FontWeight.w700,
-                      fontSize: 24),
-                ),
-          ),
+           Align(
+            alignment: Alignment.bottomCenter,
+             child: Text(
+                   title,
+                   style: const TextStyle(
+                       fontFamily: 'inter',
+                       fontWeight: FontWeight.w700,
+                       fontSize: 24),
+                 ),
+           ),
           Visibility(
               visible: userRef.user != null && userRef.user?.photoURL != null,
               replacement: const CircleAvatar(

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 
@@ -18,9 +16,9 @@ class CalendarPage extends ConsumerWidget {
     final eventProvider = ref.watch(EventProvider.provider);
 
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
+      // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
-        backgroundColor: ProjectColors.white,
+        // backgroundColor: ProjectColors.white,
         centerTitle: false,
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),
@@ -32,7 +30,7 @@ class CalendarPage extends ConsumerWidget {
             onPressed: () {},
             icon: const Icon(
               Icons.more_vert,
-              color: ProjectColors.black,
+              // color: ProjectColors.black,
             ),
           ),
         ],

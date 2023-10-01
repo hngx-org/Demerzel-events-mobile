@@ -2,15 +2,32 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
 import '../../riverpod/event_provider.dart';
+import '../../widgets/timeline_event_card.dart';
 
-class EveryoneScreen extends ConsumerWidget {
-  const EveryoneScreen({super.key});
+class UpcomingEventScreen extends ConsumerStatefulWidget {
+  const UpcomingEventScreen({super.key});
+
+  @override
+  ConsumerState<UpcomingEventScreen> createState() => _CreateGroupState();
+}
+
+class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
+  @override
+  void initState() {
+
+    super.initState();
+    //ref.read(EventProvider.provider).getUpcomingEvent();
+    // getUpcomingEvent();    
+  }
+
+  //Future getUpcomingEvent() async => await ref.read(EventProvider.provider).getUpcomingEvent();
 
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
@@ -40,7 +57,7 @@ class EveryoneScreen extends ConsumerWidget {
                 children: [
                   Visibility(
                     visible: image.isEmpty,
-                    replacement:  Image.network(
+                    replacement: Image.network(
                       image,
                       fit: BoxFit.contain,
                       width: 100.r,
@@ -107,14 +124,17 @@ class EveryoneScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(
+    BuildContext context,
+  ) {
     final eventNotifier = ref.watch(EventProvider.provider);
-
+     Size screensize = MediaQuery.of(context).size;
+  
     if (eventNotifier.isBusy) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
+    if (eventNotifier.upcomingEvents.isEmpty) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,7 +142,7 @@ class EveryoneScreen extends ConsumerWidget {
             const Text("No event was found", textAlign: TextAlign.center),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => eventNotifier.getAllEvent(),
+              onTap: () => eventNotifier.getUpcomingEvent(),
               child: const Text(
                 "Tap to Retry",
                 style: TextStyle(decoration: TextDecoration.underline),
@@ -134,55 +154,32 @@ class EveryoneScreen extends ConsumerWidget {
     }
 
     return RefreshIndicator(
-      onRefresh: () async => eventNotifier.getAllEvent(),
+      onRefresh: () async => eventNotifier.getUpcomingEvent(),
       child: ListView.builder(
-        itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
+        itemCount: eventNotifier.upcomingEvents.length,
         itemBuilder: (BuildContext context, int index) {
-          final Event? event = eventNotifier.allEvents?.data.events[index];
+          final Event event = eventNotifier.upcomingEvents[index];
 
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CommentScreen(event: event!),
+                builder: (context) => CommentScreen(event: event),
               ),
             ),
-            child: bodyBuild(
-              event?.title ?? "N/A",
-              event?.startDate ?? "N/A",
-              event?.startTime ?? "N/A",
-              event?.location ?? "N/A",
-              timeLeft(DateTime.parse(event?.startDate ?? '2021-09-09'),),
-              event?.thumbnail ?? "",
+            child: TimelineEventCard(
+              context: context, 
+              screensize: screensize, 
+              image: event.thumbnail, 
+              title: event.title , 
+              time: event.startTime ,
+              location: event.location ,
+              date: event.startDate ,
+              activity:  timeLeft(event.startDate, event.startTime),
             ),
           );
         },
       ),
     );
-  }
-
-  static String timeLeft(DateTime date) {
-    final date2 = DateTime.now();
-    final difference = date.difference(date2);
-
-    if ((difference.inDays / 7).floor() >= 1) {
-      return '1 week Left';
-    } else if (difference.inDays >= 2) {
-      return '${difference.inDays} days Left';
-    } else if (difference.inDays >= 1) {
-      return '1 day Left';
-    } else if (difference.inHours >= 2) {
-      return '${difference.inHours} hours Left';
-    } else if (difference.inHours >= 1) {
-      return '1 hour Left';
-    } else if (difference.inMinutes >= 2) {
-      return '${difference.inMinutes} minutes Left';
-    } else if (difference.inMinutes >= 1) {
-      return '1 minute Left';
-    } else if (difference.inSeconds >= 3) {
-      return '${difference.inSeconds} seconds Left';
-    } else {
-      return 'Expired';
-    }
   }
 }
