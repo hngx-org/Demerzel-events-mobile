@@ -60,7 +60,6 @@ class EventRepository {
       
       final result = GetListEventModel.fromMap(data);
 
-      print('-------> ${result.data.events.length}');
 
       return result;
 
