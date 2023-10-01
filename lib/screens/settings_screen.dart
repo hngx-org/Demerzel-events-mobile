@@ -65,7 +65,7 @@ class SettingsPage extends ConsumerWidget {
                       subtitle: Text(
                          userRef.user?.email ?? 'salome357@gmail.com',
                         style: greyTextStyle.copyWith(
-                            fontSize: 17, fontWeight: FontWeight.w700),
+                            fontSize: 14, fontWeight: FontWeight.w700),
                       ),
                       trailing: SvgPicture.asset(ProjectConstants.rightChevron),
                     );

@@ -131,7 +131,11 @@ class EventsCard extends ConsumerWidget {
                 visible: eventNotifier.userEvents
                     .any((element) => element.id == event.id),
                 replacement: JoinButton(
-                  onPressed: () => eventNotifier.subscribeToEvent(event.id),
+                  onPressed: () async{
+                   await eventNotifier.subscribeToEvent(event.id);
+                   await eventNotifier.getUserEvent();
+                   
+                  },
                 ),
                 child: const Text('Already Subscribed 👍🏼'),
               ),
