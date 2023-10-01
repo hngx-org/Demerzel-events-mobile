@@ -6,6 +6,7 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
+import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
 
 import 'package:svg_flutter/svg.dart';
@@ -49,7 +50,16 @@ class SettingsPage extends ConsumerWidget {
         child: Column(
           children: [
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) => EditProfileScreen(
+                    name: userRef.user?.displayName?? 'salome', 
+                    image: null,
+                    email: userRef.user?.email ?? 'salome357@gmail.com',
+                    )
+                  )
+                );
+              },
               child: Container(
                 height: 72,
                 decoration: ProjectConstants.appBoxDecoration,

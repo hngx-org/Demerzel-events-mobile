@@ -68,9 +68,13 @@ class AuthRepository {
     await localStorageService.saveToDisk(_user, token);
   }
 
-  Future<String?> getToken() async {
+  Future<String> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
-    return token;
+    if (token != null) {
+      return token;
+    } else {
+      throw Exception('Failed to retrieve token');
+    }
   }
 
   Future<Map<String, String>> getAuthHeader() async {
@@ -81,22 +85,18 @@ class AuthRepository {
   }
 
   Future<String> getUserid() async{
-    String? token = await getToken();
-    if (token != null) {
-      Map<String, dynamic> userMap = JwtDecoder.decode(token);
-      log(userMap.toString());
+    String token = await getToken();
+    Map<String, dynamic> userMap = JwtDecoder.decode(token);
       return userMap["data"]["id"];
-    } else {
-      throw Exception("No user token");
-    }    
   }
 
   Future updateUserProfile(String userName, String image) async{
     String userid = await getUserid();
+    String userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
     // header = Headers.fromMap(headerMap)
     final response = await http.put(
-      Uri.parse('$baseUrl/api/users/$userid'),
+      Uri.parse('$baseUrl/api/users/$userToken'),
       headers: headerMap,
       body: jsonEncode(<String, String>
         {

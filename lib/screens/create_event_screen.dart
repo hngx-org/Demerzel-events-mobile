@@ -125,362 +125,146 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          color: ProjectColors.bgColor,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: titleController,
-                  cursorColor: ProjectColors.black,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: ProjectColors.white,
-                    labelText: 'Event Title',
-                    labelStyle:
-                        TextStyle(color: ProjectColors.black, fontSize: 15),
-                    alignLabelWithHint: true,
-                    hintText: 'Type Event Title',
-                    hintStyle: TextStyle(fontSize: 15),
-                    border: OutlineInputBorder(borderSide: BorderSide()),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
-                  ),
-                  onChanged: (value) => setState(() {}),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: titleController,
+                cursorColor: ProjectColors.black,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: ProjectColors.white,
+                  labelText: 'Event Title',
+                  labelStyle:
+                      TextStyle(color: ProjectColors.black, fontSize: 15),
+                  alignLabelWithHint: true,
+                  hintText: 'Type Event Title',
+                  hintStyle: TextStyle(fontSize: 15),
+                  border: OutlineInputBorder(borderSide: BorderSide()),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
                 ),
+                onChanged: (value) => setState(() {}),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: locationController,
-                  cursorColor: ProjectColors.black,
-                  textAlignVertical: TextAlignVertical.top,
-                  decoration: const InputDecoration(
-                    filled: true,
-                    fillColor: ProjectColors.white,
-                    labelText: 'Add a Location',
-                    labelStyle:
-                        TextStyle(color: ProjectColors.black, fontSize: 15),
-                    alignLabelWithHint: true,
-                    hintText: 'Type The Location of the Event',
-                    hintStyle: TextStyle(fontSize: 15),
-                    border: OutlineInputBorder(borderSide: BorderSide()),
-                    focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
-                  ),
-                  onChanged: (value) => setState(() {}),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: locationController,
+                cursorColor: ProjectColors.black,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: const InputDecoration(
+                  filled: true,
+                  fillColor: ProjectColors.white,
+                  labelText: 'Add a Location',
+                  labelStyle:
+                      TextStyle(color: ProjectColors.black, fontSize: 15),
+                  alignLabelWithHint: true,
+                  hintText: 'Type The Location of the Event',
+                  hintStyle: TextStyle(fontSize: 15),
+                  border: OutlineInputBorder(borderSide: BorderSide()),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide()),
                 ),
+                onChanged: (value) => setState(() {}),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Stack(
-                  children: [
-                    TextField(
-                      controller: bodyController,
-                      cursorColor: ProjectColors.black,
-                      maxLines: 3,
-                      textAlignVertical: TextAlignVertical.top,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: ProjectColors.white,
-                        labelText: 'Event Description',
-                        labelStyle: TextStyle(
-                          color: ProjectColors.black,
-                          fontSize: 15,
-                        ),
-                        alignLabelWithHint: true,
-                        hintText: 'Type Event Description',
-                        hintStyle: TextStyle(
-                          fontSize: 15,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(),
-                        ),
-                        contentPadding: EdgeInsets.only(
-                          top: 15,
-                          left: 20,
-                          right: 20,
-                          bottom: 50,
-                        ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Stack(
+                children: [
+                  TextField(
+                    controller: bodyController,
+                    cursorColor: ProjectColors.black,
+                    maxLines: 3,
+                    textAlignVertical: TextAlignVertical.top,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: ProjectColors.white,
+                      labelText: 'Event Description',
+                      labelStyle: TextStyle(
+                        color: ProjectColors.black,
+                        fontSize: 15,
                       ),
-                      onChanged: (value) => setState(() {}),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: InkWell(
-                  onTap: () {
-                    _getFromGallery();
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: ProjectConstants.appBoxDecoration
-                        .copyWith(color: Colors.white),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(imagePath.split('/').last.isEmpty
-                              ? 'Add a Image'
-                              : imagePath.split('/').last),
-                          SvgPicture.asset(ProjectConstants.imagePicker),
-                        ],
+                      alignLabelWithHint: true,
+                      hintText: 'Type Event Description',
+                      hintStyle: TextStyle(
+                        fontSize: 15,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(),
+                      ),
+                      contentPadding: EdgeInsets.only(
+                        top: 15,
+                        left: 20,
+                        right: 20,
+                        bottom: 50,
                       ),
                     ),
+                    onChanged: (value) => setState(() {}),
                   ),
-                ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Divider(thickness: 1, color: Colors.black),
-                    ),
-                    Row(
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: InkWell(
+                onTap: () {
+                  _getFromGallery();
+                },
+                child: Container(
+                  height: 50,
+                  decoration: ProjectConstants.appBoxDecoration
+                      .copyWith(color: Colors.white),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            'Starts',
-                            style: TextStyle(
-                              fontFamily: 'NotoSans',
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 80.0),
-                          child: Container(
-                            height: 35,
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: ProjectColors.purple,
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(4, 5),
-                                ),
-                              ],
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                _selectDate(context, true);
-                              },
-                              child: Text(
-                                startDate != null
-                                    ? "${startDate!.toLocal()}".split(' ')[0]
-                                    : 'Select Date',
-                                style: const TextStyle(
-                                  color: ProjectColors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 17.0),
-                          child: Container(
-                            height: 35,
-                            decoration: BoxDecoration(
-                              color: ProjectColors.purple,
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(4, 5),
-                                ),
-                              ],
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                _selectTime(context, true);
-                              },
-                              child: Text(
-                                startTime != null
-                                    ? "${startTime!.hour}:${startTime!.minute}"
-                                    : 'Select Time',
-                                style: const TextStyle(
-                                  color: ProjectColors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        Text(imagePath.split('/').last.isEmpty
+                            ? 'Add a Image'
+                            : imagePath.split('/').last),
+                        SvgPicture.asset(ProjectConstants.imagePicker),
                       ],
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            'Ends',
-                            style: TextStyle(
-                              fontFamily: 'NotoSans',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 80.0),
-                          child: Container(
-                            height: 35,
-                            decoration: BoxDecoration(
-                              color: ProjectColors.purple,
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(4, 5),
-                                ),
-                              ],
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                _selectDate(context, false);
-                              },
-                              child: Text(
-                                endDate != null
-                                    ? "${endDate!.toLocal()}".split(' ')[0]
-                                    : 'Select Date',
-                                style: const TextStyle(
-                                  color: ProjectColors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: Container(
-                            height: 35,
-                            decoration: BoxDecoration(
-                              color: ProjectColors.purple,
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  spreadRadius: 0,
-                                  blurRadius: 0,
-                                  offset: Offset(
-                                    4,
-                                    5,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                _selectTime(context, false);
-                              },
-                              child: Text(
-                                endTime != null
-                                    ? "${endTime!.hour}:${endTime!.minute}"
-                                    : 'Select Time',
-                                style: const TextStyle(
-                                  color: ProjectColors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Divider(
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.group,
-                            color: ProjectColors.purple,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: DropdownButton<Group>(
-                                value: selectedGroup,
-
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedGroup = newValue;
-                                  });
-                                },
-                                items: groupsNotifier.groups.map((group) {
-                                  return DropdownMenuItem(
-                                    value: group,
-                                    child: Text(
-                                      group.name,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                hint: const Text(
-                                  'Select a Group',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                  ),
-                                ), // Optional hint text
-                                isExpanded:
-                                    true, // Makes the dropdown button expand to the available width
-                                underline: Container(
-                                  height:
-                                      1, // Add an underline with custom styling
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                  ),
                 ),
               ),
-              isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      width: 300,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 40.0),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Divider(thickness: 1, color: Colors.black),
+                  ),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Starts',
+                          style: TextStyle(
+                            fontFamily: 'NotoSans',
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 80.0),
                         child: Container(
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
+                          height: 35,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            color: ProjectColors.purple,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: const [
                               BoxShadow(
                                 color: Colors.black,
                                 spreadRadius: 0,
@@ -490,41 +274,254 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                             ],
                           ),
                           child: TextButton(
-                            onPressed: () => uploadEvent(eventNotifier),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                isFormValid()
-                                    ? ProjectColors.purple
-                                    : ProjectColors.purple.withOpacity(0.6),
-                              ),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                              ),
-                              side: MaterialStateProperty.all(
-                                const BorderSide(
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                            child: const Text(
-                              'Create Event',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
+                            onPressed: () {
+                              _selectDate(context, true);
+                            },
+                            child: Text(
+                              startDate != null
+                                  ? "${startDate!.toLocal()}".split(' ')[0]
+                                  : 'Select Date',
+                              style: const TextStyle(
                                 color: ProjectColors.black,
-                                fontFamily: 'NotoSans',
-                                fontSize: 20,
                               ),
                             ),
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17.0),
+                        child: Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: ProjectColors.purple,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                spreadRadius: 0,
+                                blurRadius: 0,
+                                offset: Offset(4, 5),
+                              ),
+                            ],
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              _selectTime(context, true);
+                            },
+                            child: Text(
+                              startTime != null
+                                  ? "${startTime!.hour}:${startTime!.minute}"
+                                  : 'Select Time',
+                              style: const TextStyle(
+                                color: ProjectColors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.black,
                     ),
-              const SizedBox(height: 40),
-            ],
-          ),
+                  ),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Ends',
+                          style: TextStyle(
+                            fontFamily: 'NotoSans',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 80.0),
+                        child: Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: ProjectColors.purple,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                spreadRadius: 0,
+                                blurRadius: 0,
+                                offset: Offset(4, 5),
+                              ),
+                            ],
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              _selectDate(context, false);
+                            },
+                            child: Text(
+                              endDate != null
+                                  ? "${endDate!.toLocal()}".split(' ')[0]
+                                  : 'Select Date',
+                              style: const TextStyle(
+                                color: ProjectColors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: ProjectColors.purple,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black,
+                                spreadRadius: 0,
+                                blurRadius: 0,
+                                offset: Offset(
+                                  4,
+                                  5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              _selectTime(context, false);
+                            },
+                            child: Text(
+                              endTime != null
+                                  ? "${endTime!.hour}:${endTime!.minute}"
+                                  : 'Select Time',
+                              style: const TextStyle(
+                                color: ProjectColors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.group,
+                          color: ProjectColors.purple,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: DropdownButton<Group>(
+                              value: selectedGroup,
+
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selectedGroup = newValue;
+                                });
+                              },
+                              items: groupsNotifier.groups.map((group) {
+                                return DropdownMenuItem(
+                                  value: group,
+                                  child: Text(
+                                    group.name,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              hint: const Text(
+                                'Select a Group',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                              ), // Optional hint text
+                              isExpanded:
+                                  true, // Makes the dropdown button expand to the available width
+                              underline: Container(
+                                height:
+                                    1, // Add an underline with custom styling
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SizedBox(
+                    width: 300,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              spreadRadius: 0,
+                              blurRadius: 0,
+                              offset: Offset(4, 5),
+                            ),
+                          ],
+                        ),
+                        child: TextButton(
+                          onPressed: () => uploadEvent(eventNotifier),
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              isFormValid()
+                                  ? ProjectColors.purple
+                                  : ProjectColors.purple.withOpacity(0.6),
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                            side: MaterialStateProperty.all(
+                              const BorderSide(
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            'Create Event',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: ProjectColors.black,
+                              fontFamily: 'NotoSans',
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );

@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
 
-class ThemeSettingScreen extends StatefulWidget {
+class ThemeSettingScreen extends ConsumerStatefulWidget {
   const ThemeSettingScreen({super.key});
 
   @override
-  State<ThemeSettingScreen> createState() => _ThemeSettingScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ThemeSettingScreenState();
 }
 
 enum ThemeValue {system, dark, light}
 
-class _ThemeSettingScreenState extends State<ThemeSettingScreen> {
-  ThemeValue? groupValue = ThemeValue.system;
+class _ThemeSettingScreenState extends ConsumerState<ThemeSettingScreen> {
+  ThemeValue? groupValue;
+  @override
+ 
+
   @override
   Widget build(BuildContext context) {
+    groupValue = switch (ref.watch(themeProvider)) {
+      ThemeMode.dark => ThemeValue.dark,
+      ThemeMode.system => ThemeValue.system,
+      ThemeMode.light => ThemeValue.light,
+    };
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -30,6 +38,7 @@ class _ThemeSettingScreenState extends State<ThemeSettingScreen> {
                   groupValue: groupValue, 
                   onChanged: (ThemeValue? value){
                     ref.read(themeProvider.notifier).switchMode(ThemeMode.system);
+                    ref.read(themeProvider.notifier).getThemeLocal();
                     setState(() {
                       groupValue = value;
                     });
