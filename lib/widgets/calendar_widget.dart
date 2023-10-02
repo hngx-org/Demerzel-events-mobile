@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../riverpod/event_provider.dart';
@@ -86,6 +84,8 @@ class _CalCardState extends ConsumerState<CalCard> {
                   selectedDecoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
+                  markerDecoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+                  markerSize: 6,
                 ),
                 calendarBuilders: CalendarBuilders(
                   selectedBuilder: (context, date, events) => Container(
@@ -113,7 +113,34 @@ class _CalCardState extends ConsumerState<CalCard> {
                     ),
                   ),
                 ),
-                //eventLoader: (day) => ,
+                eventLoader: (day) {
+                  List _events = [];
+                  for (var i = 0;
+                      i <
+                          ref
+                              .read(EventProvider.provider)
+                              .allEvents!
+                              .data
+                              .events
+                              .length;
+                      i++) {
+                    if (isSameDay(
+                        DateTime.parse(ref
+                            .read(EventProvider.provider)
+                            .allEvents!
+                            .data
+                            .events[i]
+                            .startDate),
+                        day)) {
+                      _events.add(ref
+                          .read(EventProvider.provider)
+                          .allEvents!
+                          .data
+                          .events[i]);
+                    }
+                  }
+                  return _events;
+                },
               ),
             ],
           ),
