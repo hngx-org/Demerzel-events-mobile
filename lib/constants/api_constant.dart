@@ -1,9 +1,11 @@
 class ApiRoutes {
-  static const baseUrl = "https://api-s65g.onrender.com/api";
+  static const baseUrl =  "https://ev-l4gd.onrender.com/api";
+  // static const baseUrl = "https://api-s65g.onrender.com/api";
    //static const baseUrl = "https://hng.jameesjohn.com/api";
 
   static const String scheme = 'https';
-  static const String host = 'api-s65g.onrender.com';
+    static const String host = "ev-l4gd.onrender.com";
+  // static const String host = 'api-s65g.onrender.com';
   //static const String host = 'hng.jameesjohn.com';
 
   static const int receiveTimeout = 10000;
@@ -14,6 +16,8 @@ class ApiRoutes {
   static final authGoogleURI = Uri.parse('$baseUrl/auth/verify');
   static final groupURI = Uri.parse('$baseUrl/groups');
   static final eventURI = baseUri.replace(path: '/api/events');
+static eventURII(String limit, String page) =>
+      baseUri.replace(path: '/api/events?limit=$limit&page=$page');
   static final upcomingEventURI = baseUri.replace(path: '/api/events/upcoming');
   static final userEventURI = baseUri.replace(path: '/api/events/subscriptions');
   static subscribeToEventURI(String eventId) =>

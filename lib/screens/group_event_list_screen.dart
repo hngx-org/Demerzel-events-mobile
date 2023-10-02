@@ -25,16 +25,18 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(EventProvider.provider.notifier)
-          .getAllGroupEvent(widget.group.id);
+     getGroupEvents();
     });
     super.initState();
   }
 
+  Future getGroupEvents() async=> await ref
+          .read(EventProvider.provider.notifier)
+          .getAllGroupEvent(widget.group.id);
+
   @override
   Widget build(BuildContext context) {
-    // final eventNotifier = ref.watch(EventProvider.provider);
+     final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
@@ -53,13 +55,13 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               color: Theme.of(context).colorScheme.onBackground),
         ),
         actions: [
-          const Row(
+           Row(
             children: [
-              Icon(Icons.person),
+              const Icon(Icons.person),
               //TODO change from hardcoded data
               Text(
-                '12',
-                style: TextStyle(fontSize: 16),
+                "${widget.group.membersCount}",
+                style: const TextStyle(fontSize: 16),
               )
             ],
           ),
@@ -74,7 +76,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               // flex: 6,
               child: SizedBox(
                 height: 400,
-                child: (widget.group.events).isEmpty
+                child: (eventNotifier.allGroupEvents!.data.events).isEmpty
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -82,10 +84,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                         ],
                       )
                     : ListView.builder(
-                        itemCount: widget.group.events.length,
+                        itemCount: eventNotifier.allGroupEvents?.data.events.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
-                          event: widget.group.events[index],
+                          event: eventNotifier.allGroupEvents?.data.events[index],
                         ),
                       ),
               ),

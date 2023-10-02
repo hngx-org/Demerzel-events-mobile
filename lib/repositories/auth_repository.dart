@@ -49,9 +49,11 @@ class AuthRepository {
       body: body,
     );
 
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data = json.decode(response.body);
       final String token = data['data']['token'];
+      
       await saveToken(token);
     }
 
@@ -67,13 +69,10 @@ class AuthRepository {
     await localStorageService.saveToDisk(_user, token);
   }
 
-  Future<String> getToken() async {
+  Future<String?> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
-    if (token != null) {
-      return token;
-    } else {
-      throw Exception('Failed to retrieve token');
-    }
+    return token;
+ 
   }
 
   Future<Map<String, String>> getAuthHeader() async {
@@ -84,14 +83,14 @@ class AuthRepository {
   }
 
   Future<String> getUserid() async{
-    String token = await getToken();
-    Map<String, dynamic> userMap = JwtDecoder.decode(token);
+    String? token = await getToken();
+    Map<String, dynamic> userMap = JwtDecoder.decode(token!);
       return userMap["data"]["id"];
   }
 
   Future updateUserProfile(String userName, String image) async{
     String userid = await getUserid();
-    String userToken = await getToken();
+    String? userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
     // header = Headers.fromMap(headerMap)
     final response = await http.put(
