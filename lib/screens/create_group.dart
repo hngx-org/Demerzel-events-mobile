@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class CreateGroup extends ConsumerStatefulWidget {
 
 class _CreateGroupState extends ConsumerState<CreateGroup> {
   bool pressed = false;
+  bool isLoading = false;
   String imagePath = '';
   File? image;
 
@@ -38,6 +40,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   TextEditingController groupNameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final groupsNotifier = ref.watch(GroupProvider.groupProvider);
     return Scaffold(
       appBar: AppBar(
           // backgroundColor: Colors.white,
@@ -125,24 +128,11 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               GestureDetector(
                 onTap: () async {
                   if (groupNameController.text.isNotEmpty) {
-                    setState(() {
-                      pressed = true;
-                    });
-                    final result = await ref
-                        .read(groupProvider)
-                        .createGroup(groupNameController.text, image!);
-                    // ref.read(groupsProvider).createGroup(Group(
-                    //     name: groupNameController.text,
-                    //     groupImage:
-                    //         "assets/illustrations/techies_illustration.png"), image!);
-                    if (result) {
-                      setState(() {
-                        pressed = false;
-                      });
-                      Navigator.pop(
-                        context,
-                      );
-                    }
+                    // final result = await ref
+                    //     .read(groupProvider)
+                    //     .createGroup(groupNameController.text, image!);
+
+                    await createGroup(groupsNotifier);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.red,
@@ -170,10 +160,22 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
                     child: Center(
-                      child: pressed
+                      child: isLoading
                           ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Creating group',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ],
                               ),
                             )
                           : const Text(
@@ -196,5 +198,66 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         ),
       ),
     );
+  }
+
+  Future<void> createGroup(GroupProvider groupController) async {
+    // if (isFormValid() == false) return;
+
+    try {
+      isLoading = true;
+      setState(() {});
+
+      final body = {
+        "image": image,
+        "name": groupNameController.text,
+      };
+
+      final result = await groupController.createGroup(body);
+      await Future.delayed(const Duration(seconds: 5));
+      setState(() {
+        isLoading = false;
+      });
+
+      if (result) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Group created",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+
+        await groupController.getGroups();
+      } else {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              "Group could not be created",
+              style: TextStyle(color: Colors.white),
+            ),
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e, s) {
+      isLoading = false;
+      log(e.toString());
+      log(s.toString());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 }

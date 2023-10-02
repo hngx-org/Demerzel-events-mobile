@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../riverpod/event_provider.dart';
@@ -19,9 +18,20 @@ class _CalCardState extends ConsumerState<CalCard> {
 
   @override
   void initState() {
-    ref.read(EventProvider.provider.notifier).getEventByDate(DateTime.now());
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getEvents();
+      getEventByDate();
+    });
+
     super.initState();
   }
+
+  Future getEvents() async =>
+      await ref.read(EventProvider.provider).getAllEvent();
+
+  Future getEventByDate() async => await ref
+      .read(EventProvider.provider.notifier)
+      .getEventByDate(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +79,13 @@ class _CalCardState extends ConsumerState<CalCard> {
                   formatButtonVisible: false,
                 ),
                 calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                  todayDecoration:
+                      BoxDecoration(color: Theme.of(context).primaryColor),
                   selectedDecoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
+                  markerDecoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+                  markerSize: 6,
                 ),
                 calendarBuilders: CalendarBuilders(
                   selectedBuilder: (context, date, events) => Container(
@@ -95,10 +108,39 @@ class _CalCardState extends ConsumerState<CalCard> {
                     ),
                     child: Text(
                       date.day.toString(),
-                      style:  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ),
+                eventLoader: (day) {
+                  List _events = [];
+                  for (var i = 0;
+                      i <
+                          ref
+                              .read(EventProvider.provider)
+                              .allEvents!
+                              .data
+                              .events
+                              .length;
+                      i++) {
+                    if (isSameDay(
+                        DateTime.parse(ref
+                            .read(EventProvider.provider)
+                            .allEvents!
+                            .data
+                            .events[i]
+                            .startDate),
+                        day)) {
+                      _events.add(ref
+                          .read(EventProvider.provider)
+                          .allEvents!
+                          .data
+                          .events[i]);
+                    }
+                  }
+                  return _events;
+                },
               ),
             ],
           ),

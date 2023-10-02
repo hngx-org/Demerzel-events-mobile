@@ -98,10 +98,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(groupProvider);
+    //ref.watch(GroupProvider.groupProvider);
 
     final eventNotifier = ref.watch(EventProvider.provider);
-    final groupsNotifier = ref.watch(groupProvider);
+    final groupsNotifier = ref.watch(GroupProvider.groupProvider);
 
     return Scaffold(
       appBar: AppBar(
