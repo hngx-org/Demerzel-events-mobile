@@ -70,3 +70,53 @@ class GroupListModel {
     );
   }
 }
+
+class GroupEventListModel {
+  final Data data;
+  final String message;
+  final String status;
+
+  GroupEventListModel({
+    required this.data,
+    required this.message,
+    required this.status,
+  });
+
+  factory GroupEventListModel.fromMap(Map<String, dynamic> json) {
+    return GroupEventListModel(
+      data: Data.fromMap(json["data"]["group"]),
+      message: json["message"],
+      status: json["status"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "data": data.toMap(),
+      "message": message,
+      "status": status,
+    };
+  }
+}
+
+class Data {
+  final List<Event> events;
+
+  Data({required this.events});
+
+  factory Data.fromMap(Map<String, dynamic> json) {
+   if ( json.containsKey('events')) {
+      return Data(
+      events: List<Event>.from(json["events"].map((x) => Event.fromMap(x))),
+    );
+   }
+
+   return Data(events: []);
+  }
+
+
+
+  Map<String, dynamic> toMap() {
+    return {"events": List<dynamic>.from(events.map((x) => x.toMap()))};
+  }
+}

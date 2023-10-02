@@ -26,11 +26,13 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
     getGroupEvents();
-     print('getting group events');
+ 
     });
      
     super.initState();
   }
+
+
 
   Future getGroupEvents() async => await ref
           .read(EventProvider.provider.notifier)
@@ -40,7 +42,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   Widget build(BuildContext context) {
      final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
+      //backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
         centerTitle: false,
         bottom: PreferredSize(
@@ -60,7 +62,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
            Row(
             children: [
               const Icon(Icons.person),
-              //TODO change from hardcoded data
+              
               Text(
                 "${widget.group.membersCount}",
                 style: const TextStyle(fontSize: 16),
