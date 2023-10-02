@@ -54,6 +54,8 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                 );
               },
               buttonColor: Theme.of(context).primaryColor,
+              shadowColor: Theme.of(context).colorScheme.onBackground,
+              borderColor: Theme.of(context).colorScheme.onBackground,
               buttonHeight: 40,
               borderRadius: BorderRadius.circular(8),
               child: Center(
@@ -77,7 +79,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.asset('assets/images/Vector (Stroke).png'),
+                        child: Image.asset('assets/images/Vector (Stroke).png', color: Theme.of(context).colorScheme.onBackground,),
                       ),
                     ],
                   ),

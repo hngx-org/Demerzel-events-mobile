@@ -27,7 +27,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     "Upcoming Events",
-                    style: TextStyle(fontSize: 17, color: Colors.black),
+                    style: TextStyle(fontSize: 17,),
                   ),
                 ),
               ),
