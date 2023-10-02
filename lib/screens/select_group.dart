@@ -9,7 +9,7 @@ class SelectGroup extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final groupsNotifier = ref.watch(groupProvider);
+    final groupsNotifier = ref.watch(GroupProvider.groupProvider);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(

@@ -10,13 +10,11 @@ import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
-  const EventsScreen( {
+  const EventsScreen({
     super.key,
     required this.group,
-   
   });
   final Group group;
-  
 
   @override
   ConsumerState<EventsScreen> createState() => _EventsScreenState();
@@ -26,7 +24,9 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref.read(EventProvider.provider.notifier).getAllGroupEvent(widget.group.id);
+      ref
+          .read(EventProvider.provider.notifier)
+          .getAllGroupEvent(widget.group.id);
     });
     super.initState();
   }
@@ -36,25 +36,39 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     // final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
       backgroundColor: ProjectColors.bgColor,
-      appBar: AppHeader(title: widget.group.name),
+      appBar: AppBar(
+        centerTitle: false,
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4.0),
+            child: Container(
+              height: 1,
+              color: Colors.black,
+            )),
+        title: Text(
+          widget.group.name,
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onBackground),
+        ),
+        actions: [
+          const Row(
+            children: [
+              Icon(Icons.person),
+              //TODO change from hardcoded data
+              Text(
+                '12',
+                style: TextStyle(fontSize: 16),
+              )
+            ],
+          ),
+          TextButton(onPressed: () {}, child: const Text('Join', style: TextStyle(fontSize: 16),)),
+        ],
+      ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Container(
-            //   margin: const EdgeInsets.all(20),
-            //   width: 60,
-            //   height: 30,
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(5),
-            //       border: Border.all(),
-            //       color: ProjectColors.purple),
-            //   child: const Center(
-            //     child: Text(
-            //       "Today",
-            //     ),
-            //   ),
-            // ),
             Expanded(
               // flex: 6,
               child: SizedBox(
@@ -67,12 +81,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                         ],
                       )
                     : ListView.builder(
-                        itemCount:
-                            widget.group.events.length ,
+                        itemCount: widget.group.events.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
-                          event:
-                              widget.group.events[index],
+                          event: widget.group.events[index],
                         ),
                       ),
               ),
