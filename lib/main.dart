@@ -27,6 +27,7 @@ class MyApp extends ConsumerWidget {
               useMaterial3: true
             ).copyWith(
               colorScheme: const ColorScheme.dark(
+                
                 primary: ProjectColors.purple
               )
             ),
