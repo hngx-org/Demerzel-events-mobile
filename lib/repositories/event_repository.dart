@@ -71,6 +71,32 @@ class EventRepository {
     }
   }
 
+    Future<GetListEventModel> getUpcomingEvent() async {
+    final header = await authRepository.getAuthHeader();
+
+    try {
+      final http.Response response = await http
+          .get(ApiRoutes.upcomingEventURI, headers: header)
+          .timeout(const Duration(seconds: 60));
+
+      final Map<String, dynamic> data = json.decode(response.body);
+
+      log(data['data']['events'].length.toString());
+
+      
+      final result = GetListEventModel.fromMap(data);
+
+
+      return result;
+
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      rethrow;
+    }
+  }
+
   Future<GetListEventModel?> getAllGroupEvent(String groupId) async {
     final header = await authRepository.getAuthHeader();
 

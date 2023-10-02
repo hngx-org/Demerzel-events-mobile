@@ -75,37 +75,14 @@ class EventProvider extends ChangeNotifier {
     _isBusy = false;
     notifyListeners();
   }
-
   Future<void> getUpcomingEvent() async {
     _isBusy = true;
     _error = "";
     notifyListeners();
-    final newUpcoming = <Event>[];
+
     try {
-      final result = await eventRepository.getAllEvent();
+      final result = await eventRepository.getUpcomingEvent();
       allEvents = result;
-
-      if (upcomingEvents.isEmpty) {
-        upcomingEvents.addAll(allEvents!.data.events.where((event) =>
-            timeLeft(
-             event.startDate, event.startTime
-            ) !=
-            'Expired'));
-      } else {
-        newUpcoming.addAll(allEvents!.data.events.where((event) =>
-            timeLeft(
-             event.startDate, event.startTime
-            ) !=
-            'Expired'));
-        for (var i = 0; i < newUpcoming.length; i++) {
-          if (!upcomingEvents.contains(newUpcoming[i])) {
-            upcomingEvents.add(newUpcoming[i]);
-          }
-        }
-      }
-
-
-      log(upcomingEvents.toString());
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -115,9 +92,54 @@ class EventProvider extends ChangeNotifier {
       notifyListeners();
     }
 
+    print('-------------> called ${allEvents?.data.events.length}');
+
     _isBusy = false;
     notifyListeners();
   }
+
+  // Future<void> getUpcomingEvent() async {
+  //   _isBusy = true;
+  //   _error = "";
+  //   notifyListeners();
+  //   final newUpcoming = <Event>[];
+  //   try {
+  //     final result = await eventRepository.getAllEvent();
+  //     allEvents = result;
+
+  //     if (upcomingEvents.isEmpty) {
+  //       upcomingEvents.addAll(allEvents!.data.events.where((event) =>
+  //           timeLeft(
+  //            event.startDate, event.startTime
+  //           ) !=
+  //           'Expired'));
+  //     } else {
+  //       newUpcoming.addAll(allEvents!.data.events.where((event) =>
+  //           timeLeft(
+  //            event.startDate, event.startTime
+  //           ) !=
+  //           'Expired'));
+  //       for (var i = 0; i < newUpcoming.length; i++) {
+  //         if (!upcomingEvents.contains(newUpcoming[i])) {
+  //           upcomingEvents.add(newUpcoming[i]);
+  //         }
+  //       }
+  //     }
+
+
+  //     log(upcomingEvents.toString());
+  //     notifyListeners();
+  //   } catch (e, s) {
+  //     log(e.toString());
+  //     log(s.toString());
+
+  //     _error = e.toString();
+  //     notifyListeners();
+  //   }
+
+  //   _isBusy = false;
+  //   notifyListeners();
+  // }
 
   Future<void> subscribeToEvent(String eventId) async {
     _isBusy = true;

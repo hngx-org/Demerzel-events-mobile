@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:hng_events_app/widgets/app_header.dart';
@@ -61,7 +62,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               )
             ],
           ),
-          TextButton(onPressed: () {}, child: const Text('Join', style: TextStyle(fontSize: 16),)),
+          TextButton(onPressed: ()=> ref.read(GroupProvider.groupProvider).subscribeToGroup(widget.group.id) , child: const Text('Join', style: TextStyle(fontSize: 16),)),
         ],
       ),
       body: Center(

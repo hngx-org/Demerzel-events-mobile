@@ -7,6 +7,8 @@ class Group {
   String image;
   DateTime createdAt;
   DateTime updatedAt;
+  int membersCount;
+  int eventCount;
   List<User>? members; // You can change the type of members as needed
   List<Event> events ;
 
@@ -16,6 +18,8 @@ class Group {
     required this.image,
     required this.createdAt,
     required this.updatedAt,
+    required this.membersCount,
+    required this.eventCount,
     this.members,
     this.events = const [],
   });
@@ -38,6 +42,8 @@ class Group {
       image: json['image'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
+      membersCount: json['members_count'],
+      eventCount: json['events_count'],
       members: members,
       events: events,
     );
