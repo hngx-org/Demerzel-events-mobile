@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/api_service.dart';
 import 'package:hng_events_app/services/http_service/image_upload_service.dart';
@@ -97,20 +98,21 @@ class EventRepository {
     }
   }
 
-  Future<GetListEventModel?> getAllGroupEvent(String groupId) async {
+  Future<GroupEventListModel?> getAllGroupEvent(String groupId) async {
     final header = await authRepository.getAuthHeader();
-
+print(header);
     try {
       final http.Response response = await http
           .get(ApiRoutes.groupEventURI(groupId), headers: header)
           .timeout(const Duration(seconds: 60));
-
+print("this is ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
        // log(data.toString());
 
-        return data['data']['Result'] != null
-            ? GetListEventModel.fromMap(data)
+        return 
+        data['data'] != null
+            ? GroupEventListModel.fromMap(data)
             : null;
       } else {
         throw response.reasonPhrase ?? response.body;

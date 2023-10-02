@@ -51,6 +51,7 @@ class GroupRepository {
 
   Future<bool> createGroup(Map<String, dynamic> body) async {
     final header = await authRepository.getAuthHeader();
+    log(header.toString());
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
 
     body["image"] = imageUrl;
@@ -59,7 +60,7 @@ class GroupRepository {
     // log(body.toString());
 
     final result =
-        apiService.post(url: ApiRoutes.groupURI, body: body, headers: header);
+        await apiService.post(url: ApiRoutes.groupURI, body: body, headers: header);
     // log(result.toString());
 
     return true;
