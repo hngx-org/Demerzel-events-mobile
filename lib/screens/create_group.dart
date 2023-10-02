@@ -48,7 +48,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             icon: const Icon(
               Icons.chevron_left,
               size: 30,
-              color: Colors.black,
+              
             ),
             onPressed: () {
               Navigator.of(context).pop();
@@ -58,9 +58,9 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
           title: const Text(
             'Create Group',
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 22, color: Colors.black),
+                fontWeight: FontWeight.bold, fontSize: 22, ),
           )),
-      backgroundColor: const Color(0xffFFF8F5),
+      //backgroundColor: const Color(0xffFFF8F5),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -81,7 +81,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 controller: groupNameController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: ProjectColors.white,
+                  fillColor:Theme.of(context).colorScheme.background,
                   hintStyle: const TextStyle(
                     fontSize: 15,
                   ),
@@ -111,14 +111,14 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 child: Container(
                   height: 50,
                   decoration: ProjectConstants.appBoxDecoration
-                      .copyWith(color: Colors.white),
+                      .copyWith(color: Theme.of(context).colorScheme.background, border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(imagePath.split('/').last),
-                        SvgPicture.asset(ProjectConstants.imagePicker),
+                        SvgPicture.asset(ProjectConstants.imagePicker, color: Theme.of(context).colorScheme.onBackground,),
                       ],
                     ),
                   ),
