@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
@@ -19,9 +20,20 @@ class _CalCardState extends ConsumerState<CalCard> {
 
   @override
   void initState() {
-    ref.read(EventProvider.provider.notifier).getEventByDate(DateTime.now());
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      getEvents();
+      getEventByDate();
+    });
+
     super.initState();
   }
+
+  Future getEvents() async =>
+      await ref.read(EventProvider.provider).getAllEvent();
+
+  Future getEventByDate() async => await ref
+      .read(EventProvider.provider.notifier)
+      .getEventByDate(DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +81,8 @@ class _CalCardState extends ConsumerState<CalCard> {
                   formatButtonVisible: false,
                 ),
                 calendarStyle: CalendarStyle(
-                  todayDecoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                  todayDecoration:
+                      BoxDecoration(color: Theme.of(context).primaryColor),
                   selectedDecoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
@@ -95,10 +108,12 @@ class _CalCardState extends ConsumerState<CalCard> {
                     ),
                     child: Text(
                       date.day.toString(),
-                      style:  TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     ),
                   ),
                 ),
+                //eventLoader: (day) => ,
               ),
             ],
           ),
