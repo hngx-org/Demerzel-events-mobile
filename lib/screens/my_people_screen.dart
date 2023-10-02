@@ -18,7 +18,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
   Widget build(
     BuildContext context,
   ) {
-    final groupsNotifier = ref.watch(groupProvider);
+    final groupsNotifier = ref.watch(GroupProvider.groupProvider);
 
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
