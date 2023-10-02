@@ -14,7 +14,6 @@ import '../../riverpod/event_provider.dart';
 
 class AllEventsScreen extends ConsumerWidget {
   const AllEventsScreen({super.key});
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Size screensize = MediaQuery.of(context).size;

@@ -69,8 +69,8 @@ class SettingsPage extends ConsumerWidget {
                      
                       tileColor: Theme.of(context).cardColor,
                       leading:  CircleAvatar(
-                backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
-              ),
+                        backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
+                      ),
                       title: Text(
                        userRef.user?.displayName?? 'salome',
                         style: largeTextStyle,
