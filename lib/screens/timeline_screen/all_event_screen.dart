@@ -23,7 +23,7 @@ class AllEventsScreen extends ConsumerWidget {
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: ProjectColors.white,
+          // color: ProjectColors.white,
           boxShadow: const [
             BoxShadow(
               offset: Offset(4, 4),

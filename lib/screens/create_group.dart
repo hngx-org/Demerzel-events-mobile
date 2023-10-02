@@ -40,7 +40,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
               Icons.chevron_left,

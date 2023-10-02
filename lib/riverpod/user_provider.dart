@@ -14,8 +14,7 @@ class UserProvider extends ChangeNotifier {
   User? user;
   updateUserProfile(String username, String image) async{
     await authRepository.updateUserProfile(
-      username, 
-      ''
+      username,
     );
   }
 

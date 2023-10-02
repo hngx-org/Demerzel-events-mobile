@@ -105,7 +105,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ProjectColors.white,
+        // backgroundColor: ProjectColors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: ProjectColors.black),
           onPressed: () => Navigator.pop(context),
@@ -118,7 +118,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
               style: TextStyle(
                 fontFamily: 'NotoSans',
                 fontWeight: FontWeight.w600,
-                color: ProjectColors.black,
+                // color: ProjectColors.black,
               ),
             ),
           ),
@@ -135,10 +135,12 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                 textAlignVertical: TextAlignVertical.top,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: ProjectColors.white,
+                  // fillColor: ProjectColors.white,
                   labelText: 'Event Title',
                   labelStyle:
-                      TextStyle(color: ProjectColors.black, fontSize: 15),
+                      TextStyle(
+                        // color: ProjectColors.black, 
+                        fontSize: 15),
                   alignLabelWithHint: true,
                   hintText: 'Type Event Title',
                   hintStyle: TextStyle(fontSize: 15),
@@ -156,10 +158,12 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                 textAlignVertical: TextAlignVertical.top,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: ProjectColors.white,
+                  // fillColor: ProjectColors.white,
                   labelText: 'Add a Location',
                   labelStyle:
-                      TextStyle(color: ProjectColors.black, fontSize: 15),
+                      TextStyle(
+                        // color: ProjectColors.black, 
+                        fontSize: 15),
                   alignLabelWithHint: true,
                   hintText: 'Type The Location of the Event',
                   hintStyle: TextStyle(fontSize: 15),
@@ -180,10 +184,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                     textAlignVertical: TextAlignVertical.top,
                     decoration: const InputDecoration(
                       filled: true,
-                      fillColor: ProjectColors.white,
+                      // fillColor: ProjectColors.white,
                       labelText: 'Event Description',
                       labelStyle: TextStyle(
-                        color: ProjectColors.black,
+                        // color: ProjectColors.black,
                         fontSize: 15,
                       ),
                       alignLabelWithHint: true,
@@ -449,7 +453,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                               hint: const Text(
                                 'Select a Group',
                                 style: TextStyle(
-                                  color: Colors.black,
+                                  // color: Colors.black,
                                   fontSize: 15,
                                 ),
                               ), // Optional hint text

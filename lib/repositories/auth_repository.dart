@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,17 +90,36 @@ class AuthRepository {
       return userMap["data"]["id"];
   }
 
-  Future updateUserProfile(String userName, String image) async{
+  Future updateUserProfile(String userName) async{
     String userid = await getUserid();
     String userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
     // header = Headers.fromMap(headerMap)
     final response = await http.put(
-      Uri.parse('$baseUrl/api/users/$userToken'),
+      Uri.parse('$baseUrl/users/$userid'),
       headers: headerMap,
       body: jsonEncode(<String, String>
         {
           'name': userName,          
+        }
+      )
+    );
+    if (response.statusCode != 200) {
+      throw Exception("failed to update userProfile");
+    }
+  }
+
+    Future updateProfilePhoto(File imageFile) async{
+    String userid = await getUserid();
+    String userToken = await getToken();
+    Map<String, String> headerMap = await getAuthHeader();
+    // header = Headers.fromMap(headerMap)
+    final response = await http.put(
+      Uri.parse('$baseUrl/users/$userid'),
+      headers: headerMap,
+      body: jsonEncode(<String, dynamic>
+        {
+          'avatar': imageFile,          
         }
       )
     );
