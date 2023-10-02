@@ -35,7 +35,6 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   Widget build(BuildContext context) {
     // final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
         centerTitle: false,
         bottom: PreferredSize(

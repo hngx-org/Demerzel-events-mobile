@@ -43,7 +43,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(
               Icons.chevron_left,
