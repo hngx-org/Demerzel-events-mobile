@@ -139,5 +139,5 @@ class AuthRepository {
   }
 
   static final provider = Provider<AuthRepository>((ref) => AuthRepository(
-      localStorageService: ref.read(LocalStorageService.provider)));
+    localStorageService: ref.read(LocalStorageService.provider)));
 }
