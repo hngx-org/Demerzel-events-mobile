@@ -142,7 +142,7 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
             const Text("No event was found", textAlign: TextAlign.center),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => eventNotifier.getUpcomingEvent(),
+              onTap: () => eventNotifier.getAllEvent(),
               child: const Text(
                 "Tap to Retry",
                 style: TextStyle(decoration: TextDecoration.underline),
