@@ -88,6 +88,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
           ],
         ),
         body: 
+        
         groupsNotifier.groups.isNotEmpty?
         Padding(
           padding: const EdgeInsets.only(
@@ -125,7 +126,9 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
               },
             ),
           ),
-        ):Center(
+        ):
+        groupsNotifier.isBusy? const Center(child: CircularProgressIndicator(),):
+        Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -222,6 +222,7 @@ class EventProvider extends ChangeNotifier {
     }
 
     _isBusy = false;
+    
     notifyListeners();
     return true;
   }

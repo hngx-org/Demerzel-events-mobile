@@ -25,12 +25,14 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-     getGroupEvents();
+    getGroupEvents();
+     print('getting group events');
     });
+     
     super.initState();
   }
 
-  Future getGroupEvents() async=> await ref
+  Future getGroupEvents() async => await ref
           .read(EventProvider.provider.notifier)
           .getAllGroupEvent(widget.group.id);
 
@@ -68,7 +70,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
           TextButton(onPressed: ()=> ref.read(GroupProvider.groupProvider).subscribeToGroup(widget.group.id) , child: const Text('Join', style: TextStyle(fontSize: 16),)),
         ],
       ),
-      body: Center(
+      body: 
+     eventNotifier.isBusy ? const Center(child: CircularProgressIndicator(),)
+     :
+      Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -84,10 +89,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                         ],
                       )
                     : ListView.builder(
-                        itemCount: eventNotifier.allGroupEvents?.data.events.length,
+                        itemCount: eventNotifier.allGroupEvents!.data.events.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
-                          event: eventNotifier.allGroupEvents?.data.events[index],
+                          event: eventNotifier.allGroupEvents!.data.events[index],
                         ),
                       ),
               ),

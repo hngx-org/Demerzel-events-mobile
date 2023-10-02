@@ -134,7 +134,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: ProjectConstants.appBoxDecoration,
+      decoration: ProjectConstants.appBoxDecoration.copyWith(border: Border.all(color: Theme.of(context).colorScheme.onBackground,)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
