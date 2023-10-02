@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:hng_events_app/widgets/components/button/hng_primary_button.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key, required this.name, required this.image, required this.email});
@@ -16,15 +19,27 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  getFromGallery() async {
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedFile != null) {
+      setState(() {
+        // isPhotoSet = true;
+        imageFile = File(pickedFile.path);
+      });
+    }
+  }
   TextEditingController namectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
-  String image = '';
+  File? imageFile;
   AuthRepository repo = AuthRepository(localStorageService: const LocalStorageService());
   @override
   void initState() {
     namectrl.text = widget.name;
     emailctrl.text = widget.email;
-    image = widget.image;
     super.initState();
   }
 
@@ -45,13 +60,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   alignment: Alignment.center,
                   children: [
                     CircleAvatar(
-                      backgroundImage: NetworkImage(image),
+                      backgroundColor: const Color.fromARGB(255, 222, 140, 236),
+                      backgroundImage: (imageFile == null)? NetworkImage(widget.image) : FileImage(imageFile!) as ImageProvider,
                       radius: 100,
                     ),
                      Align(
                         alignment: Alignment.bottomRight,
                         child: IconButton(
-                          onPressed: (){}, 
+                          onPressed: ()async{
+                            await getFromGallery();
+                          }, 
                           icon: Icon(
                             Icons.camera_alt, 
                             size: 30,
@@ -135,23 +153,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: HngPrimaryButton(
                           onPressed: () async{
                             FocusManager.instance.primaryFocus?.unfocus();
-                            await repo.updateUserProfile(namectrl.text, image).then(
-                              (value) {
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Center(child: Text('Successful'))
-                                  )
-                                );
-                              }).catchError((error){
-                                Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(child: Text(error.toString()))
-                                  )
-                                );
-                              });
-                            // Navigator.pop(context);
+                            if (imageFile != null) {
+                              await repo.updateProfilePhoto(imageFile!);
+                            }
+                            if (namectrl.text != '') {
+                              await repo.updateUserProfile(namectrl.text).then(
+                                (value) {
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Center(child: Text('Successful'))
+                                    )
+                                  );
+                                }).catchError((error){
+                                  Navigator.pop(context);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Center(child: Text(error.toString()))
+                                    )
+                                  );
+                                });
+                            }
                           },
                           text: 'Save',),
                       );
