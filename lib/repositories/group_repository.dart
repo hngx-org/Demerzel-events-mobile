@@ -63,36 +63,13 @@ class GroupRepository {
     // log(result.toString());
 
     return true;
-    // try {
-    // final jsonData = jsonEncode({
-    //   "name": name,
-    // });
+  }
+    Future<bool> subscribeToGroup(String groupId) async {
+    final header = await authRepository.getAuthHeader();
 
-    // var request = http.MultipartRequest('POST', ApiRoutes.groupURI)
-    //   ..fields['jsonData'] = jsonData
-    //   ..files.add(await http.MultipartFile.fromPath(
-    //     'file',
-    //     image.path,
-    //   ))
-    //   ..headers.addAll(header);
+    await apiService.post(
+        url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
 
-    // var response = await request.send();
-
-    // if (response.statusCode == 200) print('Uploaded!');
-
-    // if (response.statusCode == 200 || response.statusCode == 201) {
-    //   log(response.statusCode.toString());
-    // } else {
-    //   return false;
-    // }
-
-    //HttpServiceWithDio.uploadImage(url, image);
-
-    //   return true;
-    // } catch (e, s) {
-    //   log(e.toString());
-    //   log(s.toString());
-    //   rethrow;
-    // }
+    return true;
   }
 }

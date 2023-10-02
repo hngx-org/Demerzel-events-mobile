@@ -65,4 +65,25 @@ class GroupProvider extends ChangeNotifier {
     _isBusy = false;
     notifyListeners();
   }
+
+
+  Future<void> subscribeToGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.subscribeToGroup(groupId);
+      await getGroups();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
 }
