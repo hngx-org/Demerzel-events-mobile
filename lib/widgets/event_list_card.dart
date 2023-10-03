@@ -24,7 +24,9 @@ class EventsCard extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: NeuContainer(
-            color: Colors.white,
+            shadowColor: Theme.of(context).colorScheme.onBackground,
+            borderColor:  Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).cardColor,
             width: double.infinity,
             borderRadius: BorderRadius.circular(10),
             borderWidth: 1.0,
@@ -54,20 +56,21 @@ class EventsCard extends ConsumerWidget {
                     width: 60,
                     height: 30,
                     decoration: BoxDecoration(
-                      color: ProjectColors.white,
+                     // color: Theme.of(context).colorScheme.onBackground,
                       borderRadius: BorderRadius.circular(5),
-                      border: Border.all(color: ProjectColors.black),
-                      boxShadow: const <BoxShadow>[
+                      border: Border.all(color: Theme.of(context).colorScheme.onBackground,),
+                      boxShadow:  <BoxShadow>[
                         BoxShadow(
-                            color: ProjectColors.black, offset: Offset(2, 2))
+                            color: Theme.of(context).colorScheme.onPrimary, offset: Offset(2, 2))
                       ],
                     ),
                     child: Center(
                       child: Text(
                         DateFormatter.formatDateDayAndMonth(event!.startDate),
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontFamily: 'inter',
                           fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.onBackground,
                         ),
                       ),
                     ),
@@ -78,7 +81,7 @@ class EventsCard extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                   children: [
-                    SvgPicture.asset(ProjectConstants.locationIcon),
+                    SvgPicture.asset(ProjectConstants.locationIcon, color: Theme.of(context).colorScheme.onBackground,),
                     SizedBox(
                       width: MediaQuery.sizeOf(context).width * 0.02,
                     ),
@@ -100,7 +103,7 @@ class EventsCard extends ConsumerWidget {
                   child: 
                   Row(
                 children: [
-                  SvgPicture.asset(ProjectConstants.clockIcon),
+                  SvgPicture.asset(ProjectConstants.clockIcon,color: Theme.of(context).colorScheme.onBackground,),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.02,
                   ),
@@ -223,9 +226,9 @@ class _InputFieldState extends ConsumerState<InputField> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            SvgPicture.asset('assets/icons/chat.svg'),
+            SvgPicture.asset('assets/icons/chat.svg',color: Theme.of(context).colorScheme.onBackground,),
              const Text('Leave a comment'),
-             SvgPicture.asset(ProjectConstants.rightChevron),
+             SvgPicture.asset(ProjectConstants.rightChevron,color: Theme.of(context).colorScheme.onBackground,),
       
           ],):
           InkWell(

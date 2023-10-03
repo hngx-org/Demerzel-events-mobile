@@ -316,7 +316,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                             },
                             child: Text(
                               startTime != null
-                                  ? "${startTime!.hour}:${startTime!.minute}"
+                                  ? "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}"
                                   : 'Select Time',
                               style: const TextStyle(
                                 color: ProjectColors.black,
@@ -403,7 +403,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                             },
                             child: Text(
                               endTime != null
-                                  ? "${endTime!.hour}:${endTime!.minute}"
+                                  ? "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}"
                                   : 'Select Time',
                               style: const TextStyle(
                                 color: ProjectColors.black,
@@ -494,7 +494,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                           ],
                         ),
                         child: TextButton(
-                          onPressed: () => uploadEvent(eventNotifier),
+                          onPressed: () => uploadEvent(eventNotifier, ref),
                           style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                               isFormValid()
@@ -533,7 +533,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     );
   }
 
-  Future<void> uploadEvent(EventProvider eventController) async {
+  Future<void> uploadEvent(EventProvider eventController, WidgetRef ref) async {
     if (isFormValid() == false) return;
 
     try {
@@ -560,6 +560,11 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
       if (result) {
         // ignore: use_build_context_synchronously
+        
+         await eventController.getUpcomingEvent();
+        await eventController.getAllEvent();
+       await eventController.getUserEvent();
+        await ref.read(GroupProvider.groupProvider).getGroups().then((value) =>  Navigator.of(context).pop());
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -571,10 +576,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
           ),
         );
         // ignore: use_build_context_synchronously
-        Navigator.of(context).pop();
-
-        await eventController.getAllEvent();
-        eventController.getUserEvent();
+       
+       
       } else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(

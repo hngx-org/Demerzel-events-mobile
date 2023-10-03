@@ -26,90 +26,89 @@ class CommentPageCard extends ConsumerStatefulWidget {
 class _CommentPageCardState extends ConsumerState<CommentPageCard> {
   @override
   Widget build(BuildContext context) {
-
     bool? isChecked = false;
     return Container(
-      decoration: ProjectConstants.appBoxDecoration.copyWith(),
+      decoration: ProjectConstants.appBoxDecoration.copyWith(
+          border:
+              Border.all(color: Theme.of(context).colorScheme.onBackground)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Image.asset(
-                    ProjectConstants.profileImage,
-                    height: 20,
-                    width: 20,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.02,
-                  ),
-                  Text(
-                    widget.event.title,
-                    style: mediumTextStyle,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.25,
-                  ),
-                  Container(
-                    decoration: ProjectConstants.appBoxDecoration.copyWith(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        DateFormatter.formatDateDayAndMonth(
-                            widget.event.startDate),
-                        style: normalTextStyle,
+              ListTile(
+                leading: widget.event.thumbnail.isEmpty
+                    ? const CircleAvatar(
+                        backgroundImage:
+                            AssetImage("assets/illustrations/smiley_face.png"),
+                        radius: 15,
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(widget.event.thumbnail),
+                        radius: 15,
                       ),
+                title: Text(
+                  widget.event.title,
+                  style: mediumTextStyle,
+                ),
+                trailing: Container(
+                  decoration: BoxDecoration(
+                    // color: Theme.of(context).colorScheme.onBackground,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
                   ),
-                ],
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      DateFormatter.formatDateDayAndMonth(
+                          widget.event.startDate),
+                      style: normalTextStyle,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      ProjectConstants.locationIcon,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.02,
+                    ),
+                    Text(
+                      widget.event.location,
+                      style: greyTextStyle,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Row(
-                children: [
-                  SvgPicture.asset(ProjectConstants.locationIcon),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.02,
-                  ),
-                  Text(
-                    widget.event.location,
-                    style: greyTextStyle,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    SvgPicture.asset(
+                      ProjectConstants.clockIcon,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.02,
+                    ),
+                    Text(
+                      '${widget.event.startTime} - ${widget.event.endTime}',
+                      style: greyTextStyle,
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  SvgPicture.asset(ProjectConstants.clockIcon),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.02,
-                  ),
-                  Text(
-                    '${widget.event.startTime} - ${widget.event.endTime}',
-                    style: greyTextStyle,
-                  ),
-                ],
-              ),
-              // Row(
-              //   children: [
-              //     Checkbox(
-              //         value: isChecked,
-              //         onChanged: (value) {
-              //           setState(() {
-              //             isChecked = value;
-              //           });
-              //         }),
-              //     const Text('Check box to invite to Techies'),
-              //   ],
-              // ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Visibility(
@@ -120,14 +119,14 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     buttonColor: ProjectColors.purple,
                     buttonHeight: 40,
                     borderRadius: BorderRadius.circular(5),
-                    child: const Center(
+                    child:  Center(
                       child: Text(
                         'I will join',
                         style: TextStyle(
                           //fontFamily: 'NotoSans',
                           fontWeight: FontWeight.w700,
                           fontSize: 14,
-                          color: ProjectColors.black,
+                          color: Theme.of(context).colorScheme.onBackground,
                         ),
                       ),
                     ),

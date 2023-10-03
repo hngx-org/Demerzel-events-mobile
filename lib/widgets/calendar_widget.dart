@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/constants/colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../riverpod/event_provider.dart';
@@ -43,7 +44,8 @@ class _CalCardState extends ConsumerState<CalCard> {
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side: const BorderSide(),
+          side:  BorderSide(color: Theme.of(context).colorScheme.onBackground,),
+          
         ),
         child: Padding(
           padding: EdgeInsets.all(height * 0.01),
@@ -80,11 +82,11 @@ class _CalCardState extends ConsumerState<CalCard> {
                 ),
                 calendarStyle: CalendarStyle(
                   todayDecoration:
-                      BoxDecoration(color: Theme.of(context).primaryColor),
+                      BoxDecoration(color: ProjectColors.purple),
                   selectedDecoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
-                  markerDecoration: BoxDecoration(color: Theme.of(context).primaryColor, shape: BoxShape.circle),
+                  markerDecoration: BoxDecoration(color: ProjectColors.purple, shape: BoxShape.circle),
                   markerSize: 6,
                 ),
                 calendarBuilders: CalendarBuilders(
@@ -92,28 +94,33 @@ class _CalCardState extends ConsumerState<CalCard> {
                       margin: const EdgeInsets.all(4.0),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
+                        //color: Theme.of(context).colorScheme.onBackground,
+                        border: Border.all(color: ProjectColors.purple,),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
                         date.day.toString(),
-                        style: const TextStyle(color: Colors.white),
+                        style:  TextStyle(color:Theme.of(context).colorScheme.onBackground),
                       )),
+                     
                   todayBuilder: (context, date, events) => Container(
                     margin: const EdgeInsets.all(4.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      border: Border.all(color:ProjectColors.purple, ),
+                      // color: Theme.of(context).colorScheme.onPrimary,
                       shape: BoxShape.circle,
                     ),
                     child: Text(
                       date.day.toString(),
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary),
+                          color: Theme.of(context).colorScheme.onBackground),
                     ),
                   ),
                 ),
-                eventLoader: (day) {
+                eventLoader: ref.read(EventProvider.provider).allEvents == null ? ((day) {
+                  return [];
+                }):(day) {
                   List _events = [];
                   for (var i = 0;
                       i <
@@ -141,6 +148,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                   }
                   return _events;
                 },
+
               ),
             ],
           ),

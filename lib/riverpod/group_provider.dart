@@ -9,13 +9,13 @@ class GroupProvider extends ChangeNotifier {
   GroupProvider({required this.groupRepo}) {
     getGroups();
   }
-  
+
   static final groupProvider = ChangeNotifierProvider<GroupProvider>(
     (ref) => GroupProvider(
       groupRepo: ref.read(GroupRepository.provider),
     ),
   );
- 
+
   String _error = "";
   String get error => _error;
 
@@ -47,7 +47,6 @@ class GroupProvider extends ChangeNotifier {
   }
 
   Future<void> getGroups() async {
-  
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -56,12 +55,34 @@ class GroupProvider extends ChangeNotifier {
       groups = result;
       notifyListeners();
     } catch (e, s) {
+      _isBusy = false;
       _error = e.toString();
       log(e.toString());
       log(s.toString());
-
+      
+      notifyListeners();
       rethrow;
     }
+    _isBusy = false;
+    notifyListeners();
+  }
+
+  Future<void> subscribeToGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.subscribeToGroup(groupId);
+      await getGroups();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
     _isBusy = false;
     notifyListeners();
   }

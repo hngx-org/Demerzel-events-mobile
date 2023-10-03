@@ -1,45 +1,38 @@
-import 'package:hng_events_app/classes/user.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
-class Group {
-  String id;
-  String name;
-  String image;
-  DateTime createdAt;
-  DateTime updatedAt;
-  List<User>? members; // You can change the type of members as needed
-  List<Event> events ;
+class Group extends Equatable {
+  final String id;
+  final String name;
+  final String image;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int membersCount;
+  final int eventCount;
 
-  Group({
+  const Group({
     required this.id,
     required this.name,
     required this.image,
     required this.createdAt,
     required this.updatedAt,
-    this.members,
-    this.events = const [],
+    required this.membersCount,
+    required this.eventCount,
   });
 
-  factory Group.fromJson(Map<String, dynamic> json) {
-    List<User>? members;
-    List<Event> events= [];
-    if (json['members'] != null) {
-      members = List<User>.from(
-          json['members'].map((member) => User.fromJson(member)));
-    }
+  @override
+  List<Object> get props => [id];
 
-    if (json['events'] != null) {
-      events = List<Event>.from(
-          json['events'].map((event) => Event.fromMap(event)));
-    }
+  factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
       id: json['id'],
       name: json['name'],
       image: json['image'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
-      members: members,
-      events: events,
+      membersCount: json['members_count'],
+      eventCount: json['events_count'],
     );
   }
 }
@@ -58,8 +51,8 @@ class GroupListModel {
   factory GroupListModel.fromJson(Map<String, dynamic> json) {
     List<Group> groups = [];
     if (json['data'] != null) {
-      groups =
-          List<Group>.from(json['data'].map((group) => Group.fromJson(group)));
+      groups = List<Group>.from(
+          json['data']['groups'].map((group) => Group.fromJson(group)));
     }
 
     return GroupListModel(
@@ -67,5 +60,64 @@ class GroupListModel {
       message: json['message'],
       status: json['status'],
     );
+  }
+}
+
+class GroupEventListModel {
+  final Data data;
+  final String message;
+  final String status;
+
+  GroupEventListModel({
+    required this.data,
+    required this.message,
+    required this.status,
+  });
+
+  factory GroupEventListModel.fromMap(Map<String, dynamic> json) {
+    return GroupEventListModel(
+      data: Data.fromMap(json["data"]["group"]),
+      message: json["message"],
+      status: json["status"],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      "data": data.toMap(),
+      "message": message,
+      "status": status,
+    };
+  }
+}
+
+class Data {
+  final List<Event> events;
+  final List<Member>? members;
+
+  Data({required this.events, this.members});
+
+  factory Data.fromMap(Map<String, dynamic> json) {
+    List<Event> eventsList = [];
+    List<Member> membersList = [];
+
+    if (json['events'] != null) {
+      eventsList =
+          List<Event>.from(json['events'].map((x) => Event.fromMap(x)));
+    }
+
+    if (json['members'] != null) {
+      membersList =
+          List<Member>.from(json['members'].map((x) => Member.fromJson(x['user'])));
+    }
+
+    return Data(
+      events: eventsList,
+      members: membersList,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {"events": List<dynamic>.from(events.map((x) => x.toMap()))};
   }
 }

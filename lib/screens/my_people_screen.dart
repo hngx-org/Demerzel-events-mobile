@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';
@@ -15,79 +16,81 @@ class PeopleScreen extends ConsumerStatefulWidget {
 
 class _CreateGroupState extends ConsumerState<PeopleScreen> {
   @override
-  Widget build(
-    BuildContext context,
-  ) {
+  Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
 
-    return Scaffold(
-      // backgroundColor: ProjectColors.bgColor,
-      appBar: AppBar(
-        // backgroundColor: ProjectColors.white,
-        centerTitle: false,
-        bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(4.0),
-            child: Container(
-              height: 1,
-              color: Colors.black,
-            )),
-        title: Text(
-          'My People',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).colorScheme.onBackground
+    return 
+    Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(4.0),
+              child: Container(
+                height: 1,
+                color: Colors.black,
+              )),
+          title: Text(
+            'My People',
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onBackground),
           ),
-          // style: appBarTextStyle.copyWith(
-          //     fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 24.0),
-            child: NeuTextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const CreateGroup(),
-                  ),
-                );
-              },
-              buttonColor: Theme.of(context).primaryColor,
-              buttonHeight: 40,
-              borderRadius: BorderRadius.circular(8),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        'Create ',
-                        style: TextStyle(
-                          //fontFamily: 'NotoSans',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          color: Theme.of(context).colorScheme.onBackground,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 24.0),
+              child: NeuTextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateGroup(),
+                    ),
+                  );
+                },
+                buttonColor: Theme.of(context).primaryColor,
+                shadowColor: Theme.of(context).colorScheme.onBackground,
+                borderColor: Theme.of(context).colorScheme.onBackground,
+                buttonHeight: 40,
+                borderRadius: BorderRadius.circular(8),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          'Create ',
+                          style: TextStyle(
+                            //fontFamily: 'NotoSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 17,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Image.asset('assets/images/Vector (Stroke).png'),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Image.asset(
+                            'assets/images/Vector (Stroke).png',
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Padding(
+          ],
+        ),
+        body: 
+        
+        groupsNotifier.groups.isNotEmpty?
+        Padding(
           padding: const EdgeInsets.only(
             left: 20,
             right: 20,
@@ -108,9 +111,10 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                 return MyPeopleCard(
                     title: currentGroup.name,
                     image: currentGroup.image,
-                    eventLength: currentGroup.events.length,
+                    eventLength: currentGroup.eventCount,
                     bubbleVisible: true,
-                    onPressed: () {
+                    onPressed: () async{
+              
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -121,7 +125,25 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                     });
               },
             ),
-          )),
-    );
+          ),
+        ):
+        groupsNotifier.isBusy? const Center(child: CircularProgressIndicator(),):
+        Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("No group was found", textAlign: TextAlign.center),
+            const SizedBox(height: 10),
+            GestureDetector(
+              onTap: () => groupsNotifier.getGroups(),
+              child: const Text(
+                "Tap to Retry",
+                style: TextStyle(decoration: TextDecoration.underline),
+              ),
+            ),
+          ],
+        ),
+      )
+        );
   }
 }
