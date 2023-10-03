@@ -1,19 +1,27 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
+import 'package:hng_events_app/services/api_service.dart';
+import 'package:hng_events_app/services/http_service/image_upload_service.dart';
 import 'package:http/http.dart' as http;
 
 class GroupRepository {
   final AuthRepository authRepository;
-  GroupRepository({required this.authRepository});
+  final ImageUploadService imageUploadService;
+  final ApiService apiService;
+  GroupRepository(
+      {required this.authRepository,
+      required this.imageUploadService,
+      required this.apiService});
 
   static final provider = Provider<GroupRepository>((ref) {
-    final authRepository = ref.read(AuthRepository.provider);
-    return GroupRepository(authRepository: authRepository);
+    return GroupRepository(
+        authRepository: ref.read(AuthRepository.provider),
+        apiService: ref.read(ApiServiceImpl.provider),
+        imageUploadService: ref.read(ImageUploadService.provider));
   });
 
   Future<List<Group>> getAllGroups() async {
@@ -25,7 +33,7 @@ class GroupRepository {
           .timeout(const Duration(seconds: 60));
 
       log(response.body);
-      
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
         GroupListModel groupListModel = GroupListModel.fromJson(data);
@@ -41,39 +49,28 @@ class GroupRepository {
     }
   }
 
-  Future<bool> createGroup(String name, File image) async {
+  Future<bool> createGroup(Map<String, dynamic> body) async {
+    final header = await authRepository.getAuthHeader();
+    log(header.toString());
+    final imageUrl = await imageUploadService.uploadImage(body["image"]);
+
+    body["image"] = imageUrl;
+    // body.remove("image");
+
+    // log(body.toString());
+
+    final result =
+        await apiService.post(url: ApiRoutes.groupURI, body: body, headers: header);
+    // log(result.toString());
+
+    return true;
+  }
+    Future<bool> subscribeToGroup(String groupId) async {
     final header = await authRepository.getAuthHeader();
 
-    try {
-      final jsonData = jsonEncode({
-        "name": name,
-      });
+    await apiService.post(
+        url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
 
-      var request = http.MultipartRequest('POST', ApiRoutes.groupURI)
-        ..fields['jsonData'] = jsonData
-        ..files.add(await http.MultipartFile.fromPath(
-          'file',
-          image.path,
-        ))
-        ..headers.addAll(header);
-
-      var response = await request.send();
-
-      if (response.statusCode == 200) print('Uploaded!');
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log(response.statusCode.toString());
-      } else {
-        return false;
-      }
-
-      //HttpServiceWithDio.uploadImage(url, image);
-
-      return true;
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-      rethrow;
-    }
+    return true;
   }
 }

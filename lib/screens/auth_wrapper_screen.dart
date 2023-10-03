@@ -46,10 +46,13 @@ class AuthWrapper extends ConsumerWidget {
 
   Future<String> _getIdToken(User user) async {
     final idTokenResult = await user.getIdToken();
+    print(idTokenResult);
     return idTokenResult??'';
   }
+  
 
   Future<String> _getIdTokenAndSignUp(User user, AuthRepository authRepo) async {
+
     final backendToken = await authRepo.getToken();
     log(backendToken.toString());
     if (backendToken != null) {

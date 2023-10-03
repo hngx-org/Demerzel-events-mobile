@@ -4,19 +4,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
+import 'package:hng_events_app/screens/group_members.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
-  const EventsScreen( {
+  const EventsScreen({
     super.key,
     required this.group,
-   
   });
   final Group group;
-  
 
   @override
   ConsumerState<EventsScreen> createState() => _EventsScreenState();
@@ -26,40 +26,69 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      ref.read(EventProvider.provider.notifier).getAllGroupEvent(widget.group.id);
+    getGroupEvents();
+ 
     });
+     
     super.initState();
   }
 
+
+
+  Future getGroupEvents() async => await ref
+          .read(EventProvider.provider.notifier)
+          .getAllGroupEvent(widget.group.id);
+
   @override
   Widget build(BuildContext context) {
-    // final eventNotifier = ref.watch(EventProvider.provider);
+     final eventNotifier = ref.watch(EventProvider.provider);
     return Scaffold(
-      backgroundColor: ProjectColors.bgColor,
-      appBar: AppHeader(title: widget.group.name),
-      body: Center(
+      appBar: AppBar(
+        centerTitle: false,
+        bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(4.0),
+            child: Container(
+              height: 1,
+              color: Colors.black,
+            )),
+        title: Text(
+          widget.group.name,
+          style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.onBackground),
+        ),
+        actions: [
+           InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const GroupMembersPage()));
+            },
+             child: Row(
+              children: [
+                const Icon(Icons.person),
+                
+                Text(
+                  "${widget.group.membersCount}",
+                  style: const TextStyle(fontSize: 16),
+                )
+              ],
+                     ),
+           ),
+          TextButton(onPressed: ()=> ref.read(GroupProvider.groupProvider).subscribeToGroup(widget.group.id) , child: const Text('Join', style: TextStyle(fontSize: 16),)),
+        ],
+      ),
+      body: 
+     eventNotifier.isBusy ? const Center(child: CircularProgressIndicator(),)
+     :
+      Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Container(
-            //   margin: const EdgeInsets.all(20),
-            //   width: 60,
-            //   height: 30,
-            //   decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(5),
-            //       border: Border.all(),
-            //       color: ProjectColors.purple),
-            //   child: const Center(
-            //     child: Text(
-            //       "Today",
-            //     ),
-            //   ),
-            // ),
             Expanded(
               // flex: 6,
               child: SizedBox(
                 height: 400,
-                child: (widget.group.events).isEmpty
+                child: (eventNotifier.allGroupEvents!.data.events).isEmpty
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -67,12 +96,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                         ],
                       )
                     : ListView.builder(
-                        itemCount:
-                            widget.group.events.length ,
+                        itemCount: eventNotifier.allGroupEvents!.data.events.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => EventsCard(
-                          event:
-                              widget.group.events[index],
+                          event: eventNotifier.allGroupEvents!.data.events[index],
                         ),
                       ),
               ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/api_service.dart';
 import 'package:hng_events_app/services/http_service/image_upload_service.dart';
@@ -47,22 +48,27 @@ class EventRepository {
 
   Future<GetListEventModel> getAllEvent() async {
     final header = await authRepository.getAuthHeader();
+    final queryParameters = {
+      'limit': "10",
+      'page':'1',
+    };
 
+    final uri = Uri.https(ApiRoutes.host, '/api/events', queryParameters);
+    log(uri.toString());
     try {
       final http.Response response = await http
-          .get(ApiRoutes.eventURI, headers: header)
+          .get(uri, headers: header)
           .timeout(const Duration(seconds: 60));
+      
+
 
       final Map<String, dynamic> data = json.decode(response.body);
 
-      log(data['data']['events'].length.toString());
+      log(data['data']['events'].toString());
 
-      
       final result = GetListEventModel.fromMap(data);
 
-
       return result;
-
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -71,21 +77,31 @@ class EventRepository {
     }
   }
 
-  Future<GetListEventModel?> getAllGroupEvent(String groupId) async {
+  Future<List<Event>> getUpcomingEvent() async {
+    final header = await authRepository.getAuthHeader();
+
+    final result =
+        await apiService.get(url: ApiRoutes.upcomingEventURI, headers: header);
+
+    return result['data']['events'] == null
+        ? []
+        : List<Event>.from(
+            result['data']['events'].map((x) => Event.fromMap(x)));
+  }
+
+  Future<GroupEventListModel?> getAllGroupEvent(String groupId) async {
     final header = await authRepository.getAuthHeader();
 
     try {
       final http.Response response = await http
           .get(ApiRoutes.groupEventURI(groupId), headers: header)
           .timeout(const Duration(seconds: 60));
-
+          
+      log("this is ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
-       // log(data.toString());
 
-        return data['data']['Result'] != null
-            ? GetListEventModel.fromMap(data)
-            : null;
+        return data['data'] != null ? GroupEventListModel.fromMap(data) : null;
       } else {
         throw response.reasonPhrase ?? response.body;
       }
@@ -105,11 +121,11 @@ class EventRepository {
     body["thumbnail"] = imageUrl;
     body.remove("image");
 
-   // log(body.toString());
+    // log(body.toString());
 
     final result =
         apiService.post(url: ApiRoutes.eventURI, body: body, headers: header);
-   // log(result.toString());
+    // log(result.toString());
 
     return true;
   }
@@ -128,7 +144,7 @@ class EventRepository {
     try {
       final http.Response response = await http
           .get(
-           uri,
+            uri,
             headers: header,
           )
           .timeout(const Duration(seconds: 60));
@@ -136,7 +152,7 @@ class EventRepository {
       // await Future.delayed(const Duration(seconds: 2));
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
-       // log(data.toString());
+        // log(data.toString());
         return GetListEventModel.fromMap(data);
       } else {
         throw response.reasonPhrase ?? response.body;

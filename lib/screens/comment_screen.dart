@@ -155,6 +155,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                               onTap: _getFromGallery,
                               child: SvgPicture.asset(
                                 ProjectConstants.imagePicker,
+                                color: Theme.of(context).colorScheme.onBackground,
                               ),
                             ),
                             const SizedBox(
@@ -184,9 +185,9 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                         controller.text, widget.event.id, image)
                                     .then((value) => {controller.clear()});
                               },
-                              child: const Icon(
+                              child:  Icon(
                                 Icons.send,
-                                color: ProjectColors.grey,
+                                color: Theme.of(context).colorScheme.onBackground,
                               ),
                             ),
                           ],
@@ -248,7 +249,7 @@ class ChatCard extends StatelessWidget {
           child: Container(
               width: MediaQuery.sizeOf(context).width * 0.73518,
               // width: double.infinity,
-              decoration: ProjectConstants.appBoxDecoration,
+              decoration: ProjectConstants.appBoxDecoration.copyWith(border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -256,7 +257,7 @@ class ChatCard extends StatelessWidget {
                   children: [
                     Text(
                       userName,
-                      style: normalTextStyle,
+                      style: normalTextStyle.copyWith(fontWeight: FontWeight.w700),
                     ),
                     Text(
                       text,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,9 +50,11 @@ class AuthRepository {
       body: body,
     );
 
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data = json.decode(response.body);
       final String token = data['data']['token'];
+      
       await saveToken(token);
     }
 
@@ -70,6 +73,7 @@ class AuthRepository {
   Future<String?> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
     return token;
+ 
   }
 
   Future<Map<String, String>> getAuthHeader() async {
@@ -81,25 +85,40 @@ class AuthRepository {
 
   Future<String> getUserid() async{
     String? token = await getToken();
-    if (token != null) {
-      Map<String, dynamic> userMap = JwtDecoder.decode(token);
-      log(userMap.toString());
+    Map<String, dynamic> userMap = JwtDecoder.decode(token!);
       return userMap["data"]["id"];
-    } else {
-      throw Exception("No user token");
-    }    
   }
 
-  Future updateUserProfile(String userName, String image) async{
+  Future updateUserProfile(String userName) async{
     String userid = await getUserid();
+    String? userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
     // header = Headers.fromMap(headerMap)
     final response = await http.put(
-      Uri.parse('$baseUrl/api/users/$userid'),
+      Uri.parse('$baseUrl/users/$userid'),
       headers: headerMap,
       body: jsonEncode(<String, String>
         {
           'name': userName,          
+        }
+      )
+    );
+    if (response.statusCode != 200) {
+      throw Exception("failed to update userProfile");
+    }
+  }
+
+    Future updateProfilePhoto(File imageFile) async{
+    String userid = await getUserid();
+    String? userToken = await getToken();
+    Map<String, String> headerMap = await getAuthHeader();
+    // header = Headers.fromMap(headerMap)
+    final response = await http.put(
+      Uri.parse('$baseUrl/users/$userid'),
+      headers: headerMap,
+      body: jsonEncode(<String, dynamic>
+        {
+          'avatar': imageFile,          
         }
       )
     );

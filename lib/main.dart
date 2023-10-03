@@ -17,6 +17,7 @@ class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(themeProvider.notifier).initCall.call();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',
@@ -26,6 +27,7 @@ class MyApp extends ConsumerWidget {
               useMaterial3: true
             ).copyWith(
               colorScheme: const ColorScheme.dark(
+                
                 primary: ProjectColors.purple
               )
             ),

@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/group.dart';
@@ -8,9 +6,15 @@ import 'package:hng_events_app/repositories/group_repository.dart';
 
 class GroupProvider extends ChangeNotifier {
   final GroupRepository groupRepo;
-  GroupProvider({required this.groupRepo}){
-   groupsProvider();
+  GroupProvider({required this.groupRepo}) {
+    getGroups();
   }
+
+  static final groupProvider = ChangeNotifierProvider<GroupProvider>(
+    (ref) => GroupProvider(
+      groupRepo: ref.read(GroupRepository.provider),
+    ),
+  );
 
   String _error = "";
   String get error => _error;
@@ -20,14 +24,14 @@ class GroupProvider extends ChangeNotifier {
 
   List<Group> groups = [];
 
-  Future<bool> createGroup(String name, File image) async {
-     _isBusy = true;
+  Future<bool> createGroup(Map<String, dynamic> body) async {
+    _isBusy = true;
     _error = "";
     notifyListeners();
 
     try {
-      await groupRepo.createGroup(name, image);
-     groups = await groupRepo.getAllGroups();
+      await groupRepo.createGroup(body);
+      groups = await groupRepo.getAllGroups();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -37,33 +41,49 @@ class GroupProvider extends ChangeNotifier {
       return false;
     }
 
-     _isBusy = false;
+    _isBusy = false;
     notifyListeners();
     return true;
   }
 
-  Future<void> groupsProvider() async {
+  Future<void> getGroups() async {
     _isBusy = true;
     _error = "";
-     notifyListeners();
+    notifyListeners();
     try {
       final result = await groupRepo.getAllGroups();
       groups = result;
       notifyListeners();
     } catch (e, s) {
+      _isBusy = false;
       _error = e.toString();
       log(e.toString());
       log(s.toString());
-
+      
+      notifyListeners();
       rethrow;
     }
-    _isBusy =false;
+    _isBusy = false;
+    notifyListeners();
+  }
+
+  Future<void> subscribeToGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.subscribeToGroup(groupId);
+      await getGroups();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+    }
+
+    _isBusy = false;
     notifyListeners();
   }
 }
-
-final groupProvider = ChangeNotifierProvider<GroupProvider>(
-  (ref) => GroupProvider(
-    groupRepo: ref.read(GroupRepository.provider),
-  ),
-);

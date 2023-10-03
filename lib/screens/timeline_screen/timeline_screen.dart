@@ -4,6 +4,7 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
 
 class TimelineScreen extends StatefulWidget {
   const TimelineScreen({super.key});
@@ -15,34 +16,40 @@ class TimelineScreen extends StatefulWidget {
 class _TimelineScreenState extends State<TimelineScreen> {
   @override
   Widget build(BuildContext context) {
+    
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
-        backgroundColor: const Color(0xFFFFF8F5),
         appBar: AppBar(
           bottom: TabBar(
             tabs: [
-              // Tab(
-              //   child: Padding(
-              //     padding: EdgeInsets.all(8.0),
-              //     child: Text(
-              //       "Upcoming Events",
-              //       style: TextStyle(fontSize: 17, color: Colors.black),
-              //     ),
-              //   ),
-              // ),
+              const Tab(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Upcoming Events",
+                    style: TextStyle(fontSize: 17,),
+                  ),
+                ),
+              ),
               Tab(
                 key: UniqueKey(),
                 child: const Text(
                   "My Events",
-                  style: TextStyle(fontSize: 17, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 17, 
+                    // color: Colors.black
+                  ),
                 ),
               ),
               Tab(
                 key: UniqueKey(),
                 child: const Text(
                   "All Events",
-                  style: TextStyle(fontSize: 17, color: Colors.black),
+                  style: TextStyle(
+                    fontSize: 17, 
+                    // color: Colors.black
+                  ),
                 ),
               ),
             ],
@@ -50,7 +57,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         ),
         body: TabBarView(
           children: [
-            // UpcomingEventScreen(),
+            const UpcomingEventScreen(),
             MyEventScreen(
               key: UniqueKey(),
             ),
@@ -62,7 +69,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
         floatingActionButton: Padding(
           padding: const EdgeInsets.only(bottom: 70.0),
           child: FloatingActionButton(
-              backgroundColor: ProjectColors.purple,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: const CircleBorder(),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
