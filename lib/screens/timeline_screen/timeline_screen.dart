@@ -1,34 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
 
-class TimelineScreen extends StatefulWidget {
+class TimelineScreen extends ConsumerStatefulWidget {
   const TimelineScreen({super.key});
 
   @override
-  State<TimelineScreen> createState() => _TimelineScreenState();
+  ConsumerState<TimelineScreen> createState() => _TimelineScreenState();
 }
 
-class _TimelineScreenState extends State<TimelineScreen> {
+class _TimelineScreenState extends ConsumerState<TimelineScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController = TabController(length: 3, vsync: this);
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+
+      if (_tabController.index == 1 &&
+          ref.read(EventProvider.provider).userEvents.isEmpty) {
+        ref.read(EventProvider.provider.notifier).getUserEvent();
+      } else if (_tabController.index == 2 &&
+          (ref.read(EventProvider.provider).allEvents?.data.events ?? [])
+              .isEmpty) {
+        ref.read(EventProvider.provider.notifier).getAllEvent();
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           bottom: TabBar(
+            controller: _tabController,
             tabs: [
               const Tab(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
                     "Upcoming Events",
-                    style: TextStyle(fontSize: 17,),
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
                   ),
                 ),
               ),
@@ -37,7 +63,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 child: const Text(
                   "My Events",
                   style: TextStyle(
-                    fontSize: 17, 
+                    fontSize: 17,
                     // color: Colors.black
                   ),
                 ),
@@ -47,7 +73,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
                 child: const Text(
                   "All Events",
                   style: TextStyle(
-                    fontSize: 17, 
+                    fontSize: 17,
                     // color: Colors.black
                   ),
                 ),
@@ -56,6 +82,7 @@ class _TimelineScreenState extends State<TimelineScreen> {
           ),
         ),
         body: TabBarView(
+          controller: _tabController,
           children: [
             const UpcomingEventScreen(),
             MyEventScreen(

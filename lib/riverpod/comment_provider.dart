@@ -30,6 +30,11 @@ class CommentProvider extends ChangeNotifier {
     return true;
   }
 
+  void setIsBusy(bool value) {
+    _isBusy = value;
+    notifyListeners();
+  }
+
   Future<void> getEventComments(String eventId) async {
     _isBusy = true;
     _error = "";
