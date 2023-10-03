@@ -5,8 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
+import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
+import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_list_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
 
 import 'package:svg_flutter/svg.dart';
@@ -18,6 +20,7 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(notificationProvider.notifier).getNotifications();
     final userRef = ref.watch(UserProvider.notifier);
       final authRef = ref.read(AuthRepository.provider);
     return Scaffold(
@@ -96,7 +99,14 @@ class SettingsPage extends ConsumerWidget {
                   SettingItem(
                     title: 'Notificatons',
                     leading: ProjectConstants.notificationsIcon,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationListScreen()
+                        )
+                      );
+                    },
                   ),
                   SettingItem(
                     title: 'Privacy',

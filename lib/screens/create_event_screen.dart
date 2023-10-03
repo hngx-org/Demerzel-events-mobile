@@ -222,7 +222,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                 child: Container(
                   height: 50,
                   decoration: ProjectConstants.appBoxDecoration
-                      .copyWith(color: Colors.white),
+                      .copyWith(
+                        // color: Colors.white
+                        ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
