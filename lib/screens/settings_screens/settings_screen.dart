@@ -112,11 +112,11 @@ class SettingsPage extends ConsumerWidget {
                       );
                     },
                   ),
-                  SettingItem(
-                    title: 'Privacy',
-                    leading: ProjectConstants.privacyIcon,
-                    onPressed: () {},
-                  ),
+                  // SettingItem(
+                  //   title: 'Privacy',
+                  //   leading: ProjectConstants.privacyIcon,
+                  //   onPressed: () {},
+                  // ),
                   SettingItem(
                     title: 'Appearance',
                     leading: ProjectConstants.appearanceIcon,
@@ -125,12 +125,12 @@ class SettingsPage extends ConsumerWidget {
                           builder: (context) => const ThemeSettingScreen()));
                     },
                   ),
-                  SettingItem(
-                    title: 'Language and Region',
-                    leading: ProjectConstants.languageIcon,
-                    shape: const Border(),
-                    onPressed: () {},
-                  ),
+                  // SettingItem(
+                  //   title: 'Language and Region',
+                  //   leading: ProjectConstants.languageIcon,
+                  //   shape: const Border(),
+                  //   onPressed: () {},
+                  // ),
                 ],
               ),
             ),

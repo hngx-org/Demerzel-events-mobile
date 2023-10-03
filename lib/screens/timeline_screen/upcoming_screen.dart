@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 
 import '../../constants/colors.dart';

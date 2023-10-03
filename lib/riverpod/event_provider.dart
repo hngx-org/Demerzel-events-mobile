@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/models/group.dart';
-import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 
 import '../repositories/event_repository.dart';
 
@@ -12,9 +11,6 @@ class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
-    getAllEvent();
-    getUserEvent();
-   
   }
 
   GetListEventModel? events;
@@ -72,11 +68,11 @@ class EventProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    print('-------------> called ${allEvents?.data.events.length}');
-
     _isBusy = false;
     notifyListeners();
   }
+
+
   Future<void> getUpcomingEvent() async {
     _isBusy = true;
     _error = "";
@@ -84,7 +80,6 @@ class EventProvider extends ChangeNotifier {
 
     try {
       final result = await eventRepository.getUpcomingEvent();
-      log(result.toString());
       upcomingEvents = result;
       notifyListeners();
     } catch (e, s) {
@@ -94,9 +89,6 @@ class EventProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
     }
-
-    //print('-------------> called ${allEvents?.data.events.length}');
-
     _isBusy = false;
     notifyListeners();
   }

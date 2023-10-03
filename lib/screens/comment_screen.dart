@@ -2,13 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
-import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/comment_card.dart';
 import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:image_picker/image_picker.dart';
@@ -103,11 +101,13 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                           joined: !eventNotifier.userEvents
                               .any((element) => element.id == widget.event.id),
                           onSubscribe: () async {
+                            commentNotifier.setIsBusy(true);
                             await eventNotifier
                                 .subscribeToEvent(widget.event.id);
                             await eventNotifier.getUserEvent();
                             await commentNotifier
                                 .getEventComments(widget.event.id);
+                            commentNotifier.setIsBusy(false);
                           },
                         ),
                       ),
@@ -155,7 +155,8 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                               onTap: _getFromGallery,
                               child: SvgPicture.asset(
                                 ProjectConstants.imagePicker,
-                                color: Theme.of(context).colorScheme.onBackground,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                               ),
                             ),
                             const SizedBox(
@@ -185,9 +186,10 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                         controller.text, widget.event.id, image)
                                     .then((value) => {controller.clear()});
                               },
-                              child:  Icon(
+                              child: Icon(
                                 Icons.send,
-                                color: Theme.of(context).colorScheme.onBackground,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                               ),
                             ),
                           ],
@@ -249,7 +251,9 @@ class ChatCard extends StatelessWidget {
           child: Container(
               width: MediaQuery.sizeOf(context).width * 0.73518,
               // width: double.infinity,
-              decoration: ProjectConstants.appBoxDecoration.copyWith(border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
+              decoration: ProjectConstants.appBoxDecoration.copyWith(
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.onBackground)),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
@@ -257,7 +261,8 @@ class ChatCard extends StatelessWidget {
                   children: [
                     Text(
                       userName,
-                      style: normalTextStyle.copyWith(fontWeight: FontWeight.w700),
+                      style:
+                          normalTextStyle.copyWith(fontWeight: FontWeight.w700),
                     ),
                     Text(
                       text,
