@@ -11,6 +11,7 @@ class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
+    getUserEvent();
   }
 
   GetListEventModel? events;
@@ -102,6 +103,7 @@ class EventProvider extends ChangeNotifier {
     try {
       await eventRepository.subscribeToEvent(eventId);
       await getAllEvent();
+      await getUserEvent();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
