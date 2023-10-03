@@ -48,7 +48,7 @@ class NotificationViewScreen extends StatelessWidget {
                 width: screensize.width*0.9,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text(notification.time.toString())))
+                  child: Text(notification.time)))
             ],
           ),
         ),

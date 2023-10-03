@@ -153,9 +153,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         onPressed: () async{
                           FocusManager.instance.primaryFocus?.unfocus();
                           if (imageFile != null) {
-                            await repo.updateProfilePhoto(imageFile!);
+                            await repo.updateProfilePhoto(imageFile!).then(
+                              (value) {
+                                Navigator.pop(context);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Center(child: Text('Successful'))
+                                  )
+                                );
+                            }).catchError((error){
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Center(child: Text(error.toString()))
+                                  )
+                                );
+                            });
                           }
-                          if (namectrl.text != '') {
+                          if (namectrl.text != '' && namectrl.text != widget.name) {
                             await repo.updateUserProfile(namectrl.text).then(
                               (value) {
                                 Navigator.pop(context);

@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:hng_events_app/classes/notification.dart';
+import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
@@ -11,12 +13,13 @@ class NotificationRepository {
   Future<List<UserNotification>> getNotifications()async{
     final header = await authrepo.getAuthHeader();
     final response = await http.get(
-      Uri.parse('${authrepo.baseUrl}/notifications'),
+      ApiRoutes.notificationURI,
       headers: header 
     );
     if (response.statusCode == 200) {
       Map<String, dynamic> notificationMap = jsonDecode(response.body);
-      List<Map<String, dynamic>> list = notificationMap["data"]["notifications"];
+      List<dynamic> list = notificationMap["data"]["notifications"];
+      log(notificationMap.toString());
 
       return list.map((e) => UserNotification.fromJson(e)).toList();
 
@@ -25,7 +28,7 @@ class NotificationRepository {
     }
   }
 
-  Future updateNotificationRead(String id) async{
+  Future<void> updateNotificationRead(String id) async{
     final header = await authrepo.getAuthHeader();
     final response = await http.get(
       Uri.parse("${authrepo.baseUrl}/notifications/$id"),

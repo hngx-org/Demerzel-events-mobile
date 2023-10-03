@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +11,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 
 class AuthRepository {
   final LocalStorageService localStorageService;
+  
 
   AuthRepository({required this.localStorageService});
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -91,9 +91,7 @@ class AuthRepository {
 
   Future updateUserProfile(String userName) async{
     String userid = await getUserid();
-    String? userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
-    // header = Headers.fromMap(headerMap)
     final response = await http.put(
       Uri.parse('$baseUrl/users/$userid'),
       headers: headerMap,
@@ -108,17 +106,34 @@ class AuthRepository {
     }
   }
 
-    Future updateProfilePhoto(File imageFile) async{
-    String userid = await getUserid();
-    String? userToken = await getToken();
+  Future<String> getimageUrl(File file) async{
     Map<String, String> headerMap = await getAuthHeader();
-    // header = Headers.fromMap(headerMap)
+    final request = http.MultipartRequest('POST', ApiRoutes.imageUploadURI)
+        ..files.add(await http.MultipartFile.fromPath(
+          'file',
+          file.path,
+        ))
+        ..headers.addAll(headerMap);
+      final response = await request.send();
+    if (response.statusCode == 200) {
+      final responseJson = await response.stream.bytesToString();
+      Map<String, dynamic> mapdata = jsonDecode(responseJson);
+      return mapdata['data']["url"];
+    } else {
+      throw Exception("failed to update userProfile");
+    }
+  }
+
+  Future updateProfilePhoto(File imageFile) async{
+    String userid = await getUserid();
+    String imageUrl = await getimageUrl(imageFile);
+    Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(
       Uri.parse('$baseUrl/users/$userid'),
       headers: headerMap,
       body: jsonEncode(<String, dynamic>
         {
-          'avatar': imageFile,          
+          'avatar': imageUrl,          
         }
       )
     );

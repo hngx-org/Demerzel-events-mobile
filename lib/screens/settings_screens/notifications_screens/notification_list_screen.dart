@@ -18,7 +18,9 @@ class NotificationListScreen extends StatelessWidget {
       body: Consumer(
         builder: (context, ref, child) {
           List<UserNotification> nlist = ref.watch(notificationProvider).notifications;
-          return ListView(
+          return (nlist.isEmpty)? 
+          const Center(child: Text('No Notifications'))
+          : ListView(
             children: List.generate(
               nlist.length, 
               (index) => notificationTile(nlist[index], context, ref)
