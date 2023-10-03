@@ -72,10 +72,9 @@ class _TimelineScreenState extends State<TimelineScreen> {
               backgroundColor: Theme.of(context).colorScheme.primary,
               shape: const CircleBorder(),
               onPressed: () {
-                
-                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                //   return const CreateEvents();
-                // }));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const CreateEvents();
+                }));
               },
               child: Container(
                 height: 70.r,

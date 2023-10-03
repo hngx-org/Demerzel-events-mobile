@@ -110,7 +110,7 @@ class AuthRepository {
 
     Future updateProfilePhoto(File imageFile) async{
     String userid = await getUserid();
-    String userToken = await getToken();
+    String? userToken = await getToken();
     Map<String, String> headerMap = await getAuthHeader();
     // header = Headers.fromMap(headerMap)
     final response = await http.put(
