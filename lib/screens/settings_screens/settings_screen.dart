@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
@@ -19,7 +17,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userRef = ref.watch(UserProvider.notifier);
-      final authRef = ref.read(AuthRepository.provider);
+    final authRef = ref.read(AuthRepository.provider);
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
@@ -51,46 +49,52 @@ class SettingsPage extends ConsumerWidget {
           children: [
             InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) => EditProfileScreen(
-                    name: userRef.user?.displayName?? 'salome', 
-                    image: userRef.user?.photoURL?? '',
-                    email: userRef.user?.email ?? 'salome357@gmail.com',
-                    )
-                  )
-                );
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditProfileScreen(
+                              name: userRef.user?.displayName ?? 'salome',
+                              image: userRef.user?.photoURL ?? '',
+                              email:
+                                  userRef.user?.email ?? 'salome357@gmail.com',
+                            )));
               },
               child: Container(
                 height: 72,
-                decoration: ProjectConstants.appBoxDecoration,
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    return ListTile(
-                     
-                      tileColor: Theme.of(context).cardColor,
-                      leading:  CircleAvatar(
-                        backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
-                      ),
-                      title: Text(
-                       userRef.user?.displayName?? 'salome',
-                        style: largeTextStyle,
-                      ),
-                      subtitle: Text(
-                         userRef.user?.email ?? 'salome357@gmail.com',
-                        style: greyTextStyle.copyWith(
-                            fontSize: 17,
-                            overflow: TextOverflow.ellipsis, 
-                            fontWeight: FontWeight.w700),
-                      ),
-                      trailing: SvgPicture.asset(ProjectConstants.rightChevron),
-                    );
-                  }
-                ),
+                decoration: ProjectConstants.appBoxDecoration.copyWith(
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.onBackground)),
+                child: Consumer(builder: (context, ref, child) {
+                  return ListTile(
+                    tileColor: Theme.of(context).cardColor,
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(userRef.user?.photoURL ?? ''),
+                    ),
+                    title: Text(
+                      userRef.user?.displayName ?? 'salome',
+                      style: largeTextStyle,
+                    ),
+                    subtitle: Text(
+                      userRef.user?.email ?? 'salome357@gmail.com',
+                      style: greyTextStyle.copyWith(
+                          fontSize: 17,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    trailing: SvgPicture.asset(
+                      ProjectConstants.rightChevron,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  );
+                }),
               ),
             ),
             ProjectConstants.sizedBox,
             Container(
-              decoration: ProjectConstants.appBoxDecoration,
+              decoration: ProjectConstants.appBoxDecoration.copyWith(
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.onBackground)),
               child: Column(
                 children: [
                   SettingItem(
@@ -107,11 +111,8 @@ class SettingsPage extends ConsumerWidget {
                     title: 'Appearance',
                     leading: ProjectConstants.appearanceIcon,
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context)=> const ThemeSettingScreen()
-                        )
-                      );
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ThemeSettingScreen()));
                     },
                   ),
                   SettingItem(
@@ -125,7 +126,9 @@ class SettingsPage extends ConsumerWidget {
             ),
             ProjectConstants.sizedBox,
             Container(
-              decoration: ProjectConstants.appBoxDecoration,
+              decoration: ProjectConstants.appBoxDecoration.copyWith(
+                  border: Border.all(
+                      color: Theme.of(context).colorScheme.onBackground)),
               child: Column(
                 children: [
                   SettingItem(
@@ -144,10 +147,13 @@ class SettingsPage extends ConsumerWidget {
             ),
             ProjectConstants.sizedBox,
             InkWell(
-              onTap:authRef.signOut,
+              onTap: authRef.signOut,
               child: Row(
                 children: [
-                  SvgPicture.asset(ProjectConstants.logoutIcon, color: Theme.of(context).colorScheme.primary,),
+                  SvgPicture.asset(
+                    ProjectConstants.logoutIcon,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   const SizedBox(
                     width: 10,
                   ),
@@ -186,7 +192,10 @@ class SettingItem extends StatelessWidget {
     return InkWell(
       child: ListTile(
         // tileColor: Colors.white,
-        leading: SvgPicture.asset(leading, color: Theme.of(context).colorScheme.primary,),
+        leading: SvgPicture.asset(
+          leading,
+          color: Theme.of(context).colorScheme.primary,
+        ),
         title: Text(
           title,
           style: settingsItemTextStyle,

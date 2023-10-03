@@ -20,18 +20,25 @@ class User {
         name = 'Abraham Yusuf';
 }
 
-class Member {
-  final String id, avatar, email, name;
+class Member extends User {
+  Member({
+    required String id,
+    required String avatar,
+    required String email,
+    required String name,
+  }) : super(
+          id: id,
+          avatar: avatar,
+          email: email,
+          name: name,
+        );
 
-  Member(
-      {required this.id,
-      required this.avatar,
-      required this.email,
-      required this.name});
-
-  Member.fromJson(Map<String, dynamic> json)
-      : id = json["id"],
-        avatar = json["avatar"],
-        email = json["email"],
-        name = json["name"];
+  factory Member.fromJson(Map<String, dynamic> json) {
+    return Member(
+      id: json['id'],
+      avatar: json['avatar'],
+      email: json['email'],
+      name: json['name'],
+    );
+  }
 }

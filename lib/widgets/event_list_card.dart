@@ -162,9 +162,9 @@ class JoinButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: ProjectColors.white,
+          color: Theme.of(context).colorScheme.onPrimary,
           border: Border.all(
-            color: ProjectColors.black,
+            color: Theme.of(context).colorScheme.onBackground,
             width: 2,
           ),
           boxShadow: const <BoxShadow>[
