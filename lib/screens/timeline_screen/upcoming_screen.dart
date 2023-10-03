@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
+import 'package:hng_events_app/util/date_formatter.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -142,7 +143,7 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
             const Text("No event was found", textAlign: TextAlign.center),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => eventNotifier.getUpcomingEvent(),
+              onTap: () => eventNotifier.getAllEvent(),
               child: const Text(
                 "Tap to Retry",
                 style: TextStyle(decoration: TextDecoration.underline),
@@ -175,7 +176,7 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
               time: event.startTime ,
               location: event.location ,
               date: event.startDate ,
-              activity:  timeLeft(event.startDate, event.startTime),
+              activity: DateFormatter().timeLeft(event.startDate, event.startTime),
             ),
           );
         },

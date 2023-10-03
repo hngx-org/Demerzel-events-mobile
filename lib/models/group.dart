@@ -1,17 +1,17 @@
-import 'package:hng_events_app/classes/user.dart';
+import 'package:equatable/equatable.dart';
+import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
-class Group {
-  String id;
-  String name;
-  String image;
-  DateTime createdAt;
-  DateTime updatedAt;
-  int membersCount;
-  int eventCount;
+class Group extends Equatable {
+  final String id;
+  final String name;
+  final String image;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int membersCount;
+  final int eventCount;
 
-
-  Group({
+  const Group({
     required this.id,
     required this.name,
     required this.image,
@@ -21,17 +21,10 @@ class Group {
     required this.eventCount,
   });
 
-  factory Group.fromJson(Map<String, dynamic> json) {
-   
-    // if (json['members'] != null) {
-    //   members = List<User>.from(
-    //       json['members'].map((member) => User.fromJson(member)));
-    // }
+  @override
+  List<Object> get props => [id];
 
-    // if (json['events'] != null) {
-    //   events = List<Event>.from(
-    //       json['events'].map((event) => Event.fromMap(event)));
-    // }
+  factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
       id: json['id'],
       name: json['name'],
@@ -40,7 +33,6 @@ class Group {
       updatedAt: DateTime.parse(json['updated_at']),
       membersCount: json['members_count'],
       eventCount: json['events_count'],
-      
     );
   }
 }
@@ -59,8 +51,8 @@ class GroupListModel {
   factory GroupListModel.fromJson(Map<String, dynamic> json) {
     List<Group> groups = [];
     if (json['data'] != null) {
-      groups =
-          List<Group>.from(json['data']['groups'].map((group) => Group.fromJson(group)));
+      groups = List<Group>.from(
+          json['data']['groups'].map((group) => Group.fromJson(group)));
     }
 
     return GroupListModel(
@@ -101,20 +93,29 @@ class GroupEventListModel {
 
 class Data {
   final List<Event> events;
+  final List<Member>? members;
 
-  Data({required this.events});
+  Data({required this.events, this.members});
 
   factory Data.fromMap(Map<String, dynamic> json) {
-   if ( json.containsKey('events')) {
-      return Data(
-      events: List<Event>.from(json["events"].map((x) => Event.fromMap(x))),
+    List<Event> eventsList = [];
+    List<Member> membersList = [];
+
+    if (json['events'] != null) {
+      eventsList =
+          List<Event>.from(json['events'].map((x) => Event.fromMap(x)));
+    }
+
+    if (json['members'] != null) {
+      membersList =
+          List<Member>.from(json['members'].map((x) => Member.fromJson(x['user'])));
+    }
+
+    return Data(
+      events: eventsList,
+      members: membersList,
     );
-   }
-
-   return Data(events: []);
   }
-
-
 
   Map<String, dynamic> toMap() {
     return {"events": List<dynamic>.from(events.map((x) => x.toMap()))};

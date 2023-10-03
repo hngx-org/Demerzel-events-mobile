@@ -6,6 +6,7 @@ import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
+import 'package:hng_events_app/screens/group_members.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
@@ -58,16 +59,21 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               color: Theme.of(context).colorScheme.onBackground),
         ),
         actions: [
-           Row(
-            children: [
-              const Icon(Icons.person),
-              
-              Text(
-                "${widget.group.membersCount}",
-                style: const TextStyle(fontSize: 16),
-              )
-            ],
-          ),
+           InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const GroupMembersPage()));
+            },
+             child: Row(
+              children: [
+                const Icon(Icons.person),
+                
+                Text(
+                  "${widget.group.membersCount}",
+                  style: const TextStyle(fontSize: 16),
+                )
+              ],
+                     ),
+           ),
           TextButton(onPressed: ()=> ref.read(GroupProvider.groupProvider).subscribeToGroup(widget.group.id) , child: const Text('Join', style: TextStyle(fontSize: 16),)),
         ],
       ),
