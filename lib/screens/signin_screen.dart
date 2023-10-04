@@ -55,12 +55,17 @@ class SignIn extends ConsumerWidget {
                     builder: (context, ref, child) {
                       return ElevatedButton(
                         onPressed: () async{
+                          showDialog(
+                            context: context, 
+                            builder: (context){
+                              return const Center(child: CircularProgressIndicator(),);
+                            }
+                          );
                           await ref.read(appUserProvider.notifier).siginInWithGoogle().then((value) {
-                            ref.read(appUserProvider.notifier).getUserLocal();
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successful!')));
                           }).then((value) {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('failed to signin!')));
-                          });
+                          }).catchError((error) {Navigator.pop(context);});
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).colorScheme.primary,
