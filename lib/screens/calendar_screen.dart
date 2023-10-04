@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';

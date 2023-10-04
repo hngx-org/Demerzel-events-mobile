@@ -24,6 +24,6 @@ class UserProvider extends ChangeNotifier {
   }
 
   static final notifier = ChangeNotifierProvider<UserProvider>((ref) =>
-      UserProvider(authRepository: ref.watch(AuthRepository.provider)));
+    UserProvider(authRepository: ref.watch(AuthRepository.provider)));
 }
 

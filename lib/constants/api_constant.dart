@@ -16,6 +16,7 @@ class ApiRoutes {
   static final authGoogleURI = Uri.parse('$baseUrl/auth/verify');
   static final groupURI = Uri.parse('$baseUrl/groups');
   static final eventURI = baseUri.replace(path: '/api/events');
+  static final notificationURI = baseUri.replace(path: '/api/notifications');
 static eventURII(String limit, String page) =>
       baseUri.replace(path: '/api/events?limit=$limit&page=$page');
   static final upcomingEventURI = baseUri.replace(path: '/api/events/upcoming');
@@ -30,4 +31,5 @@ static subscribeToGroupURI(String groupId) =>
   static groupEventURI(String id) => Uri.parse('$baseUrl/events/group/$id');
   static eventCommentURI(String id) =>
       Uri.parse('$baseUrl/events/comments/$id');
+  static deleteEventURI(String id)=> Uri.parse("$baseUrl/events/$id");
 }

@@ -176,6 +176,10 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
               location: event.location ,
               date: event.startDate ,
               activity: DateFormatter().timeLeft(event.startDate, event.startTime),
+              onDelete: (eventId){
+                eventNotifier.deleteEvent(eventId);
+              },
+              eventId: eventNotifier.allEvents!.data.events[index].id,
             ),
           );
         },

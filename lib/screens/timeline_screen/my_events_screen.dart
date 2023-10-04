@@ -70,6 +70,11 @@ class MyEventScreen extends ConsumerWidget {
                 location: event.location,
                 date: event.startDate,
                 activity: DateFormatter().timeLeft(event.startDate, event.startTime),
+                onDelete: (eventId) {
+                 // eventNotifier.eventRepository.deleteEvent(eventNotifier.allEvents!.data.events[index].id);
+                  eventNotifier.eventRepository.deleteEvent(event.id);
+                },
+                eventId: eventNotifier.allEvents!.data.events[index].id,
               ),
             );
           },

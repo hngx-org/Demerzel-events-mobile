@@ -26,7 +26,10 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
 
-      if (_tabController.index == 1 &&
+      if(_tabController.index == 0 && ref.read(EventProvider.provider).upcomingEvents.isEmpty) {
+        ref.read(EventProvider.provider.notifier).getUpcomingEvent();
+      }
+      else if (_tabController.index == 1 &&
           ref.read(EventProvider.provider).userEvents.isEmpty) {
         ref.read(EventProvider.provider.notifier).getUserEvent();
       } else if (_tabController.index == 2 &&

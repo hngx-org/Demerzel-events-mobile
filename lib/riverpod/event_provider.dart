@@ -11,6 +11,7 @@ class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
+    getUserEvent();
   }
 
   GetListEventModel? events;
@@ -102,6 +103,7 @@ class EventProvider extends ChangeNotifier {
     try {
       await eventRepository.subscribeToEvent(eventId);
       await getAllEvent();
+      await getUserEvent();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -180,4 +182,28 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+  Future<void> deleteEvent(String eventId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await eventRepository.deleteEvent(eventId);
+
+      await getAllEvent();
+
+      await getUserEvent();
+
+      //await upcomingEvents;
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
+
 }
