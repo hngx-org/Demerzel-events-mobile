@@ -9,7 +9,6 @@ import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/screens/group_members.dart';
 import 'package:hng_events_app/widgets/event_list_card.dart';
-import 'package:hng_events_app/widgets/app_header.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
 class EventsScreen extends ConsumerStatefulWidget {
@@ -81,41 +80,46 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
             ),
           ),
           Consumer(
-            builder: (BuildContext context, WidgetRef ref, Widget? child) { 
-                  final eventNotifier = ref.watch(EventProvider.provider);
-                  final userRef = ref.watch(UserProvider.notifier);
-    final members = eventNotifier.allGroupEvents!.data.members;
-              return !(members!.contains(userRef.user) ) ? const SizedBox.shrink():TextButton(
-                onPressed: () async {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  final result = await ref
-                      .read(GroupProvider.groupProvider)
-                      .subscribeToGroup(widget.group.id);
-                       setState(() {
-                    isLoading = false;
-                  });
-                   if (result) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        backgroundColor: Colors.green,
-                        content: Text('Group Joined'),
-                      ));
-                   }else{
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text('Couldn\'t join group'),
-                      ));
-                   }
-                },
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : const Text(
-                        'Join',
-                        style: TextStyle(fontSize: 16),
-                      ));
-             },
-           
+            builder: (BuildContext context, WidgetRef ref, Widget? child) {
+              final eventNotifier = ref.watch(EventProvider.provider);
+              final userRef = ref.watch(UserProvider.notifier);
+              final members = eventNotifier.allGroupEvents?.data.members ?? [];
+
+              
+              return !(members.contains(userRef.user))
+                  ? const SizedBox.shrink()
+                  : TextButton(
+                      onPressed: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        final result = await ref
+                            .read(GroupProvider.groupProvider)
+                            .subscribeToGroup(widget.group.id);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (result) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            backgroundColor: Colors.green,
+                            content: Text('Group Joined'),
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            backgroundColor: Colors.red,
+                            content: Text('Couldn\'t join group'),
+                          ));
+                        }
+                      },
+                      child: isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Join',
+                              style: TextStyle(fontSize: 16),
+                            ));
+            },
           ),
         ],
       ),
@@ -131,7 +135,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                     // flex: 6,
                     child: SizedBox(
                       height: 400,
-                      child: (eventNotifier.allGroupEvents!.data.events).isEmpty
+                      child: (eventNotifier.allGroupEvents?.data.events ?? [])
+                              .isEmpty
                           ? const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
