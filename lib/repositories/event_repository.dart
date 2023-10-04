@@ -168,16 +168,18 @@ class EventRepository {
     final header = await authRepository.getAuthHeader();
     // final apiUrl = await apiService.delete(
     //     url: ApiRoutes.deleteEventURI(eventId));
-    final url = Uri.parse(ApiRoutes.deleteEventURI(eventId));
+    final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
+    final url = Uri.parse(apiUrl);
 
     try{
+      //final Uri url = Uri.parse(uriString);
       final http.Response response = await http
           .delete(url, headers: header)
           .timeout(const Duration(seconds: 60));
       if (response.statusCode == 200 || response.statusCode ==201) {
         print('Event deleted successfully');
       } else {
-        throw response.reasonPhrase?? response.body;
+        //throw response.reasonPhrase?? response.body;
         print('Failed to delete event. Status code: ${response.statusCode}');
       }
     } catch(e, s){

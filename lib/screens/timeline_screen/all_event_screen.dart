@@ -159,10 +159,10 @@ class AllEventsScreen extends ConsumerWidget {
               location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
               date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
               activity:  DateFormatter().timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
-              onDelete: (){
-                //eventNotifier.allEvents!.data.events[index].id;
-                eventNotifier.eventRepository.deleteEvent(eventNotifier.allEvents!.data.events[index].id);
-              }
+              onDelete: (eventId){
+                eventNotifier.deleteEvent(eventId);
+                },
+                eventId: eventNotifier.allEvents!.data.events[index].id
             ),
           );
         },
@@ -306,8 +306,7 @@ Widget eventCard({required BuildContext context,
             PopupMenuButton<String>(
             onSelected: (String value) {
           if (value == 'delete') {
-            onDelete;
-
+            onDelete();
           print('Delete item selected');
           } else if (value == 'edit') {
           print('Edit item selected');
