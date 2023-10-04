@@ -12,7 +12,7 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userRef = ref.watch(UserProvider.notifier);
+    final userRef = ref.watch(appUserProvider);
     return Container(
       color: ProjectColors.white,
       padding: const EdgeInsets.only(
@@ -45,11 +45,11 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
                  ),
            ),
           Visibility(
-              visible: userRef.user != null && userRef.user?.photoURL != null,
+              visible: userRef != null && userRef.avatar != null,
               replacement: const CircleAvatar(
                   backgroundImage: AssetImage('assets/images/img4.png')),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(userRef.user?.photoURL ?? ''),
+                backgroundImage: NetworkImage(userRef?.avatar ?? ''),
               ))
         ],
       ),

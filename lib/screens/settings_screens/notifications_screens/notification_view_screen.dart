@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/classes/notification.dart';
+import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_list_screen.dart';
 
 class NotificationViewScreen extends StatelessWidget {

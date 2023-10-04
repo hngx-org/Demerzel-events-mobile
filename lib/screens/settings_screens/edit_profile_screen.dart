@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:hng_events_app/widgets/components/button/hng_primary_button.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key, required this.name, required this.image, required this.email});
+  const EditProfileScreen({super.key, required this.name, required this.image, required this.email, required this.ref});
   final String name;
   final String email;
   final String image;
+  final WidgetRef ref;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -155,12 +157,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           if (imageFile != null) {
                             await repo.updateProfilePhoto(imageFile!).then(
                               (value) {
-                                Navigator.pop(context);
+                                ref.read(appUserProvider.notifier).getUserBE().then((value) {
+                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Center(child: Text('Successful'))
                                   )
-                                );
+                                ); 
+                                });
+                                
                             }).catchError((error){
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -173,12 +178,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           if (namectrl.text != '' && namectrl.text != widget.name) {
                             await repo.updateUserProfile(namectrl.text).then(
                               (value) {
-                                Navigator.pop(context);
+                                ref.read(appUserProvider.notifier).getUserBE().then((value) {
+                                  Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                     content: Center(child: Text('Successful'))
                                   )
                                 );
+                                });
+                                
                               }).catchError((error){
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(

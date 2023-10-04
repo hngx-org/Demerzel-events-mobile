@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/splash_screen.dart';
 
 void main() async{
@@ -18,6 +19,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(themeProvider.notifier).initCall.call();
+    ref.read(appUserProvider.notifier).getUserLocal.call();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',

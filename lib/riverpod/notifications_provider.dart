@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/classes/notification.dart';
+import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/repositories/notification_repository.dart';
 
 class NotificationsNotifier extends StateNotifier<NotificationList> {

@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -19,7 +19,7 @@ class AuthRepository {
   static const _user = 'userToken';
   String baseUrl = ApiRoutes.baseUrl;
 
-  Future<void> signInWithGoogle() async {
+  Future<String> signInWithGoogle() async {
     final GoogleSignInAccount? googleSignInAccount =
         await googleSignIn.signIn();
 
@@ -32,12 +32,24 @@ class AuthRepository {
         idToken: googleSignInAuthentication.idToken,
       );
 
-      try {
-        await auth.signInWithCredential(credential);
-      } catch (e) {
-        print(e);
-      }
-    }
+      String token = await auth.signInWithCredential(credential).then(
+        (value) async {
+          final token = await value.user?.getIdToken();
+          if (token != null) {
+            return token;
+            // signUpUserInBackend(token);
+          } else{
+            throw Exception('Failed to retrieve token from Google');
+          }
+        }
+      ).catchError(
+        (error){
+          throw Exception('signInWithCredential Failed ');
+        }
+      );
+      return token;
+      
+    }else { throw Exception('failed to retrieve Token null');}
   }
 
   Future<void> signUpUserInBackend(String token) async {
@@ -50,12 +62,10 @@ class AuthRepository {
       body: body,
     );
 
-
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data = json.decode(response.body);
-      final String token = data['data']['token'];
-      
-      await saveToken(token);
+      final String token = data['data']['token'];      
+      await localStorageService.saveToDisk(_user, token);
     }
 
     final authHeader = await getAuthHeader();
@@ -64,6 +74,21 @@ class AuthRepository {
 
   Future<User?> getUser() async {
     return auth.currentUser;
+  }
+
+  Future<AppUser?> getAppUserBE() async{
+    var header = await getAuthHeader();
+    final response = await http.get(
+      ApiRoutes.currentUserURI, 
+      headers: header,
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> listUsers = jsonDecode(response.body);
+      return AppUser.fromJson(listUsers);
+    } else {
+      throw Exception('Failed to retrieve User ${response.statusCode}');
+    }
   }
 
   Future<void> saveToken(String token) async {
@@ -87,6 +112,18 @@ class AuthRepository {
     String? token = await getToken();
     Map<String, dynamic> userMap = JwtDecoder.decode(token!);
       return userMap["data"]["id"];
+  }
+
+  Future<AppUser> getUserLocal() async {
+    String? token = await getToken();
+    if (token != null) {
+     Map<String, dynamic> userMap = JwtDecoder.decode(token); 
+     return AppUser.fromJson(userMap);
+    } else {
+      throw Exception('User Token Local null');
+    }
+    
+    
   }
 
   Future updateUserProfile(String userName) async{

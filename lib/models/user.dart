@@ -1,26 +1,27 @@
-class User {
-  final String id, avatar, email, name;
+class AppUser {
+  final String id, email, name;
+  final String avatar;
 
-  User(
+  AppUser(
       {required this.id,
       required this.avatar,
       required this.email,
       required this.name});
 
-  User.fromJson(Map<String, dynamic> map)
+  AppUser.fromJson(Map<String, dynamic> map)
       : id = map["data"]["id"],
         avatar = map["data"]["avatar"],
         email = map["data"]["email"],
         name = map["data"]["name"];
 
-  User.custom()
+  AppUser.custom()
       : id = '',
         avatar = '',
         email = 'abdulramanyusuf125@gmail.com',
         name = 'Abraham Yusuf';
 }
 
-class Member extends User {
+class Member extends AppUser {
   Member({
     required String id,
     required String avatar,

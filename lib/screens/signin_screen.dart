@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:hng_events_app/constants/colors.dart';
 
@@ -53,8 +54,13 @@ class SignIn extends ConsumerWidget {
 
                     builder: (context, ref, child) {
                       return ElevatedButton(
-                        onPressed: () {
-                          authReader.signInWithGoogle();
+                        onPressed: () async{
+                          await ref.read(appUserProvider.notifier).siginInWithGoogle().then((value) {
+                            ref.read(appUserProvider.notifier).getUserLocal();
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successful!')));
+                          }).then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('failed to signin!')));
+                          });
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Theme.of(context).colorScheme.primary,

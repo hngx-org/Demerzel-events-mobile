@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/classes/notification.dart';
+import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_view_screen.dart';
 
@@ -53,6 +53,7 @@ Widget notificationTile(UserNotification notification, BuildContext context, Wid
         color: (notification.read == false)? null : Colors.grey ,
         fontSize: 20
       ),),
+    trailing: (notification.read == false)? const Text('unread') : const Text('read', style: TextStyle(color: Colors.grey),),
     subtitle: Text(
       notification.content,
       style: TextStyle(
