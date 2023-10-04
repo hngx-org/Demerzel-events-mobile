@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/util/date_formatter.dart';
+import 'package:hng_events_app/widgets/timeline_event_card.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -156,7 +158,11 @@ class AllEventsScreen extends ConsumerWidget {
               time:  eventNotifier.allEvents?.data.events[index].startTime ?? "N/A",
               location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
               date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
-              activity:  timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
+              activity:  DateFormatter().timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
+              onDelete: (){
+                //eventNotifier.allEvents!.data.events[index].id;
+                eventNotifier.eventRepository.deleteEvent(eventNotifier.allEvents!.data.events[index].id);
+              }
             ),
           );
         },
@@ -197,26 +203,10 @@ Widget eventCard({required BuildContext context,
   required String time,
   required String location,
   required String date,
-  required String activity}){
-  void  _showPopupMenu() {
-    showMenu<String>(
-      context: context,
-      position: RelativeRect.fromLTRB(0, 0, 0, 0), // Adjust position as needed
-      items: [
-        PopupMenuItem<String>(
-          value: 'delete',
-          child: Text('Delete'),
-        ),
-        PopupMenuItem<String>(
-            value: 'edit',
-            child: Text("edit"))
-      ],
-    ).then((String? value) {
-      if (value == 'delete') {
-        print('Delete item selected');
-      }
-    });
-  }
+  required String activity,
+  required Function onDelete
+
+}){
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -316,6 +306,8 @@ Widget eventCard({required BuildContext context,
             PopupMenuButton<String>(
             onSelected: (String value) {
           if (value == 'delete') {
+            onDelete;
+
           print('Delete item selected');
           } else if (value == 'edit') {
           print('Edit item selected');

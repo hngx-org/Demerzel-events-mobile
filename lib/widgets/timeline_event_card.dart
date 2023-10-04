@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
 
-Widget TimelineEventCard({required BuildContext context, required Size screensize, required String? image, required String title, required String time, required String location, required String date, required String activity}){
+Widget TimelineEventCard({required BuildContext context, required Size screensize, required String? image, required String title, required String time, required String location, required String date, required String activity, required Null Function() onDelete}){
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -106,7 +106,28 @@ Widget TimelineEventCard({required BuildContext context, required Size screensiz
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Icon(Icons.more_vert),
+                PopupMenuButton<String>(
+                  onSelected: (String value) {
+                    if (value == 'delete') {
+                      onDelete;
+                      print('Delete item selected');
+                    } else if (value == 'edit') {
+                      print('Edit item selected');
+                    }
+                  },
+                  itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                  ],
+                  child: const Icon(Icons.more_vert),
+                ),
                 Text(activity)
               ],
             )

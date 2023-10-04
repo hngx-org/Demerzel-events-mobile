@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "425241698743-ht398tap9ar8umk0vji0q0b6h3rqhbpu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demerzel_event_app",
+            "certificate_hash": "8b4df1b0986c708a3470d6e2bb5bb51cc266b158"
+          }
+        },
+        {
           "client_id": "425241698743-nvrtsbcaniipkfcp997nslksifhubkf1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -27,6 +35,14 @@
           "android_info": {
             "package_name": "com.example.demerzel_event_app",
             "certificate_hash": "a275f396d83a470a77e9dcfa4bdfd829e0952837"
+          }
+        },
+        {
+          "client_id": "425241698743-r179v788vnhnd43t18ja2t5apnvp00bs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.demerzel_event_app",
+            "certificate_hash": "fc971c8a8bd73df08f3a0ffad6d5368727242e69"
           }
         },
         {
