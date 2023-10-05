@@ -14,18 +14,20 @@ class CommentProvider extends ChangeNotifier {
   String get error => _error;
 
   bool _isBusy = false;
+  bool _isAddingComments = false;
   bool get isBusy => _isBusy;
+  bool get isAddingComments => _isAddingComments;
 
   List<Comment> comments = [];
 
   Future<bool> createComment(String body, String eventId, File? image) async {
-    _isBusy = true;
+    _isAddingComments = true;
     _error = "";
     notifyListeners();
     await commentRepository
         .createComment(body: body, eventId: eventId, image: image);
     comments= await commentRepository.getEventComments(eventId);
-    _isBusy = false;
+    _isAddingComments = false;
     notifyListeners();
     return true;
   }

@@ -69,7 +69,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
             },
             icon: const Icon(Icons.chevron_left)),
         //SvgPicture.asset('assetName'),
-        title: Text('${commentNotifier.comments.length} comments'),
+        title: Text(!commentNotifier.isBusy?'${commentNotifier.comments.length} comments': ''),
 
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),
@@ -90,6 +90,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
+                  physics:const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -179,19 +180,26 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                             const SizedBox(
                               width: 10,
                             ),
-                            InkWell(
-                              onTap: () {
-                                commentNotifier
-                                    .createComment(
-                                        controller.text, widget.event.id, image)
-                                    .then((value) => {controller.clear()});
-                              },
-                              child: Icon(
-                                Icons.send,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                              ),
-                            ),
+                            commentNotifier.isAddingComments
+                                ? const SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator())
+                                : InkWell(
+                                    onTap: () {
+                                      commentNotifier
+                                          .createComment(controller.text,
+                                              widget.event.id, image)
+                                          .then(
+                                              (value) => {controller.clear()});
+                                    },
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
+                                  ),
                           ],
                         ),
                       ),

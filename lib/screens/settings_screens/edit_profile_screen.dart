@@ -34,6 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     }
   }
+  bool isLoading = false;
   TextEditingController namectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
   File? imageFile;
@@ -139,24 +140,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            spreadRadius: 0,
-                            blurRadius: 0,
-                            offset: Offset(
-                              4,
-                              5,
-                            ),
-                          ),
-                        ],
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //     color: Colors.black,
+                        //     spreadRadius: 0,
+                        //     blurRadius: 0,
+                        //     offset: Offset(
+                        //       4,
+                        //       5,
+                        //     ),
+                        //   ),
+                        // ],
                       ),
                       child: HngPrimaryButton(
+                        isLoading: isLoading,
                         onPressed: () async{
                           FocusManager.instance.primaryFocus?.unfocus();
+                          
                           if (imageFile != null) {
+                            setState(() {
+                              isLoading = true;
+                            });
                             await repo.updateProfilePhoto(imageFile!).then(
                               (value) {
+                                setState(() {
+                                  isLoading = false;
+                                });
                                 ref.read(appUserProvider.notifier).getUserBE().then((value) {
                                  Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -167,17 +176,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 });
                                 
                             }).catchError((error){
-                              Navigator.pop(context);
+                              setState(() {
+                                isLoading = true;
+                              });
+                              // Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Center(child: Text(error.toString()))
                                   )
-                                );
+                              );
+
                             });
                           }
                           if (namectrl.text != '' && namectrl.text != widget.name) {
+                            setState(() {
+                              isLoading = true;
+                            });
                             await repo.updateUserProfile(namectrl.text).then(
                               (value) {
+                                setState(() {
+                                  isLoading = false;
+                                });
                                 ref.read(appUserProvider.notifier).getUserBE().then((value) {
                                   Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +207,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 });
                                 
                               }).catchError((error){
-                                Navigator.pop(context);
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                // Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Center(child: Text(error.toString()))
@@ -208,4 +230,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+}
+
+Widget saveButton(bool isLoading, String text, VoidCallback onPressed, BuildContext context){
+  return ElevatedButton(
+        onPressed: !isLoading ? onPressed : null,
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            elevation: 0.0,
+            minimumSize: const Size(262, 52),
+            padding: const EdgeInsets.all(0.0)),
+        child:
+
+        Container(
+            constraints:
+                const BoxConstraints(minWidth: 262.0, minHeight: 52.0),
+            alignment: Alignment.center,
+            child: isLoading
+                ? const CircularProgressIndicator( color: Colors.white,)
+                : Text(text,
+                    style: const TextStyle(
+                        color: ProjectColors.white
+                      )
+                    )
+                  )
+                  );
 }

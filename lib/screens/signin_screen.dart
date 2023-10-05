@@ -62,7 +62,9 @@ class SignIn extends ConsumerWidget {
                             }
                           );
                           await ref.read(appUserProvider.notifier).siginInWithGoogle().then((value) {
+                            
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successful!')));
+                            Navigator.pop(context);
                           }).then((value) {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('failed to signin!')));
                           }).catchError((error) {Navigator.pop(context);});

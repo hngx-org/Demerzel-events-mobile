@@ -26,19 +26,18 @@ class HngPrimaryButton extends StatelessWidget {
             padding: const EdgeInsets.all(0.0)),
         child:
 
-        Ink(
-            decoration: BoxDecoration(
-              color: isEnabled ? null : Colors.transparent.withOpacity(0.2),
-             // borderRadius:  BorderRadius.all(Radius.circular(4.r)),
-            ),
-            child: Container(
-                constraints:
-                    const BoxConstraints(minWidth: 262.0, minHeight: 52.0),
-                alignment: Alignment.center,
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : Text(text,
-                        style: const TextStyle(
-                            color: ProjectColors.white)))));
+        Container(
+            constraints:
+                const BoxConstraints(minWidth: 262.0, minHeight: 52.0),
+            alignment: Alignment.center,
+            child: isLoading
+                ? const CircularProgressIndicator( color: Colors.white,)
+                : Text(text,
+                    style: const TextStyle(
+                        color: ProjectColors.white
+                      )
+                    )
+                  )
+                  );
   }
 }
