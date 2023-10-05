@@ -85,8 +85,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     final userRef = ref.watch(appUserProvider);
     final members = eventNotifier.allGroupEvents?.data.members ?? [];
 
-print(members);
-print(userRef);
+
     // Check if userRef exists in members
     bool isUserInMembers = members.any((element) => element == userRef);
 
@@ -170,7 +169,7 @@ print(userRef);
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const CreateEvents(),
+            builder: (context) =>  CreateEvents(currentGroup: widget.group,),
           ),
         ),
       ),
