@@ -80,47 +80,53 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
             ),
           ),
           Consumer(
-            builder: (BuildContext context, WidgetRef ref, Widget? child) {
-              final eventNotifier = ref.watch(EventProvider.provider);
-              final userRef = ref.watch(UserProvider.notifier);
-              final members = eventNotifier.allGroupEvents?.data.members ?? [];
+  builder: (BuildContext context, WidgetRef ref, Widget? child) {
+    final eventNotifier = ref.watch(EventProvider.provider);
+    final userRef = ref.watch(appUserProvider);
+    final members = eventNotifier.allGroupEvents?.data.members ?? [];
 
-              
-              return !(members.contains(userRef.user))
-                  ? const SizedBox.shrink()
-                  : TextButton(
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        final result = await ref
-                            .read(GroupProvider.groupProvider)
-                            .subscribeToGroup(widget.group.id);
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (result) {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            backgroundColor: Colors.green,
-                            content: Text('Group Joined'),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text('Couldn\'t join group'),
-                          ));
-                        }
-                      },
-                      child: isLoading
-                          ? const CircularProgressIndicator()
-                          : const Text(
-                              'Join',
-                              style: TextStyle(fontSize: 16),
-                            ));
+print(members);
+print(userRef);
+    // Check if userRef exists in members
+    bool isUserInMembers = members.any((element) => element == userRef);
+
+    return isUserInMembers
+        ? const SizedBox.shrink()
+        : TextButton(
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              final result = await ref
+                  .read(GroupProvider.groupProvider)
+                  .subscribeToGroup(widget.group.id);
+              setState(() {
+                isLoading = false;
+              });
+              if (result) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text('Group Joined'),
+                ));
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text('Couldn\'t join group'),
+                ));
+              }
             },
-          ),
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : const Text(
+                    'Join',
+                    style: TextStyle(fontSize: 16),
+                  ),
+          );
+  },
+)
+
         ],
       ),
       body: eventNotifier.isBusy
