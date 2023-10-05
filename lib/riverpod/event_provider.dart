@@ -183,3 +183,20 @@ class EventProvider extends ChangeNotifier {
     return true;
   }
 }
+
+final allEventsProvider = FutureProvider<GetListEventModel>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllEvent();
+  
+});
+
+final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getUpcomingEvent();
+});
+
+final userEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllUserEvents();
+
+});
