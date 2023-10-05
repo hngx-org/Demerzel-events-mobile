@@ -23,9 +23,9 @@ class AboutUs extends StatelessWidget {
         centerTitle: true,
       ),
       body: const Padding(
-        padding: EdgeInsets.only(left: 8.0, right: 8.0),
+        padding: EdgeInsets.only(left: 10.0, right: 10.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Welcome to Our App!',
@@ -36,8 +36,7 @@ class AboutUs extends StatelessWidget {
             ),
             SizedBox(height: 20.0),
             Text(
-              'Our Event Management Application allows you to create and manage events, keep track of attendees, and even subscribe to groups.',
-              textAlign: TextAlign.center,
+              'WetynDeySup is an Event Management Application allows you to create and manage events, keep track of attendees, and even subscribe to groups.',
               style: TextStyle(
                 fontSize: 16.0,
               ),
@@ -61,7 +60,6 @@ class AboutUs extends StatelessWidget {
             ),
             Text(
               '- Manage event cards with ease.',
-              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
@@ -81,7 +79,7 @@ class AboutUs extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 15,
             ),
             Text(
               'Get Started Today',
@@ -94,10 +92,9 @@ class AboutUs extends StatelessWidget {
                 height: 5,
               ),
             Text(
-              "Join the [Your App Name] community and experience the future of event management."
+              "Join the Wetin dey Sup community and experience the future of event management."
                   " Whether you're an event organizer looking for a powerful platform "
                   "or an event enthusiast seeking exciting experiences, we've got you covered.",
-              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
@@ -105,7 +102,6 @@ class AboutUs extends StatelessWidget {
             Text(
               "Start creating, managing, and attending events that leave a lasting impression. "
                   "Your journey to unforgettable events management  begins here.",
-              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16.0,
               ),
