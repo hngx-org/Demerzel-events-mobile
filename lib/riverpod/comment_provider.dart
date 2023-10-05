@@ -24,10 +24,16 @@ class CommentProvider extends ChangeNotifier {
     _isAddingComments = true;
     _error = "";
     notifyListeners();
-    await commentRepository
+   final result = await commentRepository
         .createComment(body: body, eventId: eventId, image: image);
-    comments= await commentRepository.getEventComments(eventId);
+        if (result != null) {
+          comments= await commentRepository.getEventComments(eventId);
     _isAddingComments = false;
+        }else{
+          _isAddingComments = false;
+          return false;
+        }
+    
     notifyListeners();
     return true;
   }
