@@ -156,7 +156,16 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
         );
       }, 
       loading: (){
-        return const Center(child: CircularProgressIndicator(),);
+        return const Center(child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Please wait..'),
+            ),
+          ],
+        ),);
       },
       data: (data){
         return Scaffold(
