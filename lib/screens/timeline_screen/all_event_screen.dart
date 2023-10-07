@@ -211,7 +211,9 @@ class AllEventsScreen extends ConsumerWidget {
                 ),
                 child: TimelineEventCard(
                   eventId: event.id,
-                  onDelete: (eventId) {},
+                  onDelete: (eventId) {
+                    eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(allEventsProvider));
+                  },
                   context: context, 
                   screensize: screensize, 
                   image: event.thumbnail, 

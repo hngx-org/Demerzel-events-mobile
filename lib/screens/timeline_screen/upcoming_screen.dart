@@ -226,6 +226,10 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
                   ),
                 ),
                 child: TimelineEventCard(
+                  eventId: event.id,
+                  onDelete: (eventId){
+                    eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
+                  },
                   context: context, 
                   screensize: screensize, 
                   image: event.thumbnail, 
