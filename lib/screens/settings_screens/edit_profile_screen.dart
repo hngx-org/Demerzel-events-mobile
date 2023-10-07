@@ -134,93 +134,74 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               height: 50,
               width: screensize.width*0.9,
               child: Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.center,
                 child: Consumer(
                   builder: (context, ref, child) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        // boxShadow: const [
-                        //   BoxShadow(
-                        //     color: Colors.black,
-                        //     spreadRadius: 0,
-                        //     blurRadius: 0,
-                        //     offset: Offset(
-                        //       4,
-                        //       5,
-                        //     ),
-                        //   ),
-                        // ],
-                      ),
-                      child: HngPrimaryButton(
-                        isLoading: isLoading,
-                        onPressed: () async{
-                          FocusManager.instance.primaryFocus?.unfocus();
-                          
-                          if (imageFile != null) {
+                    return HngPrimaryButton(
+                      isLoading: isLoading,
+                      onPressed: () async{
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        
+                        if (imageFile != null) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await repo.updateProfilePhoto(imageFile!).then(
+                            (value) {
+                              setState(() => isLoading = false);
+                              ref.read(appUserProvider.notifier).getUserBE().then((value) {
+                               Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Center(child: Text('Successful'))
+                                )
+                              ); 
+                              }
+                            );
+                              
+                          }).catchError((error){
                             setState(() {
                               isLoading = true;
                             });
-                            await repo.updateProfilePhoto(imageFile!).then(
-                              (value) {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                ref.read(appUserProvider.notifier).getUserBE().then((value) {
-                                 Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Center(child: Text('Successful'))
-                                  )
-                                ); 
-                                });
-                                
-                            }).catchError((error){
+                            // Navigator.pop(context);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Center(child: Text(error.toString()))
+                                )
+                            );
+
+                          });
+                        }
+                        if (namectrl.text != '' && namectrl.text != widget.name) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await repo.updateUserProfile(namectrl.text).then(
+                            (value) {
                               setState(() {
-                                isLoading = true;
+                                isLoading = false;
                               });
+                              ref.read(appUserProvider.notifier).getUserBE().then((value) {
+                                Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Center(child: Text('Successful'))
+                                )
+                              );
+                              });
+                              
+                            }).catchError((error){
+                              setState(() => isLoading = false);
                               // Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(child: Text(error.toString()))
-                                  )
+                                SnackBar(
+                                  content: Center(child: Text(error.toString()))
+                                )
                               );
-
                             });
-                          }
-                          if (namectrl.text != '' && namectrl.text != widget.name) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            await repo.updateUserProfile(namectrl.text).then(
-                              (value) {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                ref.read(appUserProvider.notifier).getUserBE().then((value) {
-                                  Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Center(child: Text('Successful'))
-                                  )
-                                );
-                                });
-                                
-                              }).catchError((error){
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                // Navigator.pop(context);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Center(child: Text(error.toString()))
-                                  )
-                                );
-                              });
-                          }
-                        },
-                        text: 'Save',),
-                    );
+                        }
+                      },
+                      text: 'Save',);
                   }
                 )
               ),

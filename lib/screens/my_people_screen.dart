@@ -32,8 +32,8 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
           title: Text(
             'My People',
             style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
+                // fontSize: 24,
+                // fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.onBackground),
           ),
           actions: [
@@ -60,24 +60,18 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
+                        const Icon(Icons.add),
                         Text(
-                          'Create ',
+                          'Create',
                           style: TextStyle(
                             //fontFamily: 'NotoSans',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 17,
+                            // fontWeight: FontWeight.w700,
+                            // fontSize: 17,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
                         const SizedBox(
                           width: 10,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
-                          child: Image.asset(
-                            'assets/images/Vector (Stroke).png',
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
                         ),
                       ],
                     ),
@@ -100,11 +94,13 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
             visible: !groupsNotifier.isBusy,
             replacement: const Center(child: CircularProgressIndicator()),
             child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                  // maxCrossAxisExtent: 200,
                   //childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12),
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20
+                ),
               itemCount: groupsNotifier.groups.length,
               itemBuilder: (BuildContext context, int index) {
                 final currentGroup = groupsNotifier.groups[index];

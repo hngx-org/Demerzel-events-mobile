@@ -272,7 +272,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                         child: Text(
                           startDate != null
                               ? "${startDate!.toLocal()}".split(' ')[0]
-                              : 'Select Date',
+                              : 'Date',
                           style: const TextStyle(
                             color: ProjectColors.black,
                           ),
@@ -302,7 +302,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                           child: Text(
                             startTime != null
                                 ? "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}"
-                                : 'Select Time',
+                                : 'Time',
                             style: const TextStyle(
                               color: ProjectColors.black,
                             ),
@@ -350,7 +350,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                         child: Text(
                           endDate != null
                               ? "${endDate!.toLocal()}".split(' ')[0]
-                              : 'Select Date',
+                              : 'Date',
                           style: const TextStyle(
                             color: ProjectColors.black,
                           ),
@@ -383,7 +383,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                           child: Text(
                             endTime != null
                                 ? "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}"
-                                : 'Select Time',
+                                : 'Time',
                             style: const TextStyle(
                               color: ProjectColors.black,
                             ),

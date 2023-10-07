@@ -54,8 +54,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
         title: Text(
           widget.group.name,
           style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w600,
+              // fontSize: 24,
+              // fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.onBackground),
         ),
         actions: [

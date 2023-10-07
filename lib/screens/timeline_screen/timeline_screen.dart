@@ -56,9 +56,9 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "Upcoming Events",
+                    "Upcoming",
                     style: TextStyle(
-                      fontSize: 17,
+                      // fontSize: 17,
                     ),
                   ),
                 ),
@@ -68,7 +68,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: const Text(
                   "My Events",
                   style: TextStyle(
-                    fontSize: 17,
+                    // fontSize: 17,
                     // color: Colors.black
                   ),
                 ),
@@ -78,7 +78,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: const Text(
                   "All Events",
                   style: TextStyle(
-                    fontSize: 17,
+                    // fontSize: 17,
                     // color: Colors.black
                   ),
                 ),

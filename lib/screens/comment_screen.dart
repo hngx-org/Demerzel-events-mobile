@@ -67,9 +67,10 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.chevron_left)),
+            icon: const Icon(Icons.arrow_back)),
+          title: const Text('Comments'),
         //SvgPicture.asset('assetName'),
-        title: Text(!commentNotifier.isBusy?'${commentNotifier.comments.length} comments': ''),
+        // title: Text(!commentNotifier.isBusy?'${commentNotifier.comments.length} comments': ''),
 
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4.0),

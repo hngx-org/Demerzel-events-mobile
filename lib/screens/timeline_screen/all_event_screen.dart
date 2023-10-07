@@ -39,7 +39,7 @@ class AllEventsScreen extends ConsumerWidget {
           body: const Center(
             child: Padding(
               padding: EdgeInsets.only(bottom: 35.0),
-              child: Text('Failed to Retrieve Events,', style: TextStyle(color: Colors.red),),
+              child: Text('Failed to Retrieve Events', style: TextStyle(color: Colors.red),),
             ),
           ),
         );

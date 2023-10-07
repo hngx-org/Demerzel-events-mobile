@@ -52,7 +52,7 @@ class MyPeopleCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500,
                       fontFamily: "NotoSans",
                     ),
