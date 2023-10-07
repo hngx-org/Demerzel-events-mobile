@@ -59,18 +59,39 @@ class GroupRepository {
 
     // log(body.toString());
 
-    final result =
-        await apiService.post(url: ApiRoutes.groupURI, body: body, headers: header);
+    final result = await apiService.post(
+        url: ApiRoutes.groupURI, body: body, headers: header);
     // log(result.toString());
 
     return true;
   }
-    Future<bool> subscribeToGroup(String groupId) async {
+
+  Future<bool> subscribeToGroup(String groupId) async {
     final header = await authRepository.getAuthHeader();
 
-    await apiService.post(
+    final result = await apiService.post(
         url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
 
-    return true;
+   if (result['status'] == 'success') {
+      return true;
+    } else {
+      return false;
+    }
   }
+
+  Future<bool> unSubscribeFromGroup(String groupId) async {
+    final header = await authRepository.getAuthHeader();
+
+    final result = await apiService.post(
+        url: ApiRoutes.unSubscribeFromGroupURI(groupId),
+        body: {},
+        headers: header);
+    if (result['status'] == 'success') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
 }

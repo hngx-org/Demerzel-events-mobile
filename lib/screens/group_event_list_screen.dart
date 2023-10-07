@@ -90,7 +90,39 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     bool isUserInMembers = members.any((element) => element == userRef);
 
     return isUserInMembers
-        ? const SizedBox.shrink()
+        ? TextButton(
+            onPressed: () async {
+              setState(() {
+                isLoading = true;
+              });
+              final result = await ref
+                  .read(GroupProvider.groupProvider)
+                  .unSubscribeFromGroup(widget.group.id);
+              setState(() {
+                isLoading = false;
+              });
+              Navigator.pop(context);
+              if (result) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text('Succesfful'),
+                ));
+              } else {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text('Couldn\'t leave group'),
+                ));
+              }
+            },
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : const Text(
+                    'Leave',
+                    style: TextStyle(fontSize: 16),
+                  ),
+          )
         : TextButton(
             onPressed: () async {
               setState(() {
