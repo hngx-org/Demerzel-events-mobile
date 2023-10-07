@@ -13,8 +13,8 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
-  const CreateEvents({super.key});
-
+  const CreateEvents({super.key, this.currentGroup});
+final Group? currentGroup;
   @override
   ConsumerState<CreateEvents> createState() => _CreateEventsState();
 }
@@ -39,7 +39,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       titleController.text.isNotEmpty &&
       bodyController.text.isNotEmpty &&
       locationController.text.isNotEmpty &&
-      selectedGroup != null &&
+      (selectedGroup != null || widget.currentGroup != null ) &&
       startDate != null &&
       startTime != null &&
       endDate != null &&
@@ -396,7 +396,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                 const SizedBox(height: 10),
                 const Divider(thickness: 1),
                 const SizedBox(height: 10),
-                Padding(
+                widget.currentGroup == null ? Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Row(
                     children: [
@@ -444,7 +444,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       ),
                     ],
                   ),
-                )
+                ): SizedBox.shrink(),
               ],
             ),
             const SizedBox(
@@ -523,10 +523,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
             "${startTime!.hour.toString().padLeft(2, '0')}:${startTime!.minute.toString().padLeft(2, '0')}",
         "end_time":
             "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}",
-        "group_id": [selectedGroup!.id],
+        "group_id": [widget.currentGroup?.id ?? selectedGroup!.id],
       };
 
-      final result = await eventController.createEvent(body);
+      final result = await eventController.createEvent(body: body, groupId: widget.currentGroup?.id);
       // await Future.delayed(const Duration(seconds: 5));
       
 
@@ -536,6 +536,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         await eventController.getUpcomingEvent();
         await eventController.getAllEvent();
         await eventController.getUserEvent();
+        if (widget.currentGroup != null) {
+          await eventController.getAllGroupEvent(widget.currentGroup!.id);
+        }
+         
         await ref
             .read(GroupProvider.groupProvider)
             .getGroups()

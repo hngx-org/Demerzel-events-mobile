@@ -1,8 +1,13 @@
-class AppUser {
+import 'package:equatable/equatable.dart';
+
+class AppUser extends Equatable{
   final String id, email, name;
   final String avatar;
+ @override
 
-  AppUser(
+  List<Object> get props => [id];
+ 
+ const  AppUser(
       {required this.id,
       required this.avatar,
       required this.email,
@@ -21,7 +26,7 @@ class AppUser {
         name = 'Abraham Yusuf';
 }
 
-class Member extends AppUser {
+class Member extends AppUser  {
   Member({
     required String id,
     required String avatar,
@@ -33,7 +38,17 @@ class Member extends AppUser {
           email: email,
           name: name,
         );
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
+    return other is AppUser && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  // List<Object> get props => [id];
   factory Member.fromJson(Map<String, dynamic> json) {
     return Member(
       id: json['id'],

@@ -44,7 +44,7 @@ class CommentRepository {
     }
   }
 
-  Future<Comment> createComment(
+  Future<Comment?> createComment(
       {required String body, required String eventId, File? image}) async {
     final header = await authRepository.getAuthHeader();
     final imageUrls = [];
@@ -69,7 +69,8 @@ class CommentRepository {
         log(data.toString());
         return Comment.fromJson(data['data']['comment']);
       } else {
-        throw response.reasonPhrase ?? response.body;
+        return null ;
+       // throw response.reasonPhrase ?? response.body;
       }
     } catch (e, s) {
       log(e.toString());
