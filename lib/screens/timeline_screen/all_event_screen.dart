@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
-
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
-
 import '../../riverpod/event_provider.dart';
 
 class AllEventsScreen extends ConsumerWidget {
@@ -179,12 +176,7 @@ class AllEventsScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                         color: ProjectColors.purple,
                         borderRadius: BorderRadius.all(Radius.circular(50.r)),
-                        // boxShadow: const [
-                        //   BoxShadow(
-                        //       color: ProjectColors.black,
-                        //       spreadRadius: 3,
-                        //       offset: Offset(0, 2)),
-                        // ]
+                    
                       ),
                     child: const Icon(
                       Icons.add,
@@ -229,59 +221,59 @@ class AllEventsScreen extends ConsumerWidget {
       }, 
     );
 
-    if (eventNotifier.isBusy) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (eventNotifier.isBusy) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
 
-    if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("No event was found", textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => eventNotifier.getAllEvent(),
-              child: const Text(
-                "Tap to Retry",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+    // if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
+    //   return Center(
+    //     child: Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         const Text("No event was found", textAlign: TextAlign.center),
+    //         const SizedBox(height: 10),
+    //         GestureDetector(
+    //           onTap: () => eventNotifier.getAllEvent(),
+    //           child: const Text(
+    //             "Tap to Retry",
+    //             style: TextStyle(decoration: TextDecoration.underline),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
-    return RefreshIndicator(
-      onRefresh: () async => eventNotifier.getAllEvent(),
-      child: ListView.builder(
-        itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
-        itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CommentScreen(event:  eventNotifier.allEvents!.data.events[index]),
-              ),
-            ),
-            child: TimelineEventCard(
-              context: context, 
-              screensize: screensize, 
-              image:  eventNotifier.allEvents?.data.events[index].thumbnail, 
-              title:  eventNotifier.allEvents?.data.events[index].title ?? "N/A", 
-              time:  eventNotifier.allEvents?.data.events[index].startTime ?? "N/A",
-              location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
-              date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
-              activity:  DateFormatter().timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
-              onDelete: (eventId){
-                eventNotifier.deleteEvent(eventId);
-                },
-                eventId: eventNotifier.allEvents!.data.events[index].id
-            ),
-          );
-        },
-      ),
-    );
+    // return RefreshIndicator(
+    //   onRefresh: () async => eventNotifier.getAllEvent(),
+    //   child: ListView.builder(
+    //     itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
+    //     itemBuilder: (BuildContext context, int index) {
+    //       return GestureDetector(
+    //         onTap: () => Navigator.push(
+    //           context,
+    //           MaterialPageRoute(
+    //             builder: (context) => CommentScreen(event:  eventNotifier.allEvents!.data.events[index]),
+    //           ),
+    //         ),
+    //         child: TimelineEventCard(
+    //           context: context, 
+    //           screensize: screensize, 
+    //           image:  eventNotifier.allEvents?.data.events[index].thumbnail, 
+    //           title:  eventNotifier.allEvents?.data.events[index].title ?? "N/A", 
+    //           time:  eventNotifier.allEvents?.data.events[index].startTime ?? "N/A",
+    //           location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
+    //           date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
+    //           activity:  DateFormatter().timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
+    //           onDelete: (eventId){
+    //             eventNotifier.deleteEvent(eventId);
+    //             },
+    //             eventId: eventNotifier.allEvents!.data.events[index].id
+    //         ),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 
   static String timeLeft(DateTime date) {

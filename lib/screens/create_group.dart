@@ -1,6 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
@@ -127,9 +127,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               GestureDetector(
                 onTap: () async {
                   if (groupNameController.text.isNotEmpty) {
-                    // final result = await ref
-                    //     .read(groupProvider)
-                    //     .createGroup(groupNameController.text, image!);
 
                     await createGroup(groupsNotifier);
                   } else {
@@ -218,7 +215,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
       });
 
       if (result) {
-        // ignore: use_build_context_synchronously
+  
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -229,12 +226,12 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             backgroundColor: Colors.green,
           ),
         );
-        // ignore: use_build_context_synchronously
+       
         Navigator.of(context).pop();
 
         await groupController.getGroups();
       } else {
-        // ignore: use_build_context_synchronously
+        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
