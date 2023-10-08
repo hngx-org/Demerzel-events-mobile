@@ -122,7 +122,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                 eventLoader: ref.read(EventProvider.provider).allEvents == null ? ((day) {
                   return [];
                 }):(day) {
-                  List _events = [];
+                  List events = [];
                   for (var i = 0;
                       i <
                           ref
@@ -140,14 +140,14 @@ class _CalCardState extends ConsumerState<CalCard> {
                             .events[i]
                             .startDate),
                         day)) {
-                      _events.add(ref
+                      events.add(ref
                           .read(EventProvider.provider)
                           .allEvents!
                           .data
                           .events[i]);
                     }
                   }
-                  return _events;
+                  return events;
                 },
 
               ),

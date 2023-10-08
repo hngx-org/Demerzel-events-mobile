@@ -5,7 +5,6 @@ import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
-import 'package:intl/intl.dart';
 
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

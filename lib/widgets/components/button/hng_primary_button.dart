@@ -18,7 +18,7 @@ class HngPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
             offset: Offset(4, 4),
@@ -38,7 +38,7 @@ class HngPrimaryButton extends StatelessWidget {
                 width: 1,
                 color: Colors.black
               ),
-              fixedSize: Size(250, 50),
+              fixedSize: const Size(250, 50),
               // minimumSize: const Size(262, 52),
               padding: const EdgeInsets.all(0.0)),
           child:

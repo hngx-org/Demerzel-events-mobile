@@ -18,15 +18,15 @@ class ApiRoutes {
   static final eventURI = baseUri.replace(path: '/api/events');
   static final currentUserURI = baseUri.replace(path: '/api/users/current');
   static final notificationURI = baseUri.replace(path: '/api/notifications');
-static eventURII(String limit, String page) =>
+  static eventURII(String limit, String page) =>
       baseUri.replace(path: '/api/events?limit=$limit&page=$page');
   static final upcomingEventURI = baseUri.replace(path: '/api/events/upcoming');
   static final userEventURI = baseUri.replace(path: '/api/events/subscriptions');
   static subscribeToEventURI(String eventId) =>
       baseUri.replace(path: '/api/events/$eventId/subscribe');
-static subscribeToGroupURI(String groupId) =>
+  static subscribeToGroupURI(String groupId) =>
       baseUri.replace(path: '/api/groups/$groupId/subscribe');
-static unSubscribeFromGroupURI(String groupId) =>
+  static unSubscribeFromGroupURI(String groupId) =>
       baseUri.replace(path: '/api/groups/$groupId/unsubscribe');
   static final commentURI = Uri.parse('$baseUrl/comments');
   static final imageUploadURI = Uri.parse('$baseUrl/images/upload');

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/comment.dart';
 import 'package:hng_events_app/repositories/comment_repository.dart';
-import 'package:hng_events_app/riverpod/event_provider.dart';
 
 class CommentProvider extends ChangeNotifier {
   final CommentRepository commentRepository;
