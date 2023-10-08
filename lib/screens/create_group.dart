@@ -213,7 +213,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
       };
 
       final result = await groupController.createGroup(body);
-      await Future.delayed(const Duration(seconds: 5));
+      // await Future.delayed(const Duration(seconds: 5));
       setState(() {
         isLoading = false;
       });

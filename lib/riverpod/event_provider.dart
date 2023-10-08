@@ -160,14 +160,14 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createEvent(Map<String, dynamic> body) async {
+  Future<bool> createEvent({required Map<String, dynamic> body, String? groupId}) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
     try {
       await eventRepository.createEvent(body);
-      
+      await getAllGroupEvent(groupId.toString());
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -207,3 +207,20 @@ class EventProvider extends ChangeNotifier {
   }
 
 }
+
+final allEventsProvider = FutureProvider<GetListEventModel>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllEvent();
+  
+});
+
+final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getUpcomingEvent();
+});
+
+final userEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllUserEvents();
+
+});

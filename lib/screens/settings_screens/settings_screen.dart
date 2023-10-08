@@ -5,6 +5,7 @@ import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
+import 'package:hng_events_app/screens/settings_screens/about_us.dart';
 import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_list_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
@@ -19,7 +20,7 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(notificationProvider.notifier).getNotifications();
-    final userRef = ref.watch(UserProvider.notifier);
+    final userRef = ref.watch(appUserProvider);
     final authRef = ref.read(AuthRepository.provider);
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
@@ -56,10 +57,11 @@ class SettingsPage extends ConsumerWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => EditProfileScreen(
-                              name: userRef.user?.displayName ?? 'salome',
-                              image: userRef.user?.photoURL ?? '',
+                              name: userRef?.name ?? 'salome',
+                              ref: ref,
+                              image: userRef?.avatar ?? '',
                               email:
-                                  userRef.user?.email ?? 'salome357@gmail.com',
+                                  userRef?.email ?? 'salome357@gmail.com',
                             )));
               },
               child: Container(
@@ -72,14 +74,14 @@ class SettingsPage extends ConsumerWidget {
                     tileColor: Theme.of(context).cardColor,
                     leading: CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userRef.user?.photoURL ?? ''),
+                          NetworkImage(userRef?.avatar ?? ''),
                     ),
                     title: Text(
-                      userRef.user?.displayName ?? 'salome',
+                      userRef?.name ?? 'salome',
                       style: largeTextStyle,
                     ),
                     subtitle: Text(
-                      userRef.user?.email ?? 'salome357@gmail.com',
+                      userRef?.email ?? 'salome357@gmail.com',
                       style: greyTextStyle.copyWith(
                           fontSize: 17,
                           overflow: TextOverflow.ellipsis,
@@ -150,14 +152,16 @@ class SettingsPage extends ConsumerWidget {
                     title: 'About',
                     leading: ProjectConstants.aboutIcon,
                     shape: const Border(),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const AboutUs()));
+                    },
                   )
                 ],
               ),
             ),
             ProjectConstants.sizedBox,
             InkWell(
-              onTap: authRef.signOut,
+              onTap: ref.read(appUserProvider.notifier).signOut,
               child: Row(
                 children: [
                   SvgPicture.asset(

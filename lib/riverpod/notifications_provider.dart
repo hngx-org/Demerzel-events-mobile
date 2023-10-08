@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/classes/notification.dart';
+import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/repositories/notification_repository.dart';
 
 class NotificationsNotifier extends StateNotifier<NotificationList> {
@@ -16,13 +16,16 @@ class NotificationsNotifier extends StateNotifier<NotificationList> {
     int index = state.rawNotifications.indexOf(notification);
     state.rawNotifications[index].read = true;
     state = state;
-    await repo.updateNotificationRead(notification.id);
+    await repo.updateNotificationRead(notification.id).then((value) => getNotifications());
   }
 }
 
 final notificationProvider =
     StateNotifierProvider<NotificationsNotifier, NotificationList>(
-        (ref) => NotificationsNotifier());
+        (ref) => NotificationsNotifier()
+      );
+
+  
 
 class NotificationList {
   final List<UserNotification> rawNotifications;

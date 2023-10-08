@@ -23,53 +23,51 @@ class _ThemeSettingScreenState extends ConsumerState<ThemeSettingScreen> {
       ThemeMode.system => ThemeValue.system,
       ThemeMode.light => ThemeValue.light,
     };
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Appearance'),
-        ),
-        body: Consumer(
-          builder: (context, ref, child) {
-            return ListView(
-              children: [
-                RadioListTile<ThemeValue>(
-                  title: const Text('System default'),
-                  value: ThemeValue.system, 
-                  groupValue: groupValue, 
-                  onChanged: (ThemeValue? value){
-                    ref.read(themeProvider.notifier).switchMode(ThemeMode.system);
-                    ref.read(themeProvider.notifier).getThemeLocal();
-                    setState(() {
-                      groupValue = value;
-                    });
-                  }
-                ),
-                RadioListTile<ThemeValue>(
-                  title: const Text('Light'),
-                  value: ThemeValue.light, 
-                  groupValue: groupValue, 
-                  onChanged: (ThemeValue? value){
-                    ref.read(themeProvider.notifier).switchMode(ThemeMode.light);
-                    setState(() {
-                      groupValue = value;
-                    });
-                  }
-                ),
-                RadioListTile<ThemeValue>(
-                  title: const Text('Dark'),
-                  value: ThemeValue.dark, 
-                  groupValue: groupValue, 
-                  onChanged: (ThemeValue? value){
-                    ref.read(themeProvider.notifier).switchMode(ThemeMode.dark);
-                    setState(() {
-                      groupValue = value;
-                    });
-                  }
-                )
-              ],
-            );
-          }
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Appearance'),
+      ),
+      body: Consumer(
+        builder: (context, ref, child) {
+          return ListView(
+            children: [
+              RadioListTile<ThemeValue>(
+                title: const Text('System default'),
+                value: ThemeValue.system, 
+                groupValue: groupValue, 
+                onChanged: (ThemeValue? value){
+                  ref.read(themeProvider.notifier).switchMode(ThemeMode.system);
+                  ref.read(themeProvider.notifier).getThemeLocal();
+                  setState(() {
+                    groupValue = value;
+                  });
+                }
+              ),
+              RadioListTile<ThemeValue>(
+                title: const Text('Light'),
+                value: ThemeValue.light, 
+                groupValue: groupValue, 
+                onChanged: (ThemeValue? value){
+                  ref.read(themeProvider.notifier).switchMode(ThemeMode.light);
+                  setState(() {
+                    groupValue = value;
+                  });
+                }
+              ),
+              RadioListTile<ThemeValue>(
+                title: const Text('Dark'),
+                value: ThemeValue.dark, 
+                groupValue: groupValue, 
+                onChanged: (ThemeValue? value){
+                  ref.read(themeProvider.notifier).switchMode(ThemeMode.dark);
+                  setState(() {
+                    groupValue = value;
+                  });
+                }
+              )
+            ],
+          );
+        }
       ),
     );
   }

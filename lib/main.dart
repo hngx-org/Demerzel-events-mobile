@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/splash_screen.dart';
 
 void main() async{
@@ -18,29 +19,29 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(themeProvider.notifier).initCall.call();
+    ref.read(appUserProvider.notifier).getUserLocal.call();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',
       themeMode: ref.watch(themeProvider),
-            darkTheme: ThemeData.dark(
-              
-              useMaterial3: true
-            ).copyWith(
-              colorScheme: const ColorScheme.dark(
-                
-                primary: ProjectColors.purple
-              )
-            ),
+        darkTheme: ThemeData.dark(
+          
+          useMaterial3: true
+        ).copyWith(
+          colorScheme: const ColorScheme.dark(
+            
+            primary: ProjectColors.purple
+          )
+        ), 
 
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: ProjectColors.purple,
-                primary: ProjectColors.purple,
-                // secondary: const Color(0xFFF97316),
-              ),
-              useMaterial3: true,
-            ),
-      // theme: ThemeData(primaryColor: ProjectColors.purple),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: ProjectColors.purple,
+            primary: ProjectColors.purple,
+            // secondary: const Color(0xFFF97316),
+          ),
+          useMaterial3: true,
+        ),
       home: const SplashScreen(),
     );
   }
