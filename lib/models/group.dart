@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:hng_events_app/models/comment.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
@@ -94,12 +95,14 @@ class GroupEventListModel {
 class Data {
   final List<Event> events;
   final List<Member>? members;
+  
 
-  Data({required this.events, this.members});
+  Data({required this.events, this.members, });
 
   factory Data.fromMap(Map<String, dynamic> json) {
     List<Event> eventsList = [];
     List<Member> membersList = [];
+    // List firstComments = [];
 
     if (json['events'] != null) {
       eventsList =
@@ -110,10 +113,15 @@ class Data {
       membersList =
           List<Member>.from(json['members'].map((x) => Member.fromJson(x['user'])));
     }
-
+//  if (json['comments'] != null) {
+//       firstComments =
+//           List.from(json['comments'].map((x) => FirstComments.fromJson(x['comments'])));
+//           print(firstComments);
+//     }
     return Data(
       events: eventsList,
       members: membersList,
+      
     );
   }
 

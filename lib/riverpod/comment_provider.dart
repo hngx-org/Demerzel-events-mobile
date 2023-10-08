@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/comment.dart';
 import 'package:hng_events_app/repositories/comment_repository.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 
 class CommentProvider extends ChangeNotifier {
   final CommentRepository commentRepository;
-
-  CommentProvider({required this.commentRepository});
+final Ref ref;
+  CommentProvider( {required this.commentRepository, required this.ref});
 
   String _error = "";
   String get error => _error;
@@ -20,7 +21,7 @@ class CommentProvider extends ChangeNotifier {
 
   List<Comment> comments = [];
 
-  Future<bool> createComment(String body, String eventId, File? image) async {
+  Future<bool> createComment(String body, String eventId, File? image, ) async {
     _isAddingComments = true;
     _error = "";
     notifyListeners();
@@ -29,6 +30,7 @@ class CommentProvider extends ChangeNotifier {
         if (result != null) {
           comments= await commentRepository.getEventComments(eventId);
     _isAddingComments = false;
+//ref.read(EventProvider.provider).getAllGroupEvent(groupId);
         }else{
           _isAddingComments = false;
           return false;
@@ -55,5 +57,5 @@ class CommentProvider extends ChangeNotifier {
   }
 
   static final provider = ChangeNotifierProvider<CommentProvider>((ref) =>
-      CommentProvider(commentRepository: ref.read(CommentRepository.provider)));
+      CommentProvider(commentRepository: ref.read(CommentRepository.provider), ref: ref));
 }
