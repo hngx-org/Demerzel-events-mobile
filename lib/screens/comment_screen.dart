@@ -14,7 +14,8 @@ import 'package:svg_flutter/svg.dart';
 
 class CommentScreen extends ConsumerStatefulWidget {
   final Event event;
-  const CommentScreen({super.key, required this.event});
+  final String? groupId;
+  const CommentScreen( {super.key, required this.event,   this.groupId,});
 
   @override
   ConsumerState<CommentScreen> createState() => _CommentScreenState();
@@ -189,7 +190,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                     onTap: () {
                                       commentNotifier
                                           .createComment(controller.text,
-                                              widget.event.id, image)
+                                              widget.event.id, image, )
                                           .then(
                                               (value) => {controller.clear()});
                                     },

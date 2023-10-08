@@ -52,9 +52,9 @@ class _CalCardState extends ConsumerState<CalCard> {
           child: Column(
             children: [
               TableCalendar(
-                pageJumpingEnabled: true,
+                //pageJumpingEnabled: true,
                 rowHeight: 35,
-                firstDay: DateTime.now().subtract(const Duration(days: 30)),
+                firstDay: DateTime.now().subtract(const Duration(days: 500)),
                 lastDay: DateTime.now().add(const Duration(days: 500)),
                 focusedDay: _selectedDay ?? _focusedDay,
                 currentDay: _selectedDay,
