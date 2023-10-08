@@ -16,13 +16,16 @@ class NotificationsNotifier extends StateNotifier<NotificationList> {
     int index = state.rawNotifications.indexOf(notification);
     state.rawNotifications[index].read = true;
     state = state;
-    await repo.updateNotificationRead(notification.id);
+    await repo.updateNotificationRead(notification.id).then((value) => getNotifications());
   }
 }
 
 final notificationProvider =
     StateNotifierProvider<NotificationsNotifier, NotificationList>(
-        (ref) => NotificationsNotifier());
+        (ref) => NotificationsNotifier()
+      );
+
+  
 
 class NotificationList {
   final List<UserNotification> rawNotifications;

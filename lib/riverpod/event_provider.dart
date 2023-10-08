@@ -182,4 +182,45 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+  Future<void> deleteEvent(String eventId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await eventRepository.deleteEvent(eventId);
+
+      await getAllEvent();
+
+      await getUserEvent();
+
+      //await upcomingEvents;
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+  }
+
 }
+
+final allEventsProvider = FutureProvider<GetListEventModel>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllEvent();
+  
+});
+
+final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getUpcomingEvent();
+});
+
+final userEventsProvider = FutureProvider<List<Event>>((ref) async{
+  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+  return await eventRepository.getAllUserEvents();
+
+});

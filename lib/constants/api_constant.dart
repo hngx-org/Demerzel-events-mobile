@@ -34,4 +34,5 @@ static unSubscribeFromGroupURI(String groupId) =>
   static groupEventURI(String id) => Uri.parse('$baseUrl/events/group/$id');
   static eventCommentURI(String id) =>
       Uri.parse('$baseUrl/events/comments/$id');
+  static deleteEventURI(String id)=> Uri.parse("$baseUrl/events/$id");
 }

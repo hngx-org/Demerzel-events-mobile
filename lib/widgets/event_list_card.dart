@@ -55,7 +55,8 @@ class EventsCard extends ConsumerWidget {
                     style: const TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w800,
-                        fontSize: 24),
+                        fontSize: 16
+                      ),
                   ),
                   trailing: Container(
                     width: 60,
@@ -77,7 +78,7 @@ class EventsCard extends ConsumerWidget {
                         DateFormatter.formatDateDayAndMonth(event!.startDate),
                         style: TextStyle(
                           fontFamily: 'inter',
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.onBackground,
                         ),
                       ),
@@ -88,22 +89,18 @@ class EventsCard extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        ProjectConstants.locationIcon,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.02,
-                      ),
-                      Text(
-                        event!.location,
-                        style: const TextStyle(
-                          fontFamily: 'inter',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  children: [
+                    SvgPicture.asset(ProjectConstants.locationIcon, color: Theme.of(context).colorScheme.onBackground,),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.02,
+                    ),
+                    Text(
+                      event!.location,
+                     style: const TextStyle(
+                        fontFamily: 'inter',
+                        fontWeight: FontWeight.w600,),
+                    ),
+                  ],
                   ),
                 ),
                 const SizedBox(
@@ -112,23 +109,18 @@ class EventsCard extends ConsumerWidget {
                 //time
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
-                  child: Row(
-                    children: [
-                      SvgPicture.asset(
-                        ProjectConstants.clockIcon,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.02,
-                      ),
-                      Text(
-                        '${event!.startTime} - ${event!.endTime}',
-                        style: const TextStyle(
-                          fontFamily: 'inter',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+                  child: 
+                  Row(
+                children: [
+                  SvgPicture.asset(ProjectConstants.clockIcon,color: Theme.of(context).colorScheme.onBackground,),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.02,
+                  ),
+                  Text(
+                    '${event!.startTime} - ${event!.endTime}',
+                    style: const TextStyle(
+                        fontFamily: 'inter',
+                        fontWeight: FontWeight.w500,),
                   ),
                 ),
                 const SizedBox(
@@ -172,13 +164,11 @@ class JoinButton extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20),
-        width: MediaQuery.of(context).size.width,
+        width: 200,
         height: 50,
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Theme.of(context).colorScheme.onPrimary,
+          color: Theme.of(context).colorScheme.primary,
           border: Border.all(
             color: Theme.of(context).colorScheme.onBackground,
             width: 2,
@@ -189,11 +179,12 @@ class JoinButton extends StatelessWidget {
         ),
         child: const Center(
           child: Text(
-            'I will join',
+            'Suscribe To Event',
             style: TextStyle(
                 fontFamily: 'NotoSans',
-                fontWeight: FontWeight.w700,
-                fontSize: 18),
+                // fontWeight: FontWeight.w600,
+                fontSize: 16
+              ),
           ),
         ),
       ),

@@ -24,25 +24,24 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',
       themeMode: ref.watch(themeProvider),
-            darkTheme: ThemeData.dark(
-              
-              useMaterial3: true
-            ).copyWith(
-              colorScheme: const ColorScheme.dark(
-                
-                primary: ProjectColors.purple
-              )
-            ),
+        darkTheme: ThemeData.dark(
+          
+          useMaterial3: true
+        ).copyWith(
+          colorScheme: const ColorScheme.dark(
+            
+            primary: ProjectColors.purple
+          )
+        ), 
 
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: ProjectColors.purple,
-                primary: ProjectColors.purple,
-                // secondary: const Color(0xFFF97316),
-              ),
-              useMaterial3: true,
-            ),
-      // theme: ThemeData(primaryColor: ProjectColors.purple),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: ProjectColors.purple,
+            primary: ProjectColors.purple,
+            // secondary: const Color(0xFFF97316),
+          ),
+          useMaterial3: true,
+        ),
       home: const SplashScreen(),
     );
   }
