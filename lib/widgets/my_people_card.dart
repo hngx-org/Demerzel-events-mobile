@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hng_events_app/constants/colors.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MyPeopleCard extends StatelessWidget {
@@ -63,7 +62,7 @@ class MyPeopleCard extends StatelessWidget {
                     child: image == ''
                         ? Image.asset(
                             'assets/illustrations/dancers_illustration.png')
-                        : Container(
+                        : SizedBox(
                           height: 110,
                           width: 160,
                           

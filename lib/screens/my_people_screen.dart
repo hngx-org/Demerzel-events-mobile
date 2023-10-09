@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';
@@ -19,8 +18,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
   Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
 
-    return 
-    Scaffold(
+    return Scaffold(
         appBar: AppBar(
           centerTitle: false,
           bottom: PreferredSize(
@@ -60,16 +58,16 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        const Icon(Icons.add),
                         Text(
                           'Create',
                           style: TextStyle(
-                            //fontFamily: 'NotoSans',
-                            // fontWeight: FontWeight.w700,
-                            // fontSize: 17,
+                            fontFamily: 'NotoSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
+                        const Icon(Icons.add),
                         const SizedBox(
                           width: 10,
                         ),
@@ -81,65 +79,66 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
             ),
           ],
         ),
-        body: 
-        
-        groupsNotifier.groups.isNotEmpty?
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-          ),
-          child: Visibility(
-            visible: !groupsNotifier.isBusy,
-            replacement: const Center(child: CircularProgressIndicator()),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                  // maxCrossAxisExtent: 200,
-                  //childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20
+        body: groupsNotifier.groups.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  top: 20,
                 ),
-              itemCount: groupsNotifier.groups.length,
-              itemBuilder: (BuildContext context, int index) {
-                final currentGroup = groupsNotifier.groups[index];
-                return MyPeopleCard(
-                    title: currentGroup.name,
-                    image: currentGroup.image,
-                    eventLength: currentGroup.eventCount,
-                    bubbleVisible: true,
-                    onPressed: () async{
-              
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventsScreen(
-                              group: currentGroup,
-                            ),
-                          ));
-                    });
-              },
-            ),
-          ),
-        ):
-        groupsNotifier.isBusy? const Center(child: CircularProgressIndicator(),):
-        Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("No group was found", textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => groupsNotifier.getGroups(),
-              child: const Text(
-                "Tap to Retry",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ),
-      )
-        );
+                child: Visibility(
+                  visible: !groupsNotifier.isBusy,
+                  replacement: const Center(child: CircularProgressIndicator()),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            // maxCrossAxisExtent: 200,
+                            //childAspectRatio: 3 / 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: groupsNotifier.groups.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final currentGroup = groupsNotifier.groups[index];
+                      return MyPeopleCard(
+                          title: currentGroup.name,
+                          image: currentGroup.image,
+                          eventLength: currentGroup.eventCount,
+                          bubbleVisible: true,
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EventsScreen(
+                                    group: currentGroup,
+                                  ),
+                                ));
+                          });
+                    },
+                  ),
+                ),
+              )
+            : groupsNotifier.isBusy
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("No group was found",
+                            textAlign: TextAlign.center),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () => groupsNotifier.getGroups(),
+                          child: const Text(
+                            "Tap to Retry",
+                            style:
+                                TextStyle(decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ));
   }
 }

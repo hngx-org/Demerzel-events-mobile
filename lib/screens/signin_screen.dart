@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:hng_events_app/constants/colors.dart';
@@ -10,11 +9,7 @@ class SignIn extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-    final authReader = ref.read(AuthRepository.provider);
-
-
-
+    // final authReader = ref.read(AuthRepository.provider);
 
     return Scaffold(
       body: SafeArea(
@@ -50,55 +45,62 @@ class SignIn extends ConsumerWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Consumer(
-
-                    builder: (context, ref, child) {
-                      return ElevatedButton(
-                        onPressed: () async{
-                          showDialog(
-                            context: context, 
-                            builder: (context){
-                              return const Center(child: CircularProgressIndicator(),);
-                            }
-                          );
-                          await ref.read(appUserProvider.notifier).siginInWithGoogle().then((value) {
-                            
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Successful!')));
-                            Navigator.pop(context);
-                          }).then((value) {
-                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('failed to signin!')));
-                          }).catchError((error) {Navigator.pop(context);});
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5)),
-                            padding: const EdgeInsets.symmetric(vertical: 9)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              'assets/icons/google-color-icon.svg',
-                              height: 24,
-                              width: 24,
+                  Consumer(builder: (context, ref, child) {
+                    return ElevatedButton(
+                      onPressed: () async {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            });
+                        await ref
+                            .read(appUserProvider.notifier)
+                            .siginInWithGoogle()
+                            .then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Successful!')));
+                          Navigator.pop(context);
+                        }).then((value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('failed to signin!')));
+                        }).catchError((error) {
+                          Navigator.pop(context);
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          padding: const EdgeInsets.symmetric(vertical: 9)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/icons/google-color-icon.svg',
+                            height: 24,
+                            width: 24,
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          const Text(
+                            'Continue with Google',
+                            style: TextStyle(
+                              fontFamily: 'NotoSans',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              color: ProjectColors.black,
                             ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            const Text(
-                              'Continue with Google',
-                              style: TextStyle(
-                                  fontFamily: 'NotoSans',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                  color: ProjectColors.black,),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                 ],
               )
             ],
@@ -107,6 +109,4 @@ class SignIn extends ConsumerWidget {
       ),
     );
   }
-
-  
 }

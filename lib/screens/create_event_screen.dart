@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,10 +9,8 @@ import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key, this.currentGroup});
@@ -223,7 +223,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       Text(imagePath.split('/').last.isEmpty
                           ? 'Add a Image'
                           : imagePath.split('/').last),
-                          Icon(Icons.image)
+                          const Icon(Icons.image)
                       // SvgPicture.asset(ProjectConstants.imagePicker,),
                     ],
                   ),
@@ -444,7 +444,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       ),
                     ],
                   ),
-                ): SizedBox.shrink(),
+                ): const SizedBox.shrink(),
               ],
             ),
             const SizedBox(
@@ -531,7 +531,6 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       
 
       if (result) {
-        // ignore: use_build_context_synchronously
 
         await eventController.getUpcomingEvent();
         await eventController.getAllEvent();
@@ -545,9 +544,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
             .getGroups()
             .then((value) => Navigator.of(context).pop());
         showSnackBar('Event Uploaded Successfully',Colors.green);
-        // ignore: use_build_context_synchronously
+       
       } else {
-        // ignore: use_build_context_synchronously
+        
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -579,9 +578,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         backgroundColor: color,
       ),
     );

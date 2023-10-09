@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
-import 'package:hng_events_app/models/comment.dart';
 import 'package:hng_events_app/models/event_model.dart';
-import 'package:hng_events_app/riverpod/comment_provider.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
@@ -55,8 +52,7 @@ class EventsCard extends ConsumerWidget {
                     style: const TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w800,
-                        fontSize: 16
-                      ),
+                        fontSize: 16),
                   ),
                   trailing: Container(
                     width: 60,
@@ -70,7 +66,7 @@ class EventsCard extends ConsumerWidget {
                       boxShadow: <BoxShadow>[
                         BoxShadow(
                             color: Theme.of(context).colorScheme.onPrimary,
-                            offset: Offset(2, 2))
+                            offset: const Offset(2, 2))
                       ],
                     ),
                     child: Center(
@@ -89,18 +85,22 @@ class EventsCard extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
-                  children: [
-                    SvgPicture.asset(ProjectConstants.locationIcon, color: Theme.of(context).colorScheme.onBackground,),
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.02,
-                    ),
-                    Text(
-                      event!.location,
-                     style: const TextStyle(
-                        fontFamily: 'inter',
-                        fontWeight: FontWeight.w600,),
-                    ),
-                  ],
+                    children: [
+                      SvgPicture.asset(
+                        ProjectConstants.locationIcon,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.02,
+                      ),
+                      Text(
+                        event!.location,
+                        style: const TextStyle(
+                          fontFamily: 'inter',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -109,18 +109,23 @@ class EventsCard extends ConsumerWidget {
                 //time
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
-                  child: 
-                  Row(
-                children: [
-                  SvgPicture.asset(ProjectConstants.clockIcon,color: Theme.of(context).colorScheme.onBackground,),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.02,
-                  ),
-                  Text(
-                    '${event!.startTime} - ${event!.endTime}',
-                    style: const TextStyle(
-                        fontFamily: 'inter',
-                        fontWeight: FontWeight.w500,),
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        ProjectConstants.clockIcon,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.02,
+                      ),
+                      Text(
+                        '${event!.startTime} - ${event!.endTime}',
+                        style: const TextStyle(
+                          fontFamily: 'inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(
@@ -183,8 +188,7 @@ class JoinButton extends StatelessWidget {
             style: TextStyle(
                 fontFamily: 'NotoSans',
                 // fontWeight: FontWeight.w600,
-                fontSize: 16
-              ),
+                fontSize: 16),
           ),
         ),
       ),
@@ -264,7 +268,7 @@ class _InputFieldState extends ConsumerState<InputField> {
                                   firstComments: widget.firstComments,
                                 ),
                                 Text(
-                                    '  ${widget.firstComments!.length} ${(widget.firstComments!.length >1 ? 'comments' : 'comment' )}'),
+                                    '  ${widget.firstComments!.length} ${(widget.firstComments!.length > 1 ? 'comments' : 'comment')}'),
                               ],
                             ),
                           ),

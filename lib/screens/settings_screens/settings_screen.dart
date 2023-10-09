@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
-import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/settings_screens/about_us.dart';
 import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
-import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_list_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/notifications_screens/notificaton_settings.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
 
@@ -22,7 +20,7 @@ class SettingsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(notificationProvider.notifier).getNotifications();
     final userRef = ref.watch(appUserProvider);
-    final authRef = ref.read(AuthRepository.provider);
+    
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
@@ -145,11 +143,11 @@ class SettingsPage extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.onBackground)),
               child: Column(
                 children: [
-                  SettingItem(
-                    title: 'Help and Support',
-                    leading: ProjectConstants.helpIcon,
-                    onPressed: () {},
-                  ),
+                  // SettingItem(
+                  //   title: 'Help and Support',
+                  //   leading: ProjectConstants.helpIcon,
+                  //   onPressed: () {},
+                  // ),
                   SettingItem(
                     title: 'About',
                     leading: ProjectConstants.aboutIcon,

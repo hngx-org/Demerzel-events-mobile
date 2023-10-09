@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:hng_events_app/models/error_model.dart';
 import 'package:hng_events_app/models/success_model.dart';
 import 'package:http/http.dart' as http;
 
 handleResponse(http.Response response) {
   try {
-    print(
+    log(
       'ResponseCode:: ${response.statusCode},  ResponseBody:: ${response.body}',
     );
 
@@ -18,7 +19,7 @@ handleResponse(http.Response response) {
 
     return ErrorModel(body['message']);
   } catch (ex) {
-    print(ex.toString());
+    log(ex.toString());
     return ErrorModel('Request failed');
   }
 }

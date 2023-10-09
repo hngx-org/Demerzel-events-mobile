@@ -1,4 +1,4 @@
-
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
@@ -121,9 +121,9 @@ Widget TimelineEventCard({
                   onSelected: (String value) {
                     if (value == 'delete') {
                       onDelete(eventId);
-                      print('Delete item selected');
+                      log('Delete item selected');
                     } else if (value == 'edit') {
-                      print('Edit item selected');
+                      log('Edit item selected');
                     }
                   },
                   itemBuilder: (BuildContext context) =>

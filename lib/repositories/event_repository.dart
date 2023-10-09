@@ -175,14 +175,14 @@ class EventRepository {
           .delete(url, headers: header)
           .timeout(const Duration(seconds: 60));
       if (response.statusCode == 200 || response.statusCode ==201) {
-        print('Event deleted successfully');
+        log('Event deleted successfully');
       } else {
         //throw response.reasonPhrase?? response.body;
-        print('Failed to delete event. Status code: ${response.statusCode}');
+        log('Failed to delete event. Status code: ${response.statusCode}');
       }
     } catch(e, s){
-      print(e.toString());
-      print(s.toString());
+      log(e.toString());
+      log(s.toString());
       rethrow;
     }
   }

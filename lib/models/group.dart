@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:hng_events_app/models/comment.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/models/event_model.dart';
 
