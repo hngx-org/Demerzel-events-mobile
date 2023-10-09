@@ -143,11 +143,11 @@ class SettingsPage extends ConsumerWidget {
                       color: Theme.of(context).colorScheme.onBackground)),
               child: Column(
                 children: [
-                  SettingItem(
-                    title: 'Help and Support',
-                    leading: ProjectConstants.helpIcon,
-                    onPressed: () {},
-                  ),
+                  // SettingItem(
+                  //   title: 'Help and Support',
+                  //   leading: ProjectConstants.helpIcon,
+                  //   onPressed: () {},
+                  // ),
                   SettingItem(
                     title: 'About',
                     leading: ProjectConstants.aboutIcon,
