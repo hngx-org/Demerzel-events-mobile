@@ -145,7 +145,9 @@ class EventsCard extends ConsumerWidget {
                 ),
                 const Divider(
                     height: 0, thickness: 2, color: ProjectColors.grey),
-
+ const SizedBox(
+                  height: 2,
+                ),
                 //inpuField widget
                 InputField(
                   event: event!,

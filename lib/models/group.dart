@@ -94,9 +94,11 @@ class GroupEventListModel {
 class Data {
   final List<Event> events;
   final List<Member>? members;
-  
 
-  Data({required this.events, this.members, });
+  Data({
+    required this.events,
+    this.members,
+  });
 
   factory Data.fromMap(Map<String, dynamic> json) {
     List<Event> eventsList = [];
@@ -109,18 +111,13 @@ class Data {
     }
 
     if (json['members'] != null) {
-      membersList =
-          List<Member>.from(json['members'].map((x) => Member.fromJson(x['user'])));
+      membersList = List<Member>.from(
+          json['members'].map((x) => Member.fromJson(x['user'])));
     }
-//  if (json['comments'] != null) {
-//       firstComments =
-//           List.from(json['comments'].map((x) => FirstComments.fromJson(x['comments'])));
-//           print(firstComments);
-//     }
+
     return Data(
       events: eventsList,
       members: membersList,
-      
     );
   }
 
