@@ -128,13 +128,15 @@ Widget TimelineEventCard({
                   },
                   itemBuilder: (BuildContext context) =>
                   <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
+                     PopupMenuItem<String>(
                       value: 'delete',
-                      child: Text('Delete'),
+                      child: GestureDetector(child: Text('Delete'),
+                      onTap: () => print('Delete tapped'),)
                     ),
-                    const PopupMenuItem<String>(
+                     PopupMenuItem<String>(
                       value: 'edit',
-                      child: Text('Edit'),
+                      child: GestureDetector(child: Text('Edit'),
+                      onTap: () => print('Edit tapped')),
                     ),
                   ],
                   child: const Icon(Icons.more_vert),

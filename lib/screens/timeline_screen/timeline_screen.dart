@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
-import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/My_events/my_events_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
 
 class TimelineScreen extends ConsumerStatefulWidget {
