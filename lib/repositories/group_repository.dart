@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
@@ -72,7 +73,7 @@ class GroupRepository {
     final result = await apiService.post(
         url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
 
-   if (result['status'] == 'success') {
+    if (result['status'] == 'success') {
       return true;
     } else {
       return false;
@@ -93,4 +94,38 @@ class GroupRepository {
     }
   }
 
+  Future<void> deleteGroup(String groupId) async {
+    final header = await authRepository.getAuthHeader();
+    final apiUrl = ApiRoutes.deleteGroupURI(groupId).toString();
+    final url = Uri.parse(apiUrl);
+    final http.Response response = await http
+        .delete(url, headers: header)
+        .timeout(const Duration(seconds: 60));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // log('Group deleted successfully');
+      print('Group deleted');
+    } else {
+      // throw response.reasonPhrase?? response.body;
+      // log('Failed to delete event. Status code: ${response.statusCode}');
+      print("Group not deleted.");
+    }
+  }
+
+  Future<void> editGroupName(String newGroupName) async {
+    final header = await authRepository.getAuthHeader();
+    final apiUrl = ApiRoutes.editGroupURI(newGroupName);
+    final url = Uri.parse(apiUrl);
+    final http.Response response = await http
+        .put(
+          url,
+          headers: header,
+        )
+        .timeout(const Duration(seconds: 60));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Group Name updated");
+      
+    } else {
+      print("group Name not updated");
+    }
+  }
 }

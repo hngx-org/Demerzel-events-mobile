@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/models/event_model.dart';
+import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/events_search_delegate.dart';
 import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
 
@@ -19,33 +22,48 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this);
-
-    // _tabController.addListener(() {
-    //   if (_tabController.indexIsChanging) return;
-
-    //   if(_tabController.index == 0 && ref.read(EventProvider.provider).upcomingEvents.isEmpty) {
-    //     ref.read(EventProvider.provider.notifier).getUpcomingEvent();
-    //   }
-    //   else if (_tabController.index == 1 &&
-    //       ref.read(EventProvider.provider).userEvents.isEmpty) {
-    //     ref.read(EventProvider.provider.notifier).getUserEvent();
-    //   } else if (_tabController.index == 2 &&
-    //       (ref.read(EventProvider.provider).allEvents?.data.events ?? [])
-    //           .isEmpty) {
-    //     ref.read(EventProvider.provider.notifier).getAllEvent();
-    //   }
-    // });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     ref.read(notificationProvider.notifier).getNotifications.call();
+
+    List<Event> events = ref.watch(eventSearchProvider);
+    
     ref.read(NotificationSettingsPrefsNotifier.provider);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          title: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: SizedBox(
+                height: 35,
+                child: GestureDetector(
+                  onTap: ()=> showSearch(
+                      context: context, 
+                      delegate: EventSearchDelegate(events: events)
+                    ),
+                  child: const TextField(
+                    enabled: false,
+                    expands: false,
+                    decoration: InputDecoration(
+                      label: Text('Search'),
+                      disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey
+                        )
+                      ),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           bottom: TabBar(
             controller: _tabController,
             tabs: [
@@ -55,7 +73,6 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                   child: Text(
                     "Upcoming",
                     style: TextStyle(
-                      // fontSize: 17,
                     ),
                   ),
                 ),
@@ -65,8 +82,6 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: const Text(
                   "My Events",
                   style: TextStyle(
-                    // fontSize: 17,
-                    // color: Colors.black
                   ),
                 ),
               ),
@@ -75,8 +90,6 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: const Text(
                   "All Events",
                   style: TextStyle(
-                    // fontSize: 17,
-                    // color: Colors.black
                   ),
                 ),
               ),
@@ -95,49 +108,6 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
             ),
           ],
         ),
-        // floatingActionButton: Column(
-        //   mainAxisAlignment: MainAxisAlignment.end,
-        //   children: [
-        //     Padding(
-        //       padding: const EdgeInsets.all(8.0),
-        //       child: FloatingActionButton(
-        //         shape: const CircleBorder(),
-        //         backgroundColor: Theme.of(context).colorScheme.primary,
-        //         child: Icon(Icons.refresh),
-        //         onPressed: ()=> ref.refresh(upcomingEventsProvider)),
-        //     ),
-        //     Padding(
-        //       padding: const EdgeInsets.only(bottom: 70.0),
-        //       child: FloatingActionButton(
-        //           backgroundColor: Theme.of(context).colorScheme.primary,
-        //           shape: const CircleBorder(),
-        //           onPressed: () {
-        //             Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //               return const CreateEvents();
-        //             }));
-        //           },
-        //           child: Container(
-        //             height: 70.r,
-        //             width: 70.r,
-        //             decoration: BoxDecoration(
-        //                 color: ProjectColors.purple,
-        //                 borderRadius: BorderRadius.all(Radius.circular(50.r)),
-        //                 // boxShadow: const [
-        //                 //   BoxShadow(
-        //                 //       color: ProjectColors.black,
-        //                 //       spreadRadius: 3,
-        //                 //       offset: Offset(0, 2)),
-        //                 // ]
-        //               ),
-        //             child: const Icon(
-        //               Icons.add,
-        //               size: 40,
-        //               color: Colors.black,
-        //             ),
-        //           )),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }

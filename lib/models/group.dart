@@ -20,8 +20,7 @@ class Group extends Equatable {
     required this.membersCount,
     required this.eventCount,
   });
-
-  @override
+ @override
   List<Object> get props => [id];
 
   factory Group.fromJson(Map<String, dynamic> json) {
@@ -121,7 +120,9 @@ class Data {
     );
   }
 
+
   Map<String, dynamic> toMap() {
     return {"events": List<dynamic>.from(events.map((x) => x.toMap()))};
   }
+
 }
