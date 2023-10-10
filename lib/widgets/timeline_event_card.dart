@@ -16,7 +16,7 @@ Widget TimelineEventCard(
      Null Function(String eventId)? onDelete,
      Null Function(String eventId)? onEdit,
     required String eventId,
-    required bool showVert}) {
+     bool showVert = false}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
