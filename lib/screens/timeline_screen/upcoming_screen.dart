@@ -215,87 +215,30 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
           itemBuilder: (BuildContext context, int index) {
             final Event event = data[index];
 
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommentScreen(event: event),
-                        ),
-                      ),
-                      child: TimelineEventCard(
-                        showVert: false,
-                        eventId: event.id,
-                        context: context,
-                        screensize: screensize,
-                        image: event.thumbnail,
-                        title: event.title,
-                        time: event.startTime,
-                        location: event.location,
-                        date: event.startDate,
-                        activity: DateFormatter()
-                            .timeLeft(event.startDate, event.startTime),
-                      ),
-                    );
-                  },
+              return GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommentScreen(event: event),
+                  ),
                 ),
+                child: TimelineEventCard(
+                  showVert: false,
+                  eventId: event.id,
+                  context: context,
+                  screensize: screensize,
+                  image: event.thumbnail,
+                  title: event.title,
+                  time: event.startTime,
+                  location: event.location,
+                  date: event.startDate,
+                  activity: DateFormatter()
+                      .timeLeft(event.startDate, event.startTime),
+                ),
+              );
+            },
+          ),
         );
-      },
-    );
-
-    // if (eventNotifier.isBusy) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
-
-    // if (eventNotifier.upcomingEvents.isEmpty) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         const Text("No event was found", textAlign: TextAlign.center),
-    //         const SizedBox(height: 10),
-    //         GestureDetector(
-    //           onTap: () => eventNotifier.getAllEvent(),
-    //           child: const Text(
-    //             "Tap to Retry",
-    //             style: TextStyle(decoration: TextDecoration.underline),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
-    // return RefreshIndicator(
-    //   onRefresh: () async => eventNotifier.getUpcomingEvent(),
-    //   child: ListView.builder(
-    //     itemCount: eventNotifier.upcomingEvents.length,
-    //     itemBuilder: (BuildContext context, int index) {
-    //       final Event event = eventNotifier.upcomingEvents[index];
-
-    //       return GestureDetector(
-    //         onTap: () => Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => CommentScreen(event: event),
-    //           ),
-    //         ),
-    //         child: TimelineEventCard(
-    //           context: context,
-    //           screensize: screensize,
-    //           image: event.thumbnail,
-    //           title: event.title ,
-    //           time: event.startTime ,
-    //           location: event.location ,
-    //           date: event.startDate ,
-    //           activity: DateFormatter().timeLeft(event.startDate, event.startTime),
-    //           onDelete: (eventId){
-    //             eventNotifier.deleteEvent(eventId);
-    //           },
-    //           eventId: eventNotifier.allEvents!.data.events[index].id,
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
-  }
+      }    
+  
 }

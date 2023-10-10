@@ -151,10 +151,7 @@ class AllEventsScreen extends ConsumerWidget {
             ),
           ],
         ),);
-      },
-      data: (data){
-        return onData(context, ref, data, eventNotifier, screensize);
-      }, 
+      }
     );
 
   }
