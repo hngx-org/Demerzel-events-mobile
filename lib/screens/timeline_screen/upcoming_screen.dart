@@ -22,14 +22,12 @@ class UpcomingEventScreen extends ConsumerStatefulWidget {
 class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
   @override
   void initState() {
-
     super.initState();
     //ref.read(EventProvider.provider).getUpcomingEvent();
-    // getUpcomingEvent();    
+    // getUpcomingEvent();
   }
 
   //Future getUpcomingEvent() async => await ref.read(EventProvider.provider).getUpcomingEvent();
-  
 
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
@@ -130,70 +128,74 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
     BuildContext context,
   ) {
     final eventNotifier = ref.watch(EventProvider.provider);
-     Size screensize = MediaQuery.of(context).size;
+    Size screensize = MediaQuery.of(context).size;
     AsyncValue<List<Event>> events = ref.watch(upcomingEventsProvider);
 
     return events.when(
       skipLoadingOnRefresh: false,
-      
-      error: (error, stackTrace){
+      error: (error, stackTrace) {
         return Scaffold(
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 70.0),
             child: FloatingActionButton(
-              shape: const CircleBorder(),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Icon(Icons.refresh),
-              onPressed: ()=> ref.refresh(upcomingEventsProvider)
-            ),
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: const Icon(Icons.refresh),
+                onPressed: () => ref.refresh(upcomingEventsProvider)),
           ),
           body: const Center(
             child: Padding(
               padding: EdgeInsets.only(bottom: 35.0),
-              child: Text('Failed to Retrieve Events', style: TextStyle(color: Colors.red),),
+              child: Text(
+                'Failed to Retrieve Events',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
           ),
         );
-      }, 
-      loading: (){
-        return const Center(child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('Please wait..'),
-            ),
-          ],
-        ),);
       },
-      data: (data){
+      loading: () {
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text('Please wait..'),
+              ),
+            ],
+          ),
+        );
+      },
+      data: (data) {
         return Scaffold(
           floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Icon(Icons.refresh),
-                onPressed: ()=> ref.refresh(upcomingEventsProvider)),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 70.0),
-              child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: const CircleBorder(),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return const CreateEvents();
-                    }));
-                  },
-                  child: Container(
-                    height: 70.r,
-                    width: 70.r,
-                    decoration: BoxDecoration(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FloatingActionButton(
+                    shape: const CircleBorder(),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: Icon(Icons.refresh),
+                    onPressed: () => ref.refresh(upcomingEventsProvider)),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 70.0),
+                child: FloatingActionButton(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    shape: const CircleBorder(),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const CreateEvents();
+                      }));
+                    },
+                    child: Container(
+                      height: 70.r,
+                      width: 70.r,
+                      decoration: BoxDecoration(
                         color: ProjectColors.purple,
                         borderRadius: BorderRadius.all(Radius.circular(50.r)),
                         // boxShadow: const [
@@ -203,47 +205,49 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
                         //       offset: Offset(0, 2)),
                         // ]
                       ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                  )),
-            ),
-          ],
-        ),
-          body: data.isEmpty? const Center(child: Text('No Events'),) : 
-              ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (BuildContext context, int index) {
-              final Event event = data[index];
-
-              return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CommentScreen(event: event),
-                  ),
-                ),
-                child: TimelineEventCard(
-                  eventId: event.id,
-                  onDelete: (eventId){
-                    eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
-                  },
-                  context: context, 
-                  screensize: screensize, 
-                  image: event.thumbnail, 
-                  title: event.title , 
-                  time: event.startTime ,
-                  location: event.location ,
-                  date: event.startDate ,
-                  activity: DateFormatter().timeLeft(event.startDate, event.startTime),
-                ),
-              );
-            },
+                      child: const Icon(
+                        Icons.add,
+                        size: 40,
+                        color: Colors.black,
+                      ),
+                    )),
+              ),
+            ],
           ),
+          body: data.isEmpty
+              ? const Center(
+                  child: Text('No Events'),
+                )
+              : ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final Event event = data[index];
+
+                    return GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CommentScreen(event: event),
+                        ),
+                      ),
+                      child: TimelineEventCard(
+                        showVert: false,
+                        eventId: event.id,
+                        context: context,
+                        screensize: screensize,
+                        image: event.thumbnail,
+                        title: event.title,
+                        time: event.startTime,
+                        location: event.location,
+                        date: event.startDate,
+                        activity: DateFormatter()
+                            .timeLeft(event.startDate, event.startTime),
+                      ),
+                    );
+                  },
+                ),
         );
-      }, 
+      },
     );
 
     // if (eventNotifier.isBusy) {
@@ -284,10 +288,10 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
     //           ),
     //         ),
     //         child: TimelineEventCard(
-    //           context: context, 
-    //           screensize: screensize, 
-    //           image: event.thumbnail, 
-    //           title: event.title , 
+    //           context: context,
+    //           screensize: screensize,
+    //           image: event.thumbnail,
+    //           title: event.title ,
     //           time: event.startTime ,
     //           location: event.location ,
     //           date: event.startDate ,
