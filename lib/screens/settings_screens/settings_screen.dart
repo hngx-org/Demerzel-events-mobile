@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/settings_screens/about_us.dart';
 import 'package:hng_events_app/screens/settings_screens/edit_profile_screen.dart';
+import 'package:hng_events_app/screens/settings_screens/notifications_screens/notification_list_screen.dart';
 import 'package:hng_events_app/screens/settings_screens/notifications_screens/notificaton_settings.dart';
 import 'package:hng_events_app/screens/settings_screens/theme_screen.dart';
-
+import 'package:badges/badges.dart' as badges;
 import 'package:svg_flutter/svg.dart';
 
 import '../../constants/colors.dart';
@@ -18,9 +20,12 @@ class SettingsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(notificationProvider.notifier).getNotifications();
+    // ref.read(notificationProvider.notifier).getNotifications();
+    ref.watch(NotificationSettingsPrefsNotifier.provider);
     final userRef = ref.watch(appUserProvider);
-    
+    List<UserNotification> nlist =
+        ref.watch(notificationProvider).notifications;
+
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
       appBar: AppBar(
@@ -37,11 +42,22 @@ class SettingsPage extends ConsumerWidget {
           style: appBarTextStyle.copyWith(),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-              // color: ProjectColors.black,
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const NotificationListScreen()));
+              },
+              child: badges.Badge(
+                position: badges.BadgePosition.topEnd(top: -7, end: -7),
+                badgeContent: Text("${nlist.length}"),
+                child: const Icon(
+                  Icons.notifications,
+                  size: 35,
+                  // color: ProjectColors.black,
+                ),
+              ),
             ),
           ),
         ],
@@ -59,8 +75,7 @@ class SettingsPage extends ConsumerWidget {
                               name: userRef?.name ?? 'salome',
                               ref: ref,
                               image: userRef?.avatar ?? '',
-                              email:
-                                  userRef?.email ?? 'salome357@gmail.com',
+                              email: userRef?.email ?? 'salome357@gmail.com',
                             )));
               },
               child: Container(
@@ -72,8 +87,7 @@ class SettingsPage extends ConsumerWidget {
                   return ListTile(
                     tileColor: Theme.of(context).cardColor,
                     leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(userRef?.avatar ?? ''),
+                      backgroundImage: NetworkImage(userRef?.avatar ?? ''),
                     ),
                     title: Text(
                       userRef?.name ?? 'salome',
@@ -106,12 +120,11 @@ class SettingsPage extends ConsumerWidget {
                     leading: ProjectConstants.notificationsIcon,
                     onPressed: () {
                       Navigator.push(
-                        context, 
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationSettings()
-                          // NotificationListScreen()
-                        )
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const NotificationSettings()
+                              // NotificationListScreen()
+                              ));
                     },
                   ),
                   // SettingItem(
@@ -153,7 +166,10 @@ class SettingsPage extends ConsumerWidget {
                     leading: ProjectConstants.aboutIcon,
                     shape: const Border(),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=> const AboutUs()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const AboutUs()));
                     },
                   )
                 ],
