@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
+import 'package:hng_events_app/screens/screen_util.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:hng_events_app/constants/colors.dart';
 
@@ -61,11 +62,12 @@ class SignIn extends ConsumerWidget {
                             .then((value) {
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Successful!')));
-                          Navigator.pop(context);
-                        }).then((value) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('failed to signin!')));
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ScreenUtilInitScreen()));
+                          // Navigator.pop(context);
+                        // }).then((value) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //       const SnackBar(
+                        //           content: Text('failed to signin!')));
                         }).catchError((error) {
                           Navigator.pop(context);
                         });
