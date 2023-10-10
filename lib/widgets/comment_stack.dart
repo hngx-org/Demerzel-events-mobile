@@ -16,10 +16,10 @@ class CommentStack extends StatelessWidget {
         (index) => Positioned(
           left: (29 * index).toDouble(),
           child: CircleAvatar(
-            radius: 20,
+            radius: 17,
             backgroundColor: Colors.white,
             child: CircleAvatar(
-              radius: 18,
+              radius: 16,
               backgroundImage: NetworkImage(firstComments![index].avatar ?? ''),
             ),
           ),

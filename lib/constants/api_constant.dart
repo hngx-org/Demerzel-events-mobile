@@ -18,6 +18,7 @@ class ApiRoutes {
   static final eventURI = baseUri.replace(path: '/api/events');
   static final currentUserURI = baseUri.replace(path: '/api/users/current');
   static final notificationURI = baseUri.replace(path: '/api/notifications');
+   static final notificationPrefsURI = baseUri.replace(path: '/api/notifications/settings');
   static eventURII(String limit, String page) =>
       baseUri.replace(path: '/api/events?limit=$limit&page=$page');
   static final upcomingEventURI = baseUri.replace(path: '/api/events/upcoming');
