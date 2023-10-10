@@ -41,7 +41,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
   @override
   Widget build(BuildContext context) {
     ref.read(notificationProvider.notifier).getNotifications.call();
-    ref.read(NotificationSettingsPrefsNotifier.provider).getPrefs();
+    ref.read(NotificationSettingsPrefsNotifier.provider);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
