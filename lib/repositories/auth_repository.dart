@@ -136,7 +136,7 @@ class AuthRepository {
     String userid = await getUserid();
     Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(
-      Uri.parse('$baseUrl/users/$userid'),
+      Uri.parse('$baseUrl/users'),
       headers: headerMap,
       body: jsonEncode(<String, String>
         {
@@ -145,7 +145,7 @@ class AuthRepository {
       )
     );
     if (response.statusCode != 200) {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to update userName");
     }
   }
 
@@ -163,7 +163,7 @@ class AuthRepository {
       Map<String, dynamic> mapdata = jsonDecode(responseJson);
       return mapdata['data']["url"];
     } else {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to get imageUrl ${response.statusCode}");
     }
   }
 
@@ -172,7 +172,7 @@ class AuthRepository {
     String imageUrl = await getimageUrl(imageFile);
     Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(
-      Uri.parse('$baseUrl/users/$userid'),
+      Uri.parse('$baseUrl/users'),
       headers: headerMap,
       body: jsonEncode(<String, dynamic>
         {
@@ -181,7 +181,7 @@ class AuthRepository {
       )
     );
     if (response.statusCode != 200) {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to update userPhoto ${response.statusCode}");
     }
   }
 

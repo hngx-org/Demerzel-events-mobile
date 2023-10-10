@@ -37,15 +37,14 @@ class UserNotifier extends StateNotifier<AppUser?> {
   bool _preventLoop = false;
   
   Future getUserLocal() async{
+    await repo.getUserLocal().then((value) => state = value);
+  }
+
+  Future getUserInit() async{
     if (!_preventLoop) {
       await repo.getUserLocal().then((value) => state = value);
       _preventLoop = true;
     }
-  }
-
-  Future getUserInit() async{
-      await repo.getUserLocal().then((value) => state = value);
-      _preventLoop = true;
     
   }
 

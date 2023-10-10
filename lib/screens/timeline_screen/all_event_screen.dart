@@ -137,149 +137,101 @@ class AllEventsScreen extends ConsumerWidget {
           ),
         );
       },
-      loading: () {
-        return const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Please wait..'),
-              ),
-            ],
-          ),
-        );
+      data: (data){
+        return onData(context, ref, data, eventNotifier, screensize);
       },
-      data: (data) {
-        return Scaffold(
-          floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton(
-                    shape: const CircleBorder(),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(Icons.refresh),
-                    onPressed: () => ref.refresh(upcomingEventsProvider)),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 70.0),
-                child: FloatingActionButton(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    shape: const CircleBorder(),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const CreateEvents();
-                      }));
-                    },
-                    child: Container(
-                      height: 70.r,
-                      width: 70.r,
-                      decoration: BoxDecoration(
-                        color: ProjectColors.purple,
-                        borderRadius: BorderRadius.all(Radius.circular(50.r)),
-                      ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 40,
-                        color: Colors.black,
-                      ),
-                    )),
-              ),
-            ],
-          ),
-          body: data.data.events.isEmpty
-              ? const Center(
-                  child: Text('No Events'),
-                )
-              : ListView.builder(
-                  itemCount: data.data.events.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final Event event = data.data.events[index];
-
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CommentScreen(event: event),
-                        ),
-                      ),
-                      child: TimelineEventCard(
-                        showVert: false,
-                        eventId: event.id,
-                        context: context,
-                        screensize: screensize,
-                        image: event.thumbnail,
-                        title: event.title,
-                        time: event.startTime,
-                        location: event.location,
-                        date: event.startDate,
-                        activity: DateFormatter()
-                            .timeLeft(event.startDate, event.startTime),
-                      ),
-                    );
-                  },
-                ),
-        );
-      },
+      loading: (){
+        return const Center(child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('Please wait..'),
+            ),
+          ],
+        ),);
+      }
     );
 
-    // if (eventNotifier.isBusy) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
+  }
 
-    // if ((eventNotifier.allEvents?.data.events ?? []).isEmpty) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         const Text("No event was found", textAlign: TextAlign.center),
-    //         const SizedBox(height: 10),
-    //         GestureDetector(
-    //           onTap: () => eventNotifier.getAllEvent(),
-    //           child: const Text(
-    //             "Tap to Retry",
-    //             style: TextStyle(decoration: TextDecoration.underline),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
+  Scaffold onData(BuildContext context, WidgetRef ref, GetListEventModel data, EventProvider eventNotifier, Size screensize) {
+    return Scaffold(
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              shape: const CircleBorder(),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Icon(Icons.refresh),
+              onPressed: ()=> ref.refresh(upcomingEventsProvider)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 70.0),
+            child: FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const CreateEvents();
+                  }));
+                },
+                child: Container(
+                  height: 70.r,
+                  width: 70.r,
+                  decoration: BoxDecoration(
+                      color: ProjectColors.purple,
+                      borderRadius: BorderRadius.all(Radius.circular(50.r)),
+                      // boxShadow: const [
+                      //   BoxShadow(
+                      //       color: ProjectColors.black,
+                      //       spreadRadius: 3,
+                      //       offset: Offset(0, 2)),
+                      // ]
+                    ),
+                  child: const Icon(
+                    Icons.add,
+                    size: 40,
+                    color: Colors.black,
+                  ),
+                )),
+          ),
+        ],
+      ),
+        body: data.data.events.isEmpty? const Center(child: Text('No Events'),) : 
+            ListView.builder(
+          itemCount: data.data.events.length,
+          itemBuilder: (BuildContext context, int index) {
+            final Event event = data.data.events[index];
 
-    // return RefreshIndicator(
-    //   onRefresh: () async => eventNotifier.getAllEvent(),
-    //   child: ListView.builder(
-    //     itemCount: eventNotifier.allEvents?.data.events.length ?? 0,
-    //     itemBuilder: (BuildContext context, int index) {
-    //       return GestureDetector(
-    //         onTap: () => Navigator.push(
-    //           context,
-    //           MaterialPageRoute(
-    //             builder: (context) => CommentScreen(event:  eventNotifier.allEvents!.data.events[index]),
-    //           ),
-    //         ),
-    //         child: TimelineEventCard(
-    //           context: context,
-    //           screensize: screensize,
-    //           image:  eventNotifier.allEvents?.data.events[index].thumbnail,
-    //           title:  eventNotifier.allEvents?.data.events[index].title ?? "N/A",
-    //           time:  eventNotifier.allEvents?.data.events[index].startTime ?? "N/A",
-    //           location:  eventNotifier.allEvents?.data.events[index].location ?? "N/A",
-    //           date:  eventNotifier.allEvents?.data.events[index].startDate ?? "N/A",
-    //           activity:  DateFormatter().timeLeft( eventNotifier.allEvents!.data.events[index].startDate,  eventNotifier.allEvents!.data.events[index].startTime),
-    //           onDelete: (eventId){
-    //             eventNotifier.deleteEvent(eventId);
-    //             },
-    //             eventId: eventNotifier.allEvents!.data.events[index].id
-    //         ),
-    //       );
-    //     },
-    //   ),
-    // );
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CommentScreen(event: event),
+                ),
+              ),
+              child: TimelineEventCard(
+                eventId: event.id,
+                onDelete: (eventId) {
+                  eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(allEventsProvider));
+                },
+                context: context, 
+                screensize: screensize, 
+                image: event.thumbnail, 
+                title: event.title , 
+                time: event.startTime ,
+                location: event.location ,
+                date: event.startDate ,
+                activity: DateFormatter().timeLeft(event.startDate, event.startTime), showVert: false,
+              ),
+            );
+          },
+        ),
+      );
   }
 
   static String timeLeft(DateTime date) {
