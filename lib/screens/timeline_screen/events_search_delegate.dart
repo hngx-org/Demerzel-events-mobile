@@ -38,7 +38,7 @@ class EventSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    List<Event> list = events.where((element) => element.title.contains(query.toLowerCase()) ).toList();
+    List<Event> list = events.where((element) => element.title.toLowerCase().contains(query.toLowerCase()) ).toList();
     return ListView.builder(
       physics: const BouncingScrollPhysics(), 
       itemCount: list.length,
@@ -54,6 +54,7 @@ class EventSearchDelegate extends SearchDelegate {
           onDelete: (eventId){
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
           },
+          showVert: false,
           context: context, 
           screensize: screensize, 
           image: list[index].thumbnail, 
@@ -71,7 +72,7 @@ class EventSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    List<Event> list = events.where((element) => element.title.contains(query.toLowerCase()) ).toList();
+    List<Event> list = events.where((element) => element.title.toLowerCase().contains(query.toLowerCase()) ).toList();
     return ListView.builder(
       physics: const BouncingScrollPhysics(), 
       itemCount: list.length,
@@ -87,6 +88,7 @@ class EventSearchDelegate extends SearchDelegate {
           onDelete: (eventId){
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
           },
+          showVert: false,
           context: context, 
           screensize: screensize, 
           image: list[index].thumbnail, 

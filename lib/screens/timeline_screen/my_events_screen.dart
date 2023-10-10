@@ -118,6 +118,7 @@ class MyEventScreen extends ConsumerWidget {
                 onDelete: (eventId) {
                   eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(userEventsProvider));
                 },
+                showVert: true,
                 eventId: event.id,
                 context: context, 
                 screensize: screensize, 
