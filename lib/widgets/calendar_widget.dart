@@ -52,9 +52,10 @@ class _CalCardState extends ConsumerState<CalCard> {
           child: Column(
             children: [
               TableCalendar(
+                //pageJumpingEnabled: true,
                 rowHeight: 35,
-                firstDay: DateTime.now().subtract(const Duration(days: 30)),
-                lastDay: DateTime.now().add(const Duration(days: 30)),
+                firstDay: DateTime.now().subtract(const Duration(days: 500)),
+                lastDay: DateTime.now().add(const Duration(days: 500)),
                 focusedDay: _selectedDay ?? _focusedDay,
                 currentDay: _selectedDay,
                 selectedDayPredicate: (day) {
@@ -121,7 +122,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                 eventLoader: ref.read(EventProvider.provider).allEvents == null ? ((day) {
                   return [];
                 }):(day) {
-                  List _events = [];
+                  List events = [];
                   for (var i = 0;
                       i <
                           ref
@@ -139,14 +140,14 @@ class _CalCardState extends ConsumerState<CalCard> {
                             .events[i]
                             .startDate),
                         day)) {
-                      _events.add(ref
+                      events.add(ref
                           .read(EventProvider.provider)
                           .allEvents!
                           .data
                           .events[i]);
                     }
                   }
-                  return _events;
+                  return events;
                 },
 
               ),

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';
 import 'package:hng_events_app/screens/group_screens/group_search_delegate.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
+import 'package:hng_events_app/models/group.dart';
 
 class PeopleScreen extends ConsumerStatefulWidget {
   const PeopleScreen({super.key});
@@ -20,8 +20,7 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
   Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
 
-    return 
-    Scaffold(
+    return Scaffold(
         appBar: AppBar(
           centerTitle: false,
           bottom: PreferredSize(
@@ -59,13 +58,16 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        const Icon(Icons.add),
                         Text(
                           'Create',
                           style: TextStyle(
+                            fontFamily: 'NotoSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
                             color: Theme.of(context).colorScheme.onBackground,
                           ),
                         ),
+                        const Icon(Icons.add),
                         const SizedBox(
                           width: 10,
                         ),

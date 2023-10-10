@@ -89,6 +89,29 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+    Future<bool> unSubscribeFromGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.unSubscribeFromGroup(groupId);
+      await getGroups();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
 }
 
 final groupSearchprovider = Provider<List<Group>>((ref) {

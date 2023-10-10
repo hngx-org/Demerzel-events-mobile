@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,16 +7,15 @@ import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/util/calendar_client.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:svg_flutter/svg_flutter.dart';
 
 class CreateEvents extends ConsumerStatefulWidget {
   const CreateEvents({super.key, this.currentGroup});
-final Group? currentGroup;
+  final Group? currentGroup;
   @override
   ConsumerState<CreateEvents> createState() => _CreateEventsState();
 }
@@ -39,7 +40,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       titleController.text.isNotEmpty &&
       bodyController.text.isNotEmpty &&
       locationController.text.isNotEmpty &&
-      (selectedGroup != null || widget.currentGroup != null ) &&
+      (selectedGroup != null || widget.currentGroup != null) &&
       startDate != null &&
       startTime != null &&
       endDate != null &&
@@ -223,7 +224,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       Text(imagePath.split('/').last.isEmpty
                           ? 'Add a Image'
                           : imagePath.split('/').last),
-                          Icon(Icons.image)
+                      const Icon(Icons.image)
                       // SvgPicture.asset(ProjectConstants.imagePicker,),
                     ],
                   ),
@@ -396,55 +397,58 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                 const SizedBox(height: 10),
                 const Divider(thickness: 1),
                 const SizedBox(height: 10),
-                widget.currentGroup == null ? Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.group,
-                        color: ProjectColors.purple,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: DropdownButton<Group>(
-                            value: selectedGroup,
+                widget.currentGroup == null
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.group,
+                              color: ProjectColors.purple,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: DropdownButton<Group>(
+                                  value: selectedGroup,
 
-                            onChanged: (newValue) {
-                              setState(() {
-                                selectedGroup = newValue;
-                              });
-                            },
-                            items: groupsNotifier.groups.map((group) {
-                              return DropdownMenuItem(
-                                value: group,
-                                child: Text(
-                                  group.name,
-                                  style: const TextStyle(
-                                    fontSize: 15,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedGroup = newValue;
+                                    });
+                                  },
+                                  items: groupsNotifier.groups.map((group) {
+                                    return DropdownMenuItem(
+                                      value: group,
+                                      child: Text(
+                                        group.name,
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  hint: const Text(
+                                    'Select a Group',
+                                    style: TextStyle(
+                                      // color: Colors.black,
+                                      fontSize: 15,
+                                    ),
+                                  ), // Optional hint text
+                                  isExpanded:
+                                      true, // Makes the dropdown button expand to the available width
+                                  underline: Container(
+                                    height:
+                                        1, // Add an underline with custom styling
+                                    color: Colors.black,
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                            hint: const Text(
-                              'Select a Group',
-                              style: TextStyle(
-                                // color: Colors.black,
-                                fontSize: 15,
                               ),
-                            ), // Optional hint text
-                            isExpanded:
-                                true, // Makes the dropdown button expand to the available width
-                            underline: Container(
-                              height: 1, // Add an underline with custom styling
-                              color: Colors.black,
                             ),
-                          ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ): SizedBox.shrink(),
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
             const SizedBox(
@@ -462,7 +466,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
                       uploadEvent(eventNotifier, ref);
                       return;
                     }
-                    showSnackBar('Input missing fields',Colors.red);
+                    showSnackBar('Input missing fields', Colors.red);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(
@@ -506,6 +510,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   }
 
   Future<void> uploadEvent(EventProvider eventController, WidgetRef ref) async {
+    CalendarClient calendarClient = CalendarClient();
     if (isFormValid() == false) return;
 
     try {
@@ -525,29 +530,26 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
             "${endTime!.hour.toString().padLeft(2, '0')}:${endTime!.minute.toString().padLeft(2, '0')}",
         "group_id": [widget.currentGroup?.id ?? selectedGroup!.id],
       };
-
-      final result = await eventController.createEvent(body: body, groupId: widget.currentGroup?.id);
-      // await Future.delayed(const Duration(seconds: 5));
-      
+      final result = await eventController.createEvent(
+          body: body, groupId: widget.currentGroup?.id);
+      await Future.delayed(const Duration(seconds: 5));
 
       if (result) {
-        // ignore: use_build_context_synchronously
-
+        calendarClient.insert(context, titleController.text, startDate,
+            startTime, endTime, endDate);
         await eventController.getUpcomingEvent();
         await eventController.getAllEvent();
         await eventController.getUserEvent();
         if (widget.currentGroup != null) {
           await eventController.getAllGroupEvent(widget.currentGroup!.id);
         }
-         
+
         await ref
             .read(GroupProvider.groupProvider)
             .getGroups()
             .then((value) => Navigator.of(context).pop());
-        showSnackBar('Event Uploaded Successfully',Colors.green);
-        // ignore: use_build_context_synchronously
+        showSnackBar('Event Uploaded Successfully', Colors.green);
       } else {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
@@ -574,14 +576,14 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     }
   }
 
-  void showSnackBar(String message,Color color) {
+  void showSnackBar(String message, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
         ),
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         backgroundColor: color,
       ),
     );

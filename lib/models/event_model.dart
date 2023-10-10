@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:hng_events_app/models/comment.dart';
 
 class GetListEventModel {
   final Data data;
@@ -44,7 +45,7 @@ class Data {
   }
 }
 
-class Event extends Equatable{
+class Event extends Equatable {
   final String id;
   final String creatorId;
   final String thumbnail;
@@ -58,11 +59,12 @@ class Event extends Equatable{
   final String createdAt;
   final String updatedAt;
   final Creator? creator;
+  final List<FirstComments>? firstComments;
 
   @override
   List<Object> get props => [id];
 
-const  Event({
+  const Event({
     required this.id,
     required this.creatorId,
     required this.thumbnail,
@@ -76,23 +78,29 @@ const  Event({
     required this.createdAt,
     required this.updatedAt,
     this.creator,
+    this.firstComments,
   });
 
   factory Event.fromMap(Map<String, dynamic> json) => Event(
-        id: json["id"],
-        creatorId: json["creator_id"],
-        thumbnail: json["thumbnail"],
-        location: json["location"],
-        title: json["title"],
-        description: json["description"],
-        startDate: json["start_date"],
-        endDate: json["end_date"],
-        startTime: json["start_time"],
-        endTime: json["end_time"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        creator:
-            json["creator"] == null ? null : Creator.fromMap(json["creator"]),
+      id: json["id"],
+      creatorId: json["creator_id"],
+      thumbnail: json["thumbnail"],
+      location: json["location"],
+      title: json["title"],
+      description: json["description"],
+      startDate: json["start_date"],
+      endDate: json["end_date"],
+      startTime: json["start_time"],
+      endTime: json["end_time"],
+      createdAt: json["created_at"],
+      updatedAt: json["updated_at"],
+      creator:
+          json["creator"] == null ? null : Creator.fromMap(json["creator"]),
+      firstComments: json.containsKey('comments')
+          ? List.from(json['comments']
+              .map((x) => FirstComments.fromJson(x)))
+          : [],
+     
       );
 
   Map<String, dynamic> toMap() => {

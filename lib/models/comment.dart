@@ -1,6 +1,6 @@
 import 'package:hng_events_app/models/event_model.dart';
 
-class Comment{
+class Comment {
   final String id;
   final String body;
   final String eventId;
@@ -29,6 +29,17 @@ class Comment{
       creator: Creator.fromMap(json['creator']),
     );
   }
+}
 
+class FirstComments {
+  final String id;
+  final String name;
+  final String avatar;
 
+  FirstComments({required this.id, required this.name, required this.avatar});
+
+  factory FirstComments.fromJson(Map<String, dynamic> json) {
+    return FirstComments(
+        id: json['id'], name: json['name'], avatar: json['avatar']);
+  }
 }

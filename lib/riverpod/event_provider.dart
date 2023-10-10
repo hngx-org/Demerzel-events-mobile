@@ -73,7 +73,6 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> getUpcomingEvent() async {
     _isBusy = true;
     _error = "";
@@ -93,7 +92,6 @@ class EventProvider extends ChangeNotifier {
     _isBusy = false;
     notifyListeners();
   }
-
 
   Future<void> subscribeToEvent(String eventId) async {
     _isBusy = true;
@@ -119,13 +117,13 @@ class EventProvider extends ChangeNotifier {
   Future<void> getAllGroupEvent(String groupId) async {
     _isBusy = true;
     _error = "";
- 
+
     notifyListeners();
 
     try {
       final result = await eventRepository.getAllGroupEvent(groupId);
       allGroupEvents = result;
-    
+
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -160,7 +158,8 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> createEvent({required Map<String, dynamic> body, String? groupId}) async {
+  Future<bool> createEvent(
+      {required Map<String, dynamic> body, String? groupId}) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -182,19 +181,39 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+  // Future<void> deleteEvent(String eventId) async {
+  //   _isBusy = true;
+  //   _error = "";
+  //   notifyListeners();
+
+  //   try {
+  //     await eventRepository.deleteEvent(eventId);
+
+  //     await getAllEvent();
+
+  //     await getUserEvent();
+
+  //     await upcomingEvents;
+  //   } catch (e, s) {
+  //     log(e.toString());
+  //     log(s.toString());
+
+  //     _error = e.toString();
+  //   }
+
+  //   _isBusy = false;
+  //   notifyListeners();
+  // }
   Future<void> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
-
+    
     try {
       await eventRepository.deleteEvent(eventId);
-
+      print('Deleting event with ID: $eventId');
       await getAllEvent();
-
       await getUserEvent();
-
-      //await upcomingEvents;
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -206,21 +225,22 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  notifyListeners();
 }
 
-final allEventsProvider = FutureProvider<GetListEventModel>((ref) async{
-  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+final allEventsProvider = FutureProvider<GetListEventModel>((ref) async {
+  EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getAllEvent();
-  
 });
 
-final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async{
-  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async {
+  EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getUpcomingEvent();
 });
 
-final userEventsProvider = FutureProvider<List<Event>>((ref) async{
-  EventRepository eventRepository = ref.read(EventRepository.provider) ;
+final userEventsProvider = FutureProvider<List<Event>>((ref) async {
+  EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getAllUserEvents();
 
 });

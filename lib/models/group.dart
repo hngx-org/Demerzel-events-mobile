@@ -95,11 +95,15 @@ class Data {
   final List<Event> events;
   final List<Member>? members;
 
-  Data({required this.events, this.members});
+  Data({
+    required this.events,
+    this.members,
+  });
 
   factory Data.fromMap(Map<String, dynamic> json) {
     List<Event> eventsList = [];
     List<Member> membersList = [];
+    // List firstComments = [];
 
     if (json['events'] != null) {
       eventsList =
@@ -107,8 +111,8 @@ class Data {
     }
 
     if (json['members'] != null) {
-      membersList =
-          List<Member>.from(json['members'].map((x) => Member.fromJson(x['user'])));
+      membersList = List<Member>.from(
+          json['members'].map((x) => Member.fromJson(x['user'])));
     }
 
     return Data(
