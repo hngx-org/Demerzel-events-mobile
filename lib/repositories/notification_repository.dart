@@ -1,12 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/api_service.dart';
-import 'package:hng_events_app/services/local_storage/shared_preference.dart';
-import 'package:http/http.dart' as http;
 
 class NotificationRepository {
   final AuthRepository authRepo;
@@ -40,7 +36,7 @@ class NotificationRepository {
   Future<void> updateNotificationRead(String id) async {
     final header = await authRepo.getAuthHeader();
     final response = await apiService
-        .get(url: Uri.parse("${ApiRoutes.notificationURI}/$id"), headers: header);
+        .put(url: Uri.parse("${ApiRoutes.notificationURI}/$id"), headers: header, body: {"read": true});
     if (response.statusCode != 200) {
       throw Exception('failed to update Notifications ${response.statusCode}');
     }

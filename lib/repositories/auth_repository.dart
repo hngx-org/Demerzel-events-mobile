@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
