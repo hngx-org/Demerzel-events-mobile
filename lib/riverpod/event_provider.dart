@@ -224,3 +224,14 @@ final userEventsProvider = FutureProvider<List<Event>>((ref) async{
   return await eventRepository.getAllUserEvents();
 
 });
+
+final eventSearchProvider = Provider<List<Event>>((ref) {
+  final allEvents = ref.watch(allEventsProvider);
+  return allEvents.when(
+    skipLoadingOnRefresh: true,
+    skipLoadingOnReload: true,
+    data: (data)=> data.data.events, 
+    error: (error, stackTrace)=> <Event>[], 
+    loading: ()=> []
+  );
+});

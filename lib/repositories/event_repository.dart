@@ -57,8 +57,7 @@ class EventRepository {
     log(uri.toString());
     try {
       final http.Response response = await http
-          .get(uri, headers: header)
-          .timeout(const Duration(seconds: 60));     
+          .get(uri, headers: header);     
 
       final Map<String, dynamic> data = json.decode(response.body);
 

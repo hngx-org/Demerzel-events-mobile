@@ -90,3 +90,9 @@ class GroupProvider extends ChangeNotifier {
     return true;
   }
 }
+
+final groupSearchprovider = Provider<List<Group>>((ref) {
+  final groups = ref.watch(GroupProvider.groupProvider);
+  return groups.groups;
+});
+

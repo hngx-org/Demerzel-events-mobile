@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
-
 import '../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
-
 import '../../riverpod/event_provider.dart';
 import '../../widgets/timeline_event_card.dart';
 
@@ -20,16 +17,6 @@ class UpcomingEventScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
-  @override
-  void initState() {
-
-    super.initState();
-    //ref.read(EventProvider.provider).getUpcomingEvent();
-    // getUpcomingEvent();    
-  }
-
-  //Future getUpcomingEvent() async => await ref.read(EventProvider.provider).getUpcomingEvent();
-  
 
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
@@ -168,138 +155,87 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
         ),);
       },
       data: (data){
-        return Scaffold(
-          floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Icon(Icons.refresh),
-                onPressed: ()=> ref.refresh(upcomingEventsProvider)),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 70.0),
-              child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: const CircleBorder(),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return const CreateEvents();
-                    }));
-                  },
-                  child: Container(
-                    height: 70.r,
-                    width: 70.r,
-                    decoration: BoxDecoration(
-                        color: ProjectColors.purple,
-                        borderRadius: BorderRadius.all(Radius.circular(50.r)),
-                        // boxShadow: const [
-                        //   BoxShadow(
-                        //       color: ProjectColors.black,
-                        //       spreadRadius: 3,
-                        //       offset: Offset(0, 2)),
-                        // ]
-                      ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 40,
-                      color: Colors.black,
-                    ),
-                  )),
-            ),
-          ],
-        ),
-          body: data.isEmpty? const Center(child: Text('No Events'),) : 
-              ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (BuildContext context, int index) {
-              final Event event = data[index];
-
-              return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CommentScreen(event: event),
-                  ),
-                ),
-                child: TimelineEventCard(
-                  eventId: event.id,
-                  onDelete: (eventId){
-                    eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
-                  },
-                  context: context, 
-                  screensize: screensize, 
-                  image: event.thumbnail, 
-                  title: event.title , 
-                  time: event.startTime ,
-                  location: event.location ,
-                  date: event.startDate ,
-                  activity: DateFormatter().timeLeft(event.startDate, event.startTime),
-                ),
-              );
-            },
-          ),
-        );
+        return onData(context, data, eventNotifier, screensize);
       }, 
     );
 
-    if (eventNotifier.isBusy) {
-      return const Center(child: CircularProgressIndicator());
-    }
+  }
 
-    if (eventNotifier.upcomingEvents.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("No event was found", textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => eventNotifier.getAllEvent(),
-              child: const Text(
-                "Tap to Retry",
-                style: TextStyle(decoration: TextDecoration.underline),
+  Scaffold onData(BuildContext context, List<Event> data, EventProvider eventNotifier, Size screensize) {
+    return Scaffold(
+        floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton(
+              shape: const CircleBorder(),
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(Icons.refresh),
+              onPressed: ()=> ref.refresh(upcomingEventsProvider)),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 70.0),
+            child: FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                shape: const CircleBorder(),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return const CreateEvents();
+                  }));
+                },
+                child: Container(
+                  height: 70.r,
+                  width: 70.r,
+                  decoration: BoxDecoration(
+                      color: ProjectColors.purple,
+                      borderRadius: BorderRadius.all(Radius.circular(50.r)),
+                      // boxShadow: const [
+                      //   BoxShadow(
+                      //       color: ProjectColors.black,
+                      //       spreadRadius: 3,
+                      //       offset: Offset(0, 2)),
+                      // ]
+                    ),
+                  child: const Icon(
+                    Icons.add,
+                    size: 40,
+                    color: Colors.black,
+                  ),
+                )),
+          ),
+        ],
+      ),
+        body: data.isEmpty? const Center(child: Text('No Events'),) : 
+            ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (BuildContext context, int index) {
+            final Event event = data[index];
+
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CommentScreen(event: event),
+                ),
               ),
-            ),
-          ],
+              child: TimelineEventCard(
+                eventId: event.id,
+                onDelete: (eventId){
+                  eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
+                },
+                context: context, 
+                screensize: screensize, 
+                image: event.thumbnail, 
+                title: event.title , 
+                time: event.startTime ,
+                location: event.location ,
+                date: event.startDate ,
+                activity: DateFormatter().timeLeft(event.startDate, event.startTime),
+              ),
+            );
+          },
         ),
       );
-    }
-
-    return RefreshIndicator(
-      onRefresh: () async => eventNotifier.getUpcomingEvent(),
-      child: ListView.builder(
-        itemCount: eventNotifier.upcomingEvents.length,
-        itemBuilder: (BuildContext context, int index) {
-          final Event event = eventNotifier.upcomingEvents[index];
-
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CommentScreen(event: event),
-              ),
-            ),
-            child: TimelineEventCard(
-              context: context, 
-              screensize: screensize, 
-              image: event.thumbnail, 
-              title: event.title , 
-              time: event.startTime ,
-              location: event.location ,
-              date: event.startDate ,
-              activity: DateFormatter().timeLeft(event.startDate, event.startTime),
-              onDelete: (eventId){
-                eventNotifier.deleteEvent(eventId);
-              },
-              eventId: eventNotifier.allEvents!.data.events[index].id,
-            ),
-          );
-        },
-      ),
-    );
   }
 }
