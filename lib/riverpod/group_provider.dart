@@ -136,13 +136,13 @@ class GroupProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> updateGroupName(String newGroupName) async {
+  Future<bool> updateGroupName({required String newGroupName, required String groupID}) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
     try {
-      await groupRepo.editGroupName(newGroupName);
+      await groupRepo.editGroupName(newGroupName: newGroupName, groupID: groupID);
       print("updating group in provider");
       notifyListeners();
     } catch (e, s) {

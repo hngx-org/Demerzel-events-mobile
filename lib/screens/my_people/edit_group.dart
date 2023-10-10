@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 
 class EditGroupName extends ConsumerStatefulWidget {
-  final String currentGroupName;
+  final Group currentGroup;
 
   const EditGroupName({
     Key? key,
-    required this.currentGroupName,
+    required this.currentGroup,
   }) : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class _EditGroupNameState extends ConsumerState<EditGroupName> {
   @override
   void initState() {
     super.initState();
-    _groupNameController.text = widget.currentGroupName;
+    _groupNameController.text = widget.currentGroup.name;
   }
 
   @override
@@ -46,10 +47,9 @@ class _EditGroupNameState extends ConsumerState<EditGroupName> {
                 onPressed: () async {
                   final newGroupName = _groupNameController.text;
 
-                   await groupProvider.updateGroupName(
-                    newGroupName,
-                  );
-                  
+                  await groupProvider.updateGroupName(
+                      newGroupName:newGroupName,
+                      groupID: widget.currentGroup.id);
                 },
                 child: const Text('Save'),
               ),

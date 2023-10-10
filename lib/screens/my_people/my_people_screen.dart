@@ -111,7 +111,8 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditGroupName(
-                                  currentGroupName: currentGroup.name,
+                                  currentGroup: currentGroup,
+                                  //currentGroupName: currentGroup.name,
                                 ),
                               ),
                             );
