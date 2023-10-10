@@ -19,7 +19,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.read(themeProvider.notifier).initCall.call();
-    ref.read(appUserProvider.notifier).getUserLocal.call();
+    ref.read(appUserProvider.notifier).getUserInit.call();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'WetinDeySup',

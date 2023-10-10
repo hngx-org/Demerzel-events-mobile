@@ -161,7 +161,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               
                           }).catchError((error){
                             setState(() {
-                              isLoading = true;
+                              isLoading = false;
                             });
                             // Navigator.pop(context);
                             ScaffoldMessenger.of(context).showSnackBar(

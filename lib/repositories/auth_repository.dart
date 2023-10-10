@@ -1,13 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:googleapis/calendar/v3.dart';
+final GoogleSignIn googleSignIn = GoogleSignIn(scopes:  [CalendarApi.calendarScope]);
 
 class AuthRepository {
   final LocalStorageService localStorageService;
@@ -15,9 +19,10 @@ class AuthRepository {
 
   AuthRepository({required this.localStorageService});
   FirebaseAuth auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+  
   static const _user = 'userToken';
   String baseUrl = ApiRoutes.baseUrl;
+  
 
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount? googleSignInAccount =
@@ -26,7 +31,7 @@ class AuthRepository {
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
-
+ 
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
@@ -41,7 +46,8 @@ class AuthRepository {
           } else{
             throw Exception('Failed to retrieve token from Google');
           }
-        }
+        },
+       
       ).catchError(
         (error){
           throw Exception('signInWithCredential Failed ');
@@ -130,7 +136,7 @@ class AuthRepository {
     String userid = await getUserid();
     Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(
-      Uri.parse('$baseUrl/users/$userid'),
+      Uri.parse('$baseUrl/users'),
       headers: headerMap,
       body: jsonEncode(<String, String>
         {
@@ -139,7 +145,7 @@ class AuthRepository {
       )
     );
     if (response.statusCode != 200) {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to update userName");
     }
   }
 
@@ -157,7 +163,7 @@ class AuthRepository {
       Map<String, dynamic> mapdata = jsonDecode(responseJson);
       return mapdata['data']["url"];
     } else {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to get imageUrl ${response.statusCode}");
     }
   }
 
@@ -166,7 +172,7 @@ class AuthRepository {
     String imageUrl = await getimageUrl(imageFile);
     Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(
-      Uri.parse('$baseUrl/users/$userid'),
+      Uri.parse('$baseUrl/users'),
       headers: headerMap,
       body: jsonEncode(<String, dynamic>
         {
@@ -175,7 +181,7 @@ class AuthRepository {
       )
     );
     if (response.statusCode != 200) {
-      throw Exception("failed to update userProfile");
+      throw Exception("failed to update userPhoto ${response.statusCode}");
     }
   }
 
