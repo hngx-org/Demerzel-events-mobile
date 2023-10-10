@@ -65,7 +65,9 @@ class MyEventScreen extends ConsumerWidget {
                 child: FloatingActionButton(
                     shape: const CircleBorder(),
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(Icons.refresh),
+                    child: const Tooltip(
+                      message: 'Refresh',
+                      child: Icon(Icons.refresh),),
                     onPressed: () => ref.refresh(userEventsProvider)),
               ),
               Padding(
@@ -92,10 +94,13 @@ class MyEventScreen extends ConsumerWidget {
                         //       offset: Offset(0, 2)),
                         // ]
                       ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 40,
-                        color: Colors.black,
+                      child:  const Tooltip(
+                        message: "Add Event",
+                        child: Icon(
+                          Icons.add,
+                          size: 40,
+                          color: Colors.black,
+                        ),
                       ),
                     )),
               ),
@@ -117,7 +122,7 @@ class MyEventScreen extends ConsumerWidget {
                           builder: (context) => CommentScreen(event: event),
                         ),
                       ),
-                      child: TimelineEventCard(
+                      child: TimelineEventCard( 
                         showVert: true,
                         onDelete: (eventId) {
                           eventNotifier

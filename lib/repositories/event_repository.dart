@@ -176,31 +176,31 @@ class EventRepository {
     final http.Response response = await http
         .delete(url, headers: header)
         .timeout(const Duration(seconds: 60));
-         if (response.statusCode == 200 || response.statusCode ==201) {
-        log('Event deleted successfully');
-        print('Event deleted');
-      } else {
-        // throw response.reasonPhrase?? response.body;
-        log('Failed to delete event. Status code: ${response.statusCode}');
-        print("event not deleted.");
-      }
-    // try{
-    //   //final Uri url = Uri.parse(uriString);
-    //   final http.Response response = await http
-    //       .delete(url, headers: header)
-    //       .timeout(const Duration(seconds: 120));
-    //   if (response.statusCode == 200 || response.statusCode ==201) {
-    //     log('Event deleted successfully');
-    //     print('Event deleted');
-    //   } else {
-    //     //throw response.reasonPhrase?? response.body;
-    //     log('Failed to delete event. Status code: ${response.statusCode}');
-    //     print("event not deleted.");
-    //   }
-    // } catch(e, s){
-    //   log(e.toString());
-    //   log(s.toString());
-    //   rethrow;
-    // }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      log('Event deleted successfully');
+      print('Event deleted');
+    } else {
+      // throw response.reasonPhrase?? response.body;
+      log('Failed to delete event. Status code: ${response.statusCode}');
+      print("event not deleted.");
+    }
   }
+  // try{
+  //   //final Uri url = Uri.parse(uriString);
+  //   final http.Response response = await http
+  //       .delete(url, headers: header)
+  //       .timeout(const Duration(seconds: 120));
+  //   if (response.statusCode == 200 || response.statusCode ==201) {
+  //     log('Event deleted successfully');
+  //     print('Event deleted');
+  //   } else {
+  //     //throw response.reasonPhrase?? response.body;
+  //     log('Failed to delete event. Status code: ${response.statusCode}');
+  //     print("event not deleted.");
+  //   }
+  // } catch(e, s){
+  //   log(e.toString());
+  //   log(s.toString());
+  //   rethrow;
+  // }
 }

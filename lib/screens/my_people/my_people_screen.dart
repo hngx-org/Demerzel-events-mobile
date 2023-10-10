@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';
+import 'package:hng_events_app/screens/my_people/edit_group.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 
@@ -101,6 +102,21 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       final currentGroup = groupsNotifier.groups[index];
                       return MyPeopleCard(
+                          onDelete: (groupId) {
+                            groupsNotifier.deleteGroup(groupId).then((value) =>
+                                ref.refresh(GroupProvider.groupProvider));
+                          },
+                          onEdit: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditGroupName(
+                                  currentGroupName: currentGroup.name,
+                                ),
+                              ),
+                            );
+                          },
+                          groupId: currentGroup.id,
                           title: currentGroup.name,
                           image: currentGroup.image,
                           eventLength: currentGroup.eventCount,
