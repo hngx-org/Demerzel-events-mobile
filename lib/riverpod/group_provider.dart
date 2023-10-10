@@ -59,7 +59,7 @@ class GroupProvider extends ChangeNotifier {
       _error = e.toString();
       log(e.toString());
       log(s.toString());
-      
+
       notifyListeners();
       rethrow;
     }
@@ -90,7 +90,7 @@ class GroupProvider extends ChangeNotifier {
     return true;
   }
 
-    Future<bool> unSubscribeFromGroup(String groupId) async {
+  Future<bool> unSubscribeFromGroup(String groupId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -98,6 +98,52 @@ class GroupProvider extends ChangeNotifier {
     try {
       await groupRepo.unSubscribeFromGroup(groupId);
       await getGroups();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> deleteGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.deleteGroup(groupId);
+      await getGroups();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> updateGroupName(String newGroupName) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.editGroupName(newGroupName);
+      print("updating group in provider");
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
