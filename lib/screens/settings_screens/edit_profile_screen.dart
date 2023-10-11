@@ -10,7 +10,12 @@ import 'package:hng_events_app/widgets/components/button/hng_primary_button.dart
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
-  const EditProfileScreen({super.key, required this.name, required this.image, required this.email, required this.ref});
+  const EditProfileScreen(
+      {super.key,
+      required this.name,
+      required this.image,
+      required this.email,
+      required this.ref});
   final String name;
   final String email;
   final String image;
@@ -34,6 +39,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       });
     }
   }
+
   bool isLoading = false;
   TextEditingController namectrl = TextEditingController();
   TextEditingController emailctrl = TextEditingController();
@@ -63,21 +69,23 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 children: [
                   CircleAvatar(
                     backgroundColor: const Color.fromARGB(255, 222, 140, 236),
-                    backgroundImage: (imageFile == null)? NetworkImage(widget.image) : FileImage(imageFile!) as ImageProvider,
+                    backgroundImage: (imageFile == null)
+                        ? NetworkImage(widget.image)
+                        : FileImage(imageFile!) as ImageProvider,
                     radius: 100,
                   ),
-                   Align(
-                      alignment: Alignment.bottomRight,
-                      child: IconButton(
-                        onPressed: ()async{
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                        onPressed: () async {
                           await getFromGallery();
-                        }, 
+                        },
                         icon: Icon(
-                          Icons.camera_alt, 
+                          Icons.camera_alt,
                           size: 30,
-                          color: Theme.of(context).colorScheme.primary,)
-                      ),
-                    ),
+                          color: Theme.of(context).colorScheme.primary,
+                        )),
+                  ),
                 ],
               ),
             ),
@@ -97,9 +105,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     child: TextField(
                       controller: namectrl,
                       decoration: const InputDecoration(
-                        labelText: 'Name',
-                        suffixIcon: Icon(Icons.edit, color: ProjectColors.purple,)
-                      ),
+                          labelText: 'Name',
+                          suffixIcon: Icon(
+                            Icons.edit,
+                            color: ProjectColors.purple,
+                          )),
                     ),
                   ),
                 ],
@@ -121,90 +131,46 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       controller: emailctrl,
                       enabled: false,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
-                        suffixIcon: Icon(Icons.edit)
-                      ),
+                          labelText: 'Email', suffixIcon: Icon(Icons.edit)),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox.square(dimension: 30,),
+            const SizedBox.square(
+              dimension: 30,
+            ),
             SizedBox(
               height: 50,
-              width: screensize.width*0.9,
+              width: screensize.width * 0.9,
               child: Align(
-                alignment: Alignment.center,
-                child: Consumer(
-                  builder: (context, ref, child) {
+                  alignment: Alignment.center,
+                  child: Consumer(builder: (context, ref, child) {
                     return HngPrimaryButton(
                       isLoading: isLoading,
-                      onPressed: () async{
+                      onPressed: () async {
                         FocusManager.instance.primaryFocus?.unfocus();
-                        ref.read(appUserProvider.notifier).updateUserProfile(namectrl.text, imageFile);
-                        // if (imageFile != null) {
-                        //   setState(() {
-                        //     isLoading = true;
-                        //   });
-                        //   await ref.read(appUserProvider.notifier).updateProfilePhoto(imageFile!).then(
-                        //     (value) {
-                        //       setState(() => isLoading = false);
-                        //       ref.read(appUserProvider.notifier).getUserBE().then((value) {
-                        //        Navigator.pop(context);
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(
-                        //           content: Center(child: Text('Successful'))
-                        //         )
-                        //       ); 
-                        //       }
-                        //     );
-                              
-                        //   }).catchError((error){
-                        //     setState(() {
-                        //       isLoading = false;
-                        //     });
-                        //     // Navigator.pop(context);
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //         SnackBar(
-                        //           content: Center(child: Text(error.toString()))
-                        //         )
-                        //     );
-
-                        //   });
-                        // }
-                        // if (namectrl.text != '' && namectrl.text != widget.name) {
-                        //   setState(() {
-                        //     isLoading = true;
-                        //   });
-                        //   await repo.updateUserProfile(namectrl.text).then(
-                        //     (value) {
-                        //       setState(() {
-                        //         isLoading = false;
-                        //       });
-                        //       ref.read(appUserProvider.notifier).getUserBE().then((value) {
-                        //         Navigator.pop(context);
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(
-                        //           content: Center(child: Text('Successful'))
-                        //         )
-                        //       );
-                        //       });
-                              
-                        //     }).catchError((error){
-                        //       setState(() => isLoading = false);
-                        //       // Navigator.pop(context);
-                        //       ScaffoldMessenger.of(context).showSnackBar(
-                        //         SnackBar(
-                        //           content: Center(child: Text(error.toString()))
-                        //         )
-                        //       );
-                        //     });
-                        // }
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await ref
+                            .read(appUserProvider.notifier)
+                            .updateUserProfile(namectrl.text, imageFile);
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (!mounted) {
+                          return;
+                        }
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Center(child: Text('Successful'))));
+                        
                       },
-                      text: 'Save',);
-                  }
-                )
-              ),
+                      text: 'Save',
+                    );
+                  })),
             )
           ],
         ),
@@ -213,27 +179,22 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 }
 
-Widget saveButton(bool isLoading, String text, VoidCallback onPressed, BuildContext context){
+Widget saveButton(
+    bool isLoading, String text, VoidCallback onPressed, BuildContext context) {
   return ElevatedButton(
-        onPressed: !isLoading ? onPressed : null,
-        style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            elevation: 0.0,
-            minimumSize: const Size(262, 52),
-            padding: const EdgeInsets.all(0.0)),
-        child:
-
-        Container(
-            constraints:
-                const BoxConstraints(minWidth: 262.0, minHeight: 52.0),
-            alignment: Alignment.center,
-            child: isLoading
-                ? const CircularProgressIndicator( color: Colors.white,)
-                : Text(text,
-                    style: const TextStyle(
-                        color: ProjectColors.white
-                      )
-                    )
-                  )
-                  );
+      onPressed: !isLoading ? onPressed : null,
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          elevation: 0.0,
+          minimumSize: const Size(262, 52),
+          padding: const EdgeInsets.all(0.0)),
+      child: Container(
+          constraints: const BoxConstraints(minWidth: 262.0, minHeight: 52.0),
+          alignment: Alignment.center,
+          child: isLoading
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
+              : Text(text,
+                  style: const TextStyle(color: ProjectColors.white))));
 }

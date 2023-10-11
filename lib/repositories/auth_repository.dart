@@ -145,7 +145,7 @@ class AuthRepository {
 log(data.toString());
     final response = await apiService.put(
         url: ApiRoutes.userURI, headers: headerMap, body: data);
-   log(response);
+   log(response.toString());
   }
 
   Future<String> getImageUrl(File file) async {
