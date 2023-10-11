@@ -12,7 +12,7 @@ Widget TimelineEventCard(
     required String date,
     required String activity,
      Null Function(String eventId)? onDelete,
-    required Null Function (String eventId)? onEdit,
+     Null Function ()? onEdit,
     required String eventId,
     required bool showVert }) {
   return Container(
@@ -129,7 +129,7 @@ Widget TimelineEventCard(
                         child: GestureDetector(
                           child: Text('Edit'),
                           onTap: () async {
-                            await onEdit!(eventId);
+                            await onEdit!();
                           },
                         ),
                       ),
