@@ -33,14 +33,22 @@ class NotificationRepository {
     }
   }
 
-  Future<void> updateNotificationRead(List ids) async {
+  // Future<void> updateNotificationRead(List ids) async {
+  //   final header = await authRepo.getAuthHeader();
+  //   final response = await apiService
+  //       .put(url: Uri.parse("${ApiRoutes.notificationURI}/"), headers: header, body: {"read": true, 'notification_ids':ids});
+  //   if (response.statusCode != 200) {
+  //     throw Exception('failed to update Notifications ${response.statusCode}');
+  //   }
+  // }
+
+   Future<void> updateNotificationRead(String id) async {
     final header = await authRepo.getAuthHeader();
     final response = await apiService
-        .put(url: Uri.parse("${ApiRoutes.notificationURI}/"), headers: header, body: {"read": true, 'notification_ids':ids});
+        .put(url: Uri.parse("${ApiRoutes.notificationURI}/$id"), headers: header, body: {"read": true});
     if (response.statusCode != 200) {
       throw Exception('failed to update Notifications ${response.statusCode}');
-    }
-  }
+    }}
 
   Future<NotificationPrefs?> getNotificationPrefs() async {
     final header = await authRepo.getAuthHeader();
