@@ -106,13 +106,12 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
                             groupsNotifier.deleteGroup(groupId).then((value) =>
                                 ref.refresh(GroupProvider.groupProvider));
                           },
-                          onEdit: () async {
+                          onEdit: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditGroupName(
                                   currentGroup: currentGroup,
-                                  //currentGroupName: currentGroup.name,
                                 ),
                               ),
                             );

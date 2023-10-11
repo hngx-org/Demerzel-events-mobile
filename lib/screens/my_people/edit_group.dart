@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/screens/group_screens/my_people_screen.dart';
 
 class EditGroupName extends ConsumerStatefulWidget {
   final Group currentGroup;
@@ -46,10 +47,11 @@ class _EditGroupNameState extends ConsumerState<EditGroupName> {
               child: ElevatedButton(
                 onPressed: () async {
                   final newGroupName = _groupNameController.text;
-
                   await groupProvider.updateGroupName(
-                      newGroupName:newGroupName,
+                      newGroupName: newGroupName,
                       groupID: widget.currentGroup.id);
+                Navigator.pop(context);      
+                
                 },
                 child: const Text('Save'),
               ),
