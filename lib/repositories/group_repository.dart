@@ -96,11 +96,11 @@ class GroupRepository {
 
   Future<void> deleteGroup(String groupId) async {
     final header = await authRepository.getAuthHeader();
-    final apiUrl = ApiRoutes.deleteGroupURI(groupId).toString();
-    final url = Uri.parse(apiUrl);
-    final http.Response response = await http
-        .delete(url, headers: header)
-        .timeout(const Duration(seconds: 60));
+
+    
+    final http.Response response = await apiService
+        .delete(url: ApiRoutes.deleteGroupURI(groupId), headers: header)
+        ;
     if (response.statusCode == 200 || response.statusCode == 201) {
       // log('Group deleted successfully');
       print('Group deleted');
