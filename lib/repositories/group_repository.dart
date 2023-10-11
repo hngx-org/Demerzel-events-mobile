@@ -111,21 +111,17 @@ class GroupRepository {
     }
   }
 
-  Future<void> editGroupName({required String newGroupName, required String groupID}) async {
+  Future<void> editGroupName(
+      {required String newGroupName, required String groupID}) async {
     final header = await authRepository.getAuthHeader();
-    //final apiUrl = ApiRoutes.editGroupURI(groupID);
-    // final url = Uri.parse(apiUrl);
-    final http.Response response = await apiService
-        .put(
-           body: {
-            'name':newGroupName
-           },
-          headers: header, url: ApiRoutes.editGroupURI(groupID),
-        )
-        .timeout(const Duration(seconds: 60));
+    final http.Response response = await apiService.put(
+      body: {'name': newGroupName},
+      headers: header,
+      url: ApiRoutes.editGroupURI(groupID),
+    ).timeout(const Duration(seconds: 60));
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Group Name updated");
-      
+      getAllGroups();
+      print('Group name updated');
     } else {
       print("group Name not updated");
     }

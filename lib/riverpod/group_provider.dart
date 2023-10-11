@@ -136,14 +136,16 @@ class GroupProvider extends ChangeNotifier {
     return true;
   }
 
-  Future<bool> updateGroupName({required String newGroupName, required String groupID}) async {
+  Future<bool> updateGroupName(
+      {required String newGroupName, required String groupID}) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
     try {
-      await groupRepo.editGroupName(newGroupName: newGroupName, groupID: groupID);
-      print("updating group in provider");
+      await groupRepo.editGroupName(
+          newGroupName: newGroupName, groupID: groupID);
+      await getGroups();
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -164,4 +166,3 @@ final groupSearchprovider = Provider<List<Group>>((ref) {
   final groups = ref.watch(GroupProvider.groupProvider);
   return groups.groups;
 });
-

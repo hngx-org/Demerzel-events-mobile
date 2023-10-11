@@ -9,6 +9,7 @@ import '../repositories/event_repository.dart';
 
 class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
+  
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
     getUserEvent();
@@ -22,7 +23,7 @@ class EventProvider extends ChangeNotifier {
   List<Event> upcomingEvents = [];
 
   static final provider = ChangeNotifierProvider<EventProvider>((ref) {
-    return EventProvider(eventRepository: ref.read(EventRepository.provider));
+    return EventProvider(eventRepository: ref.watch(EventRepository.provider));
   });
 
   bool _isBusy = false;
@@ -224,6 +225,34 @@ class EventProvider extends ChangeNotifier {
     _isBusy = false;
     notifyListeners();
   }
+
+  Future<bool> updateEventName(
+      {required String newEventName, required String eventID}) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+   
+
+    try {
+      
+      await eventRepository.editEventName(
+          newEventName: newEventName, eventID: eventID);
+      await getAllEvent();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
+
 
   @override
   notifyListeners();
