@@ -134,7 +134,10 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
             const Text("No group was found", textAlign: TextAlign.center),
             const SizedBox(height: 10),
             GestureDetector(
-              onTap: () => groupsNotifier.getGroups(),
+              onTap: () {
+                ref.refresh(groupTagProvider);
+                groupsNotifier.getGroups();
+              },
               child: const Text(
                 "Tap to Retry",
                 style: TextStyle(decoration: TextDecoration.underline),

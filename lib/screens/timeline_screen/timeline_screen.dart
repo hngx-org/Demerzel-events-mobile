@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/events_search_delegate.dart';
@@ -30,13 +31,14 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
     ref.read(notificationProvider.notifier).getNotifications.call();
     List<Event> events = ref.watch(eventSearchProvider);
     ref.read(NotificationSettingsPrefsNotifier.provider).getPrefs();
+    ref.watch(groupTagProvider);
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: SizedBox(
                 height: 35,
                 child: GestureDetector(

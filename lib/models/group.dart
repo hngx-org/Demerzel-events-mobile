@@ -10,8 +10,9 @@ class Group extends Equatable {
   final DateTime updatedAt;
   final int membersCount;
   final int eventCount;
+  final List<String>? tags;
 
-  const Group({
+  const Group(this.tags, {
     required this.id,
     required this.name,
     required this.image,
@@ -26,6 +27,7 @@ class Group extends Equatable {
 
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
+      null,
       id: json['id'],
       name: json['name'],
       image: json['image'],

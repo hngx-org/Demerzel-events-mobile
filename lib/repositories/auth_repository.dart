@@ -168,7 +168,7 @@ class AuthRepository {
   }
 
   Future updateProfilePhoto(File imageFile) async{
-    String userid = await getUserid();
+    // String userid = await getUserid();
     String imageUrl = await getimageUrl(imageFile);
     Map<String, String> headerMap = await getAuthHeader();
     final response = await http.put(

@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
+import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:svg_flutter/svg.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
@@ -37,9 +39,14 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   }
 
   TextEditingController groupNameController = TextEditingController();
+  MultiSelectController dropDownCtrl = MultiSelectController();
   @override
   Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
+    final tags = ref.watch(groupTagProvider); 
+    // ref.refresh(groupTagProvider);
+
+    Size screensize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
           // backgroundColor: Colors.white,
@@ -53,16 +60,13 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               Navigator.of(context).pop();
             },
           ),
-          centerTitle: true,
+          // centerTitle: true,
           title: const Text(
             'Create Group',
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 22, ),
           )),
-      //backgroundColor: const Color(0xffFFF8F5),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -71,7 +75,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               ),
               const Text(
                 'Group Name',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
               const SizedBox(
                 height: 8,
@@ -84,7 +87,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   hintStyle: const TextStyle(
                     fontSize: 15,
                   ),
-                  hintText: 'Group Name goes here',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide:
@@ -98,7 +100,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               ),
               const Text(
                 'Group Image',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
               const SizedBox(
                 height: 8,
@@ -123,65 +124,73 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                   ),
                 ),
               ),
-              const Spacer(),
+      
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                child: tagDropDown(tags, context),
+              ),
+
+              const SizedBox.square(dimension: 12,),
               GestureDetector(
                 onTap: () async {
-                  if (groupNameController.text.isNotEmpty) {
-
+                  if (groupNameController.text.isNotEmpty && dropDownCtrl.selectedOptions.isNotEmpty) {
                     await createGroup(groupsNotifier);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.red,
-                      content: Text('Group name can not be empty'),
+                      content: Text('Please fill required fields'),
                     ));
-
+      
                     return;
                   }
                 },
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black, // Shadow color
-                        spreadRadius: 0, // Spread radius
-                        blurRadius: 0, // Blur radius
-                        offset: Offset(4, 5), // Offset in x and y directions
+                child: SizedBox(
+                  height: 150,
+                  width: screensize.width,
+                  child: Center(
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black, // Shadow color
+                            spreadRadius: 0, // Spread radius
+                            blurRadius: 0, // Blur radius
+                            offset: Offset(4, 5), // Offset in x and y directions
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: const Color(0xffE78DFB),
+                        border: Border.all(width: 2),
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: const Color(0xffE78DFB),
-                    border: Border.all(width: 2),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0, bottom: 12.0),
-                    child: Center(
-                      child: isLoading
-                          ? const Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Creating group',
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ],
+                      child: Center(
+                        child: isLoading
+                            ? const Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Creating group',
+                                      // style: TextStyle(fontSize: 18),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const Text(
+                                'Create Group',
+                                style: TextStyle(
+                                  // fontSize: 17,
+                                  // fontWeight: FontWeight.w700,
+                                  color: Colors.black, // Text color
+                                ),
                               ),
-                            )
-                          : const Text(
-                              'Create Group',
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black, // Text color
-                              ),
-                            ),
+                      ),
                     ),
                   ),
                 ),
@@ -196,8 +205,44 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     );
   }
 
+  MultiSelectDropDown tagDropDown(AsyncValue<List<GroupTagModel>> tags, BuildContext context) {
+    return MultiSelectDropDown(
+      controller: dropDownCtrl,
+      onOptionSelected: (List<ValueItem> selectedOptions) {  }, 
+      maxItems: 5,
+      suffixIcon: tags.when(
+        data: (data)=> const Icon(Icons.arrow_drop_down), 
+        error: (error, stackTrace)=> const Icon(Icons.error_outline, color: Colors.red,), 
+        loading: ()=> const Icon(Icons.circle, color: Colors.grey,),
+      ),
+      options: tags.when(
+        data: (data)=> List.generate(
+          data.length,
+          (index)=> ValueItem(label: "#${data.map((e) => e.name.toLowerCase().replaceAll(RegExp(' '), '')).toList()[index]}" , value: data.map((e) => e.id.toString()).toList()[index])
+        ),  
+        error: (error, stackTrace) => <ValueItem>[], 
+        loading: ()=> <ValueItem>[]
+      ),
+      // controller: ,
+      inputDecoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Theme.of(context).textTheme.bodyMedium!.color!
+        )
+      ),
+      hint: 'Add #tags',
+      optionsBackgroundColor: Theme.of(context).cardColor,
+      optionTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+      selectionType: SelectionType.multi,
+      chipConfig: const ChipConfig(wrapType: WrapType.wrap),
+      dropdownHeight: 300,
+      selectedOptionIcon: const Icon(Icons.check_circle),
+      
+    );
+  }
+
   Future<void> createGroup(GroupProvider groupController) async {
-    // if (isFormValid() == false) return;
 
     try {
       isLoading = true;
@@ -206,6 +251,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
       final body = {
         "image": image,
         "name": groupNameController.text,
+        "tags": dropDownCtrl.selectedOptions.map((e) => int.parse(e.value!)).toList()
       };
 
       final result = await groupController.createGroup(body);
@@ -219,7 +265,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              "Group created",
+              "Group create successful!",
               style: TextStyle(color: Colors.white),
             ),
             duration: Duration(seconds: 2),
@@ -235,7 +281,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              "Group could not be created",
+              "Failed to create group",
               style: TextStyle(color: Colors.white),
             ),
             duration: Duration(seconds: 2),

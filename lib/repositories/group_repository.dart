@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
+import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/api_service.dart';
 import 'package:hng_events_app/services/http_service/image_upload_service.dart';
@@ -49,21 +51,33 @@ class GroupRepository {
     }
   }
 
-  Future<bool> createGroup(Map<String, dynamic> body) async {
+  Future createGroup(Map<String, dynamic> body) async {
     final header = await authRepository.getAuthHeader();
     log(header.toString());
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
-
     body["image"] = imageUrl;
-    // body.remove("image");
 
-    // log(body.toString());
+    final response = await http.post(
+      ApiRoutes.groupURI,
+      headers: header,
+      body: jsonEncode(<String, dynamic>{
+        'name':body['name'],
+        'image': imageUrl,
+        'tags': body['tags']
+      }), 
+    );
+    log(response.statusCode.toString() + response.reasonPhrase.toString());
 
-    final result = await apiService.post(
-        url: ApiRoutes.groupURI, body: body, headers: header);
-    // log(result.toString());
+    // final result = await apiService.post(
+    //   url: ApiRoutes.groupURI,
+    //   body: <String, dynamic>{
+    //     'name':body['name'],
+    //     'image': imageUrl,
+    //     'tags': body['tags']
+    //   }, 
+    //   headers: header);
 
-    return true;
+    // return true;
   }
 
   Future<bool> subscribeToGroup(String groupId) async {
@@ -90,6 +104,19 @@ class GroupRepository {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<List<GroupTagModel>> getTags() async{
+    final header = await authRepository.getAuthHeader();
+    final response = await http.get(
+      Uri.parse("${ApiRoutes.baseUrl}/tags"),
+      headers: header,
+    );
+    if (response.statusCode == 200 || response.statusCode ==201) {
+      return (jsonDecode(response.body)['data']['tags'] as List).map((e) => GroupTagModel.fromJson(e)).toList();
+    } else {
+      throw Exception('failed to retrieve tags ${response.statusCode}');
     }
   }
 
