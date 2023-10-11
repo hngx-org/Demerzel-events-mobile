@@ -4,6 +4,8 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/string.dart';
 import 'package:hng_events_app/screens/calendar_screen.dart';
 import 'package:hng_events_app/screens/group_screens/my_people_screen.dart';
+
+
 import 'package:hng_events_app/screens/settings_screens/settings_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/timeline_screen.dart';
 
@@ -17,7 +19,7 @@ class DashBoardScreen extends StatefulWidget {
 class _DashBoardScreenState extends State<DashBoardScreen> {
   static const List<Widget> _pages = <Widget>[
     TimelineScreen(),
-    PeopleScreen(),
+   MyPeopleScreen(),
     CalendarPage(),
     SettingsPage()
   ];

@@ -56,13 +56,11 @@ class GroupRepository {
     log(header.toString());
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
     body["image"] = imageUrl;
-print(body['tags']);
-    final response = await apiService.post(url:
-      ApiRoutes.groupURI,
+    print(body['tags']);
+    final response = await apiService.post(
+      url: ApiRoutes.groupURI,
       headers: header,
-      body: { 'name':body['name'],
-        'image': imageUrl,
-        'tags': body['tags']},
+      body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
     );
     log(response.statusCode.toString() + response.reasonPhrase.toString());
 
@@ -72,7 +70,7 @@ print(body['tags']);
     //     'name':body['name'],
     //     'image': imageUrl,
     //     'tags': body['tags']
-    //   }, 
+    //   },
     //   headers: header);
 
     // return true;
@@ -84,7 +82,7 @@ print(body['tags']);
     final result = await apiService.post(
         url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
 
-   if (result['status'] == 'success') {
+    if (result['status'] == 'success') {
       return true;
     } else {
       return false;
@@ -105,17 +103,47 @@ print(body['tags']);
     }
   }
 
-  Future<List<GroupTagModel>> getTags() async{
+  Future<List<GroupTagModel>> getTags() async {
     final header = await authRepository.getAuthHeader();
     final response = await http.get(
       Uri.parse("${ApiRoutes.baseUrl}/tags"),
       headers: header,
     );
-    if (response.statusCode == 200 || response.statusCode ==201) {
-      return (jsonDecode(response.body)['data']['tags'] as List).map((e) => GroupTagModel.fromJson(e)).toList();
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return (jsonDecode(response.body)['data']['tags'] as List)
+          .map((e) => GroupTagModel.fromJson(e))
+          .toList();
     } else {
       throw Exception('failed to retrieve tags ${response.statusCode}');
     }
   }
 
+  Future<void> deleteGroup(String groupId) async {
+    final header = await authRepository.getAuthHeader();
+
+    final http.Response response = await apiService.delete(
+        url: ApiRoutes.deleteGroupURI(groupId), headers: header);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // log('Group deleted successfully');
+      print('Group deleted');
+    } else {
+      // throw response.reasonPhrase?? response.body;
+      // log('Failed to delete event. Status code: ${response.statusCode}');
+      print("Group not deleted.");
+    }
+  }
+
+  Future<void> editGroupName(
+      {required String newGroupName, required String groupID}) async {
+    final header = await authRepository.getAuthHeader();
+    final response = await apiService.put(
+      body: {'name': newGroupName},
+      headers: header,
+      url: ApiRoutes.editGroupURI(groupID),
+    );
+    log(response.toString());
+    if (response['data'] != null) {
+      getAllGroups();
+    }
+  }
 }

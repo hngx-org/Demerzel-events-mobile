@@ -23,6 +23,9 @@ class GroupProvider extends ChangeNotifier {
   bool _isBusy = false;
   bool get isBusy => _isBusy;
 
+  bool _isBusyEditingGroup = false;
+  bool get isBusyEditingGroup => _isBusyEditingGroup;
+
   List<Group> groups = [];
   List<String> tags = [];
 
@@ -61,7 +64,7 @@ class GroupProvider extends ChangeNotifier {
       _error = e.toString();
       log(e.toString());
       log(s.toString());
-      
+
       notifyListeners();
       rethrow;
     }
@@ -97,7 +100,7 @@ class GroupProvider extends ChangeNotifier {
     return true;
   }
 
-    Future<bool> unSubscribeFromGroup(String groupId) async {
+  Future<bool> unSubscribeFromGroup(String groupId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
@@ -105,6 +108,55 @@ class GroupProvider extends ChangeNotifier {
     try {
       await groupRepo.unSubscribeFromGroup(groupId);
       await getGroups();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> deleteGroup(String groupId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.deleteGroup(groupId);
+      await getGroups();
+      notifyListeners();
+    } catch (e, s) {
+      log(e.toString());
+      log(s.toString());
+
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return true;
+  }
+
+  Future<bool> updateGroupName(
+      {required String newGroupName, required String groupID}) async {
+    _isBusyEditingGroup = true;
+    _error = "";
+    notifyListeners();
+
+    try {
+      await groupRepo.editGroupName(
+          newGroupName: newGroupName, groupID: groupID);
+      await getGroups();
+      _isBusyEditingGroup = false;
       notifyListeners();
     } catch (e, s) {
       log(e.toString());

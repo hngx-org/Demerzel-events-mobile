@@ -6,8 +6,12 @@ import 'package:hng_events_app/widgets/timeline_event_card.dart';
 
 class EventSearchDelegate extends SearchDelegate {
   final List<Event> events;
-  EventSearchDelegate({
-    super.searchFieldLabel, super.searchFieldDecorationTheme, super.keyboardType, super.textInputAction, required this.events});
+  EventSearchDelegate(
+      {super.searchFieldLabel,
+      super.searchFieldDecorationTheme,
+      super.keyboardType,
+      super.textInputAction,
+      required this.events});
 
   @override
   String? get searchFieldLabel => '';
@@ -18,89 +22,86 @@ class EventSearchDelegate extends SearchDelegate {
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
-      IconButton(
-        onPressed: ()=> query ='', 
-        icon: const Icon(Icons.clear)
-      )
+      IconButton(onPressed: () => query = '', icon: const Icon(Icons.clear))
     ];
   }
 
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
-      onPressed: (){
-        close(context, null);
-      }, 
-      icon: const Icon(Icons.arrow_back)
-    );
+        onPressed: () {
+          close(context, null);
+        },
+        icon: const Icon(Icons.arrow_back));
   }
 
   @override
   Widget buildResults(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    List<Event> list = events.where((element) => element.title.toLowerCase().contains(query.toLowerCase()) ).toList();
+    List<Event> list = events
+        .where((element) =>
+            element.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
     return ListView.builder(
-      physics: const BouncingScrollPhysics(), 
+      physics: const BouncingScrollPhysics(),
       itemCount: list.length,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
-        onTap: ()=> Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context)=> CommentScreen(event: list[index])
-          )
-        ),
+        onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CommentScreen(event: list[index]))),
         child: TimelineEventCard(
+          showVert: false,
           eventId: list[index].id,
-          onDelete: (eventId){
+          onDelete: (eventId) {
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
           },
-          showVert: false,
-          context: context, 
-          screensize: screensize, 
-          image: list[index].thumbnail, 
-          title: list[index].title , 
-          time: list[index].startTime ,
-          location: list[index].location ,
-          date: list[index].startDate ,
-          activity: DateFormatter().timeLeft(list[index].startDate, list[index].startTime),
+          context: context,
+          screensize: screensize,
+          image: list[index].thumbnail,
+          title: list[index].title,
+          time: list[index].startTime,
+          location: list[index].location,
+          date: list[index].startDate,
+          activity: DateFormatter()
+              .timeLeft(list[index].startDate, list[index].startTime),
         ),
       ),
-
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
-    List<Event> list = events.where((element) => element.title.toLowerCase().contains(query.toLowerCase()) ).toList();
+    List<Event> list = events
+        .where((element) =>
+            element.title.toLowerCase().contains(query.toLowerCase()))
+        .toList();
     return ListView.builder(
-      physics: const BouncingScrollPhysics(), 
+      physics: const BouncingScrollPhysics(),
       itemCount: list.length,
       itemBuilder: (BuildContext context, int index) => GestureDetector(
         onTap: () => Navigator.push(
-          context, 
-          MaterialPageRoute(
-            builder: (context)=> CommentScreen(event: list[index])
-          )
-        ),
+            context,
+            MaterialPageRoute(
+                builder: (context) => CommentScreen(event: list[index]))),
         child: TimelineEventCard(
+          showVert: false,
           eventId: list[index].id,
-          onDelete: (eventId){
+          onDelete: (eventId) {
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
           },
-          showVert: false,
-          context: context, 
-          screensize: screensize, 
-          image: list[index].thumbnail, 
-          title: list[index].title , 
-          time: list[index].startTime ,
-          location: list[index].location ,
-          date: list[index].startDate ,
-          activity: DateFormatter().timeLeft(list[index].startDate, list[index].startTime),
+          context: context,
+          screensize: screensize,
+          image: list[index].thumbnail,
+          title: list[index].title,
+          time: list[index].startTime,
+          location: list[index].location,
+          date: list[index].startDate,
+          activity: DateFormatter()
+              .timeLeft(list[index].startDate, list[index].startTime),
         ),
       ),
-
     );
   }
-  
 }

@@ -23,8 +23,8 @@ class SettingsPage extends ConsumerWidget {
     // ref.read(notificationProvider.notifier).getNotifications();
     ref.watch(NotificationSettingsPrefsNotifier.provider);
     final userRef = ref.watch(appUserProvider);
-    List<UserNotification> nlist =
-        ref.watch(notificationProvider).notifications;
+    List<UserNotification> unreadNotifications =
+        ref.watch(notificationProvider).unreadNotifications;
 
     return Scaffold(
       // backgroundColor: ProjectColors.bgColor,
@@ -51,7 +51,7 @@ class SettingsPage extends ConsumerWidget {
               },
               child: badges.Badge(
                 position: badges.BadgePosition.topEnd(top: -7, end: -7),
-                badgeContent: Text("${nlist.length}"),
+                badgeContent: Text("${unreadNotifications.length}"),
                 child: const Icon(
                   Icons.notifications,
                   size: 35,

@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/screens/timeline_screen/My_events/delete_event.dart';
 
 Widget TimelineEventCard(
     {required BuildContext context,
@@ -14,9 +12,9 @@ Widget TimelineEventCard(
     required String date,
     required String activity,
      Null Function(String eventId)? onDelete,
-     Null Function(String eventId)? onEdit,
+     Null Function ()? onEdit,
     required String eventId,
-    required bool showVert}) {
+    required bool showVert }) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -131,13 +129,13 @@ Widget TimelineEventCard(
                         child: GestureDetector(
                           child: Text('Edit'),
                           onTap: () async {
-                            await onEdit!(eventId);
+                            await onEdit!();
                           },
                         ),
                       ),
                     ],
                     child: const Icon(Icons.more_vert),
-                  ) : SizedBox(), 
+                  ) : Text("more"), 
                   Text(activity)
                 ],
               )  ),

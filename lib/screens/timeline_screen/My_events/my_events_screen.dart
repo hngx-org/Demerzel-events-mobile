@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/My_events/edit_event.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
@@ -9,11 +10,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import '../../../riverpod/event_provider.dart';
 
-class MyEventScreen extends ConsumerWidget {
-  const MyEventScreen({super.key});
+class MyEventScreen extends ConsumerStatefulWidget {
+  const MyEventScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _MyEventScreenState createState() => _MyEventScreenState();
+}
+
+class _MyEventScreenState extends ConsumerState<MyEventScreen> {
+  
+
+ 
+  @override
+  Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
     final eventNotifier = ref.watch(EventProvider.provider);
     final userEvents = ref.watch(userEventsProvider);
@@ -65,7 +74,10 @@ class MyEventScreen extends ConsumerWidget {
                 child: FloatingActionButton(
                     shape: const CircleBorder(),
                     backgroundColor: Theme.of(context).colorScheme.primary,
-                    child: Icon(Icons.refresh),
+                    child: const Tooltip(
+                      message: 'Refresh',
+                      child: Icon(Icons.refresh),
+                    ),
                     onPressed: () => ref.refresh(userEventsProvider)),
               ),
               Padding(
@@ -92,10 +104,13 @@ class MyEventScreen extends ConsumerWidget {
                         //       offset: Offset(0, 2)),
                         // ]
                       ),
-                      child: const Icon(
-                        Icons.add,
-                        size: 40,
-                        color: Colors.black,
+                      child: const Tooltip(
+                        message: "Add Event",
+                        child: Icon(
+                          Icons.add,
+                          size: 40,
+                          color: Colors.black,
+                        ),
                       ),
                     )),
               ),
@@ -124,12 +139,15 @@ class MyEventScreen extends ConsumerWidget {
                               .deleteEvent(eventId)
                               .then((value) => ref.refresh(userEventsProvider));
                         },
-
-                        // onDelete: (eventId) {
-                        //    ref.read(EventProvider.provider).deleteEvent(eventId);
-                        // },
-                        onEdit: (eventId) {
-                          print("Edit tapped");
+                        onEdit: () {
+                          
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditEventName(
+                                 currentEvent:  event,
+                                ),
+                              ));
                         },
                         eventId: event.id,
                         context: context,

@@ -21,11 +21,8 @@ class EventRepository {
       required this.apiService});
 
   static final provider = Provider<EventRepository>((ref) => EventRepository(
-        // authRepository: ref.read(AuthRepository.provider),
         authRepository: ref.watch(AuthRepository.provider),
-        // apiService: ref.read(ApiServiceImpl.provider),
         apiService: ref.watch(ApiServiceImpl.provider),
-        //  imageUploadService: ref.read(ImageUploadService.provider),
         imageUploadService: ref.watch(ImageUploadService.provider),
       ));
 
@@ -60,8 +57,7 @@ class EventRepository {
     final uri = Uri.https(ApiRoutes.host, '/api/events', queryParameters);
     log(uri.toString());
     try {
-      final http.Response response = await http
-          .get(uri, headers: header);     
+      final http.Response response = await http.get(uri, headers: header);
 
       final Map<String, dynamic> data = json.decode(response.body);
 
@@ -175,31 +171,31 @@ class EventRepository {
     final http.Response response = await http
         .delete(url, headers: header)
         .timeout(const Duration(seconds: 60));
-         if (response.statusCode == 200 || response.statusCode ==201) {
-        log('Event deleted successfully');
-        print('Event deleted');
-      } else {
-        // throw response.reasonPhrase?? response.body;
-        log('Failed to delete event. Status code: ${response.statusCode}');
-        print("event not deleted.");
-      }
-    // try{
-    //   //final Uri url = Uri.parse(uriString);
-    //   final http.Response response = await http
-    //       .delete(url, headers: header)
-    //       .timeout(const Duration(seconds: 120));
-    //   if (response.statusCode == 200 || response.statusCode ==201) {
-    //     log('Event deleted successfully');
-    //     print('Event deleted');
-    //   } else {
-    //     //throw response.reasonPhrase?? response.body;
-    //     log('Failed to delete event. Status code: ${response.statusCode}');
-    //     print("event not deleted.");
-    //   }
-    // } catch(e, s){
-    //   log(e.toString());
-    //   log(s.toString());
-    //   rethrow;
-    // }
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      log('Event deleted successfully');
+      print('Event deleted');
+    } else {
+      // throw response.reasonPhrase?? response.body;
+      log('Failed to delete event. Status code: ${response.statusCode}');
+      print("event not deleted.");
+    }
+  }
+
+  Future<void> editEventName(
+      {required String newEventName, required String eventID}) async {
+    final header = await authRepository.getAuthHeader();
+    //final apiUrl = ApiRoutes.editGroupURI(groupID);
+    // final url = Uri.parse(apiUrl);
+    final http.Response response = await apiService.put(
+      body: {'name': newEventName},
+      headers: header,
+      url: ApiRoutes.editEventURI(eventID),
+    ).timeout(const Duration(seconds: 60));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      log('Event name updated successfully');
+      print('Event name updated');
+    } else {
+      print("Event Name not updated");
+    }
   }
 }

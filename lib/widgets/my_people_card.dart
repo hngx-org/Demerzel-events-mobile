@@ -9,6 +9,12 @@ class MyPeopleCard extends StatelessWidget {
     required this.bubbleVisible,
     required this.onPressed,
     required this.eventLength,
+    this.onDelete,
+    this.groupId,
+    this.onEdit,
+
+    //  Null Function(String groupId)? onEdit,
+    // required String groupId,
   });
 
   final String title;
@@ -16,12 +22,15 @@ class MyPeopleCard extends StatelessWidget {
   final bool bubbleVisible;
   final VoidCallback onPressed;
   final int eventLength;
+  final Function? onDelete;
+  final String? groupId;
+  final Function? onEdit;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onPressed,
-      child: Card(        
+      child: Card(
         child: Stack(
           children: [
             Container(
@@ -38,48 +47,72 @@ class MyPeopleCard extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 10,
-                      left: 10,
-                      right: 10,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 10,
+                  left: 10,
+                  right: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: "NotoSans",
+                          ),
+                        ),
+                        PopupMenuButton<String>(
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            const PopupMenuItem<String>(
+                              value: 'Delete',
+                              child: Text('Delete'),
+                            ),
+                            const PopupMenuItem<String>(
+                              value: 'Edit',
+                              child: Text('Edit'),
+                            ),
+                          ],
+                          onSelected: (value) async {
+                            if (value == 'Delete') {
+                              await onDelete!(groupId);
+                            } else if (value == 'Edit') {
+                              await onEdit!();
+                            }
+                          },
+                          child: const Icon(Icons.more_vert),
+                        )
+                      ],
                     ),
-                    child: Text(
-                      title,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "NotoSans",
+                    Expanded(
+                      child: Center(
+                        child: image == ''
+                            ? Image.asset(
+                                'assets/illustrations/dancers_illustration.png')
+                            : SizedBox(
+                                height: 110,
+                                width: 130,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: FadeInImage.memoryNetwork(
+                                    placeholder: kTransparentImage,
+                                    image: image,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
-                  ),
-                
-                Expanded(
-                  child: Center(
-                    child: image == ''
-                        ? Image.asset(
-                            'assets/illustrations/dancers_illustration.png')
-                        : SizedBox(
-                          height: 110,
-                          width: 160,
-                          
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: FadeInImage.memoryNetwork(
-                                placeholder: kTransparentImage,
-                                image: image,
-                                fit: BoxFit.fill,
-                              ),
-                          ),
-                    ),
-                  )
-                  )
-                ],
+                  ],
+                ),
               ),
             ),
             Visibility(
@@ -97,7 +130,7 @@ class MyPeopleCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       color: Theme.of(context).primaryColor,
                     ),
-                    child:  Text(
+                    child: Text(
                       "$eventLength events",
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,

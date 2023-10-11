@@ -4,9 +4,9 @@ import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
+import 'package:hng_events_app/screens/timeline_screen/My_events/my_events_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/all_event_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/events_search_delegate.dart';
-import 'package:hng_events_app/screens/timeline_screen/my_events_screen.dart';
 import 'package:hng_events_app/screens/timeline_screen/upcoming_screen.dart';
 
 class TimelineScreen extends ConsumerStatefulWidget {
@@ -29,9 +29,12 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
   @override
   Widget build(BuildContext context) {
     ref.read(notificationProvider.notifier).getNotifications.call();
+
     List<Event> events = ref.watch(eventSearchProvider);
-    ref.read(NotificationSettingsPrefsNotifier.provider).getPrefs();
+    
+    ref.read(NotificationSettingsPrefsNotifier.provider);
     ref.watch(groupTagProvider);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(

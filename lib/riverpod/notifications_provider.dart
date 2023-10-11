@@ -15,11 +15,13 @@ final NotificationRepository repo;
     });
   }
 
-  onread(UserNotification notification) async {
+ onread(UserNotification notification) async {
     int index = state.rawNotifications.indexOf(notification);
     state.rawNotifications[index].read = true;
     state = state;
     await repo.updateNotificationRead(notification.id).then((value) => getNotifications());
+    state.unreadNotifications;
+    state = state;
   }
 }
 
@@ -42,7 +44,19 @@ class NotificationList {
         notificationslist.where((element) => element.read == true).toList();
     List<UserNotification> unreadNotifications =
         notificationslist.where((element) => element.read == false).toList();
-    return unreadNotifications + readNotifications;
+   return rawNotifications;
+   //return unreadNotifications + readNotifications;
+  }
+
+  List<UserNotification> get unreadNotifications{
+    List<UserNotification> notificationslist =
+        rawNotifications.reversed.toList();
+    // List<UserNotification> readNotifications =
+    //     notificationslist.where((element) => element.read == true).toList();
+    List<UserNotification> unreadNotifications =
+        notificationslist.where((element) => element.read == false).toList();
+   return unreadNotifications;
+   //return unreadNotifications + readNotifications;
   }
 
   NotificationList.empty() : rawNotifications = [];

@@ -4,18 +4,19 @@ import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/screens/create_group.dart';
 import 'package:hng_events_app/screens/group_event_list_screen.dart';
 import 'package:hng_events_app/screens/group_screens/group_search_delegate.dart';
+import 'package:hng_events_app/screens/group_screens/edit_group.dart';
 import 'package:hng_events_app/widgets/my_people_card.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 import 'package:hng_events_app/models/group.dart';
 
-class PeopleScreen extends ConsumerStatefulWidget {
-  const PeopleScreen({super.key});
+class MyPeopleScreen extends ConsumerStatefulWidget {
+  const MyPeopleScreen({super.key});
 
   @override
-  ConsumerState<PeopleScreen> createState() => _CreateGroupState();
+  ConsumerState<MyPeopleScreen> createState() => _CreateGroupState();
 }
 
-class _CreateGroupState extends ConsumerState<PeopleScreen> {
+class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
   @override
   Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
@@ -108,6 +109,20 @@ class _CreateGroupState extends ConsumerState<PeopleScreen> {
               itemBuilder: (BuildContext context, int index) {
                 final currentGroup = groupsNotifier.groups[index];
                 return MyPeopleCard(
+                  onDelete: (groupId) {
+                            groupsNotifier.deleteGroup(groupId).then((value) =>
+                                ref.refresh(GroupProvider.groupProvider));
+                          },
+                          onEdit: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditGroupName(
+                                  currentGroup: currentGroup,
+                                ),
+                              ),
+                            );
+                          },
                     title: currentGroup.name,
                     image: currentGroup.image,
                     eventLength: currentGroup.eventCount,
