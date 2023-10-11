@@ -50,6 +50,10 @@ class EventSearchDelegate extends SearchDelegate {
           )
         ),
         child: TimelineEventCard(
+          onEdit: (eventId) {
+            
+          },
+          showVert: false,
           eventId: list[index].id,
           onDelete: (eventId){
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));
@@ -83,6 +87,10 @@ class EventSearchDelegate extends SearchDelegate {
           )
         ),
         child: TimelineEventCard(
+          onEdit: (eventId) {
+            
+          },
+          showVert: false,
           eventId: list[index].id,
           onDelete: (eventId){
             // eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(upcomingEventsProvider));

@@ -223,6 +223,9 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
                   ),
                 ),
                 child: TimelineEventCard(
+                  onEdit: (eventId) {
+            
+          },
                   showVert: false,
                   eventId: event.id,
                   context: context,
