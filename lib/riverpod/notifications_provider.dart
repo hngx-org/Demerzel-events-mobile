@@ -15,11 +15,11 @@ final NotificationRepository repo;
     });
   }
 
-  onread(UserNotification notification) async {
+  onread({required UserNotification notification, List<String> notificationIds = const []}) async {
     int index = state.rawNotifications.indexOf(notification);
     state.rawNotifications[index].read = true;
     state = state;
-    await repo.updateNotificationRead(notification.id).then((value) => getNotifications());
+    await repo.updateNotificationRead(notificationIds).then((value) => getNotifications());
     state = state;
   }
 }

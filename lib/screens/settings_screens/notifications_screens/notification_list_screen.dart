@@ -23,10 +23,17 @@ class NotificationListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(24),
                 child: ListView.separated(
                   itemBuilder: (context, index) {
+                    final notificationIds = <String>[];
                     Future.delayed(const Duration(seconds: 5)).then((value) {
-                      return nlist[index].read == false ? ref
-                        .read(notificationProvider.notifier)
-                        .onread(nlist[index]) : null;
+                      if (nlist[index].read == false) {
+                        notificationIds.add(value);
+                        return ref.read(notificationProvider.notifier).onread(
+                              notification: nlist[index],
+                              notificationIds: notificationIds,
+                            );
+                      } else {
+                        return null;
+                      }
                     });
 
                     return notificationTile(nlist[index], context, ref);

@@ -33,10 +33,10 @@ class NotificationRepository {
     }
   }
 
-  Future<void> updateNotificationRead(String id) async {
+  Future<void> updateNotificationRead(List ids) async {
     final header = await authRepo.getAuthHeader();
     final response = await apiService
-        .put(url: Uri.parse("${ApiRoutes.notificationURI}/$id"), headers: header, body: {"read": true});
+        .put(url: Uri.parse("${ApiRoutes.notificationURI}/"), headers: header, body: {"read": true, 'notification_ids':ids});
     if (response.statusCode != 200) {
       throw Exception('failed to update Notifications ${response.statusCode}');
     }
