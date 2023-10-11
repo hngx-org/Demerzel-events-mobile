@@ -7,33 +7,35 @@ import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 
-class UserProvider extends ChangeNotifier {
-  UserProvider({
-    required this.authRepository,
-  }) {
-    getUser();
-  }
-  final AuthRepository authRepository;
+// class UserProvider extends ChangeNotifier {
+//   UserProvider({
+//     required this.authRepository,
+//   }) {
+//     getUser();
+//   }
+//   final AuthRepository authRepository;
 
-  User? user;
-  updateUserProfile(String username, String image) async{
-    await authRepository.updateUserProfile(
-      username,
-    );
-  }
+//   User? user;
+//   updateUserProfile(String username, String image) async{
+//     await authRepository.updateUserProfile(
+//       username,
+//     );
+//   }
 
-  Future<void> getUser() async {
-    user = await authRepository.getUser();
-    notifyListeners();
-  }
+//   Future<void> getUser() async {
+//     user = await authRepository.getUser();
+//     notifyListeners();
+//   }
 
-  static final notifier = ChangeNotifierProvider<UserProvider>((ref) =>
-    UserProvider(authRepository: ref.watch(AuthRepository.provider)));
-}
+//   static final notifier = ChangeNotifierProvider<UserProvider>((ref) =>
+//     UserProvider(authRepository: ref.watch(AuthRepository.provider)));
+// }
 
 class UserNotifier extends StateNotifier<AppUser?> {
-  UserNotifier(): super(null);
-  AuthRepository repo = AuthRepository(localStorageService: const LocalStorageService());
+  UserNotifier(this.repo): super(null){
+    getUserBE();
+  }
+  final AuthRepository repo;
   bool _preventLoop = false;
   
   Future getUserLocal() async{
@@ -52,9 +54,11 @@ class UserNotifier extends StateNotifier<AppUser?> {
     await repo.getAppUserBE().then((value) => state = value);
   }
 
-  updateUserProfile(String username) async{
+  updateUserProfile(String username, File? file) async{
     await repo.updateUserProfile(
+      file,
       username,
+      
     ).then((value) => getUserBE());
   }
 
@@ -75,5 +79,5 @@ class UserNotifier extends StateNotifier<AppUser?> {
   
 }
 
-final appUserProvider = StateNotifierProvider<UserNotifier, AppUser?>((ref) => UserNotifier());
+final appUserProvider = StateNotifierProvider<UserNotifier, AppUser?>((ref) => UserNotifier(ref.read(AuthRepository.provider)));
 

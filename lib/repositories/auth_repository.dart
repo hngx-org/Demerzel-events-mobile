@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,22 +8,30 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis_auth/auth_io.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/user.dart';
+import 'package:hng_events_app/services/api_service.dart';
+import 'package:hng_events_app/services/http_service/image_upload_service.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:googleapis/calendar/v3.dart';
-final GoogleSignIn googleSignIn = GoogleSignIn(scopes:  [CalendarApi.calendarScope]);
+
+final GoogleSignIn googleSignIn =
+    GoogleSignIn(scopes: [CalendarApi.calendarScope]);
 
 class AuthRepository {
   final LocalStorageService localStorageService;
-  
+  final ApiService apiService;
+  //final ImageUploadService imageUploadService;
 
-  AuthRepository({required this.localStorageService});
+  AuthRepository({
+    required this.localStorageService,
+    required this.apiService,
+    //required this.imageUploadService,
+  });
   FirebaseAuth auth = FirebaseAuth.instance;
-  
+
   static const _user = 'userToken';
   String baseUrl = ApiRoutes.baseUrl;
-  
 
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount? googleSignInAccount =
@@ -31,7 +40,7 @@ class AuthRepository {
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =
           await googleSignInAccount.authentication;
- 
+
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleSignInAuthentication.accessToken,
         idToken: googleSignInAuthentication.idToken,
@@ -43,19 +52,17 @@ class AuthRepository {
           if (token != null) {
             return token;
             // signUpUserInBackend(token);
-          } else{
+          } else {
             throw Exception('Failed to retrieve token from Google');
           }
         },
-       
-      ).catchError(
-        (error){
-          throw Exception('signInWithCredential Failed ');
-        }
-      );
+      ).catchError((error) {
+        throw Exception('signInWithCredential Failed ');
+      });
       return token;
-      
-    }else { throw Exception('failed to retrieve Token null');}
+    } else {
+      throw Exception('failed to retrieve Token null');
+    }
   }
 
   Future<void> signUpUserInBackend(String token) async {
@@ -70,7 +77,7 @@ class AuthRepository {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> data = json.decode(response.body);
-      final String token = data['data']['token'];      
+      final String token = data['data']['token'];
       await localStorageService.saveToDisk(_user, token);
     }
 
@@ -82,19 +89,14 @@ class AuthRepository {
     return auth.currentUser;
   }
 
-  Future<AppUser?> getAppUserBE() async{
+  Future<AppUser?> getAppUserBE() async {
     var header = await getAuthHeader();
-    final response = await http.get(
-      ApiRoutes.currentUserURI, 
+    final response = await apiService.get(
+      url: ApiRoutes.currentUserURI,
       headers: header,
     );
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> listUsers = jsonDecode(response.body);
-      return AppUser.fromJson(listUsers);
-    } else {
-      throw Exception('Failed to retrieve User ${response.statusCode}');
-    }
+   return AppUser.fromJson(response);
   }
 
   Future<void> saveToken(String token) async {
@@ -104,7 +106,6 @@ class AuthRepository {
   Future<String?> getToken() async {
     final token = await localStorageService.getFromDisk(_user) as String?;
     return token;
- 
   }
 
   Future<Map<String, String>> getAuthHeader() async {
@@ -114,50 +115,48 @@ class AuthRepository {
     };
   }
 
-  Future<String> getUserid() async{
+  Future<String> getUserid() async {
     String? token = await getToken();
     Map<String, dynamic> userMap = JwtDecoder.decode(token!);
-      return userMap["data"]["id"];
+    return userMap["data"]["id"];
   }
 
   Future<AppUser> getUserLocal() async {
     String? token = await getToken();
     if (token != null) {
-     Map<String, dynamic> userMap = JwtDecoder.decode(token); 
-     return AppUser.fromJson(userMap);
+      Map<String, dynamic> userMap = JwtDecoder.decode(token);
+      return AppUser.fromJson(userMap);
     } else {
       throw Exception('User Token Local null');
     }
-    
-    
   }
 
-  Future updateUserProfile(String userName) async{
-    String userid = await getUserid();
+  Future updateUserProfile(File? file, String userName) async {
     Map<String, String> headerMap = await getAuthHeader();
-    final response = await http.put(
-      Uri.parse('$baseUrl/users'),
-      headers: headerMap,
-      body: jsonEncode(<String, String>
-        {
-          'name': userName,          
-        }
-      )
-    );
-    if (response.statusCode != 200) {
-      throw Exception("failed to update userName");
+    final Map<String, dynamic> data = {};
+
+    if (userName.isNotEmpty) {
+      data.putIfAbsent('name', () => userName);
     }
+    if (file != null) {
+      final imageUrl = await getImageUrl(file);
+      data.putIfAbsent('avatar', () => imageUrl);
+    }
+log(data.toString());
+    final response = await apiService.put(
+        url: ApiRoutes.userURI, headers: headerMap, body: data);
+   log(response);
   }
 
-  Future<String> getimageUrl(File file) async{
+  Future<String> getImageUrl(File file) async {
     Map<String, String> headerMap = await getAuthHeader();
     final request = http.MultipartRequest('POST', ApiRoutes.imageUploadURI)
-        ..files.add(await http.MultipartFile.fromPath(
-          'file',
-          file.path,
-        ))
-        ..headers.addAll(headerMap);
-      final response = await request.send();
+      ..files.add(await http.MultipartFile.fromPath(
+        'file',
+        file.path,
+      ))
+      ..headers.addAll(headerMap);
+    final response = await request.send();
     if (response.statusCode == 200) {
       final responseJson = await response.stream.bytesToString();
       Map<String, dynamic> mapdata = jsonDecode(responseJson);
@@ -167,19 +166,15 @@ class AuthRepository {
     }
   }
 
-  Future updateProfilePhoto(File imageFile) async{
+  Future updateProfilePhoto(File imageFile) async {
     // String userid = await getUserid();
-    String imageUrl = await getimageUrl(imageFile);
+    String imageUrl = await getImageUrl(imageFile);
     Map<String, String> headerMap = await getAuthHeader();
-    final response = await http.put(
-      Uri.parse('$baseUrl/users'),
-      headers: headerMap,
-      body: jsonEncode(<String, dynamic>
-        {
-          'avatar': imageUrl,          
-        }
-      )
-    );
+    final response = await http.put(Uri.parse('$baseUrl/users'),
+        headers: headerMap,
+        body: jsonEncode(<String, dynamic>{
+          'avatar': imageUrl,
+        }));
     if (response.statusCode != 200) {
       throw Exception("failed to update userPhoto ${response.statusCode}");
     }
@@ -196,5 +191,8 @@ class AuthRepository {
   }
 
   static final provider = Provider<AuthRepository>((ref) => AuthRepository(
-    localStorageService: ref.read(LocalStorageService.provider)));
+        localStorageService: ref.read(LocalStorageService.provider),
+        apiService: ref.read(ApiServiceImpl.provider),
+        // imageUploadService: ref.read(ImageUploadService.provider)
+      ));
 }

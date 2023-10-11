@@ -12,7 +12,7 @@ class ApiRoutes {
   static const int sendTimeout = 5000;
 
   static Uri baseUri = Uri(scheme: scheme, host: host, path: '/');
-
+ static final userURI = Uri.parse('$baseUrl/users');
   static final authGoogleURI = Uri.parse('$baseUrl/auth/verify');
   static final groupURI = Uri.parse('$baseUrl/groups');
   static final eventURI = baseUri.replace(path: '/api/events');

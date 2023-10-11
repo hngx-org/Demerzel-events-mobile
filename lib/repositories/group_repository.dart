@@ -56,15 +56,13 @@ class GroupRepository {
     log(header.toString());
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
     body["image"] = imageUrl;
-
-    final response = await http.post(
+print(body['tags']);
+    final response = await apiService.post(url:
       ApiRoutes.groupURI,
       headers: header,
-      body: jsonEncode(<String, dynamic>{
-        'name':body['name'],
+      body: { 'name':body['name'],
         'image': imageUrl,
-        'tags': body['tags']
-      }), 
+        'tags': body['tags']},
     );
     log(response.statusCode.toString() + response.reasonPhrase.toString());
 
