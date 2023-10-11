@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
@@ -125,11 +124,11 @@ class GroupRepository {
         url: ApiRoutes.deleteGroupURI(groupId), headers: header);
     if (response.statusCode == 200 || response.statusCode == 201) {
       // log('Group deleted successfully');
-      print('Group deleted');
+      log('Group deleted');
     } else {
       // throw response.reasonPhrase?? response.body;
       // log('Failed to delete event. Status code: ${response.statusCode}');
-      print("Group not deleted.");
+      log("Group not deleted.");
     }
   }
 

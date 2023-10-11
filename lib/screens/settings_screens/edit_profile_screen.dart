@@ -1,11 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
-import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:hng_events_app/widgets/components/button/hng_primary_button.dart';
 import 'package:image_picker/image_picker.dart';
 

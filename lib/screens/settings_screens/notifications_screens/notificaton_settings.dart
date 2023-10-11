@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/models/notification.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 
 class NotificationSettings extends ConsumerStatefulWidget {
