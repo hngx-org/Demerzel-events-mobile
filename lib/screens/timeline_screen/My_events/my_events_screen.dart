@@ -139,13 +139,13 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                               .deleteEvent(eventId)
                               .then((value) => ref.refresh(userEventsProvider));
                         },
-                        onEdit: (eventId) {
+                        onEdit: () {
                           
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditEventName(
-                                 currentEvent: currentGroup,
+                                 currentEvent:  event,
                                 ),
                               ));
                         },

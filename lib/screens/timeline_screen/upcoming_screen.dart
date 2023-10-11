@@ -17,7 +17,6 @@ class UpcomingEventScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
-
   Widget bodyBuild(String title, String specifictime, String date,
       String location, String time, String image) {
     return GestureDetector(
@@ -157,25 +156,25 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
           ),
         );
       },
-      data: (data){
+      data: (data) {
         return onData(context, data, eventNotifier, screensize);
-      }, 
+      },
     );
-
   }
 
-  Scaffold onData(BuildContext context, List<Event> data, EventProvider eventNotifier, Size screensize) {
+  Scaffold onData(BuildContext context, List<Event> data,
+      EventProvider eventNotifier, Size screensize) {
     return Scaffold(
-        floatingActionButton: Column(
+      floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton(
-              shape: const CircleBorder(),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              child: const Icon(Icons.refresh),
-              onPressed: ()=> ref.refresh(upcomingEventsProvider)),
+                shape: const CircleBorder(),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: const Icon(Icons.refresh),
+                onPressed: () => ref.refresh(upcomingEventsProvider)),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 70.0),
@@ -191,15 +190,15 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
                   height: 70.r,
                   width: 70.r,
                   decoration: BoxDecoration(
-                      color: ProjectColors.purple,
-                      borderRadius: BorderRadius.all(Radius.circular(50.r)),
-                      // boxShadow: const [
-                      //   BoxShadow(
-                      //       color: ProjectColors.black,
-                      //       spreadRadius: 3,
-                      //       offset: Offset(0, 2)),
-                      // ]
-                    ),
+                    color: ProjectColors.purple,
+                    borderRadius: BorderRadius.all(Radius.circular(50.r)),
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       color: ProjectColors.black,
+                    //       spreadRadius: 3,
+                    //       offset: Offset(0, 2)),
+                    // ]
+                  ),
                   child: const Icon(
                     Icons.add,
                     size: 40,
@@ -209,39 +208,38 @@ class _CreateGroupState extends ConsumerState<UpcomingEventScreen> {
           ),
         ],
       ),
-        body: data.isEmpty? const Center(child: Text('No Events'),) : 
-            ListView.builder(
-          itemCount: data.length,
-          itemBuilder: (BuildContext context, int index) {
-            final Event event = data[index];
+      body: data.isEmpty
+          ? const Center(
+              child: Text('No Events'),
+            )
+          : ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Event event = data[index];
 
-              return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CommentScreen(event: event),
+                return GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CommentScreen(event: event),
+                    ),
                   ),
-                ),
-                child: TimelineEventCard(
-                  onEdit: (eventId) {
-            
-          },
-                  showVert: false,
-                  eventId: event.id,
-                  context: context,
-                  screensize: screensize,
-                  image: event.thumbnail,
-                  title: event.title,
-                  time: event.startTime,
-                  location: event.location,
-                  date: event.startDate,
-                  activity: DateFormatter()
-                      .timeLeft(event.startDate, event.startTime),
-                ),
-              );
-            },
-          ),
-        );
-      }    
-  
+                  child: TimelineEventCard(
+                    showVert: false,
+                    eventId: event.id,
+                    context: context,
+                    screensize: screensize,
+                    image: event.thumbnail,
+                    title: event.title,
+                    time: event.startTime,
+                    location: event.location,
+                    date: event.startDate,
+                    activity: DateFormatter()
+                        .timeLeft(event.startDate, event.startTime),
+                  ),
+                );
+              },
+            ),
+    );
+  }
 }

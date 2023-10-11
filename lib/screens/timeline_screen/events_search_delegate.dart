@@ -50,9 +50,7 @@ class EventSearchDelegate extends SearchDelegate {
           )
         ),
         child: TimelineEventCard(
-          onEdit: (eventId) {
-            
-          },
+         
           showVert: false,
           eventId: list[index].id,
           onDelete: (eventId){
@@ -87,9 +85,7 @@ class EventSearchDelegate extends SearchDelegate {
           )
         ),
         child: TimelineEventCard(
-          onEdit: (eventId) {
-            
-          },
+        
           showVert: false,
           eventId: list[index].id,
           onDelete: (eventId){
