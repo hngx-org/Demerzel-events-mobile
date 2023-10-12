@@ -9,7 +9,7 @@ import '../repositories/event_repository.dart';
 
 class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
-  
+
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
     getUserEvent();
@@ -203,13 +203,17 @@ class EventProvider extends ChangeNotifier {
   //   }
 
   //   _isBusy = false;
+
+bool _isBusyEditingEvent = false;
+  bool get isBusyEditingEvent => _isBusyEditingEvent;
+
   //   notifyListeners();
   // }
   Future<void> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
-    
+
     try {
       await eventRepository.deleteEvent(eventId);
       print('Deleting event with ID: $eventId');
@@ -228,17 +232,17 @@ class EventProvider extends ChangeNotifier {
 
   Future<bool> updateEventName(
       {required String newEventName, required String eventID}) async {
-    _isBusy = true;
+   _isBusyEditingEvent = true;
     _error = "";
     notifyListeners();
-   
 
     try {
-      
       await eventRepository.editEventName(
           newEventName: newEventName, eventID: eventID);
-      await getAllEvent();
+      await getUserEvent();
+      _isBusyEditingEvent = false;
       notifyListeners();
+      
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -248,14 +252,11 @@ class EventProvider extends ChangeNotifier {
       return false;
     }
 
-    _isBusy = false;
+     _isBusy = false;
     notifyListeners();
     return true;
   }
 
-
-  @override
-  notifyListeners();
 }
 
 final allEventsProvider = FutureProvider<GetListEventModel>((ref) async {
@@ -271,16 +272,14 @@ final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async {
 final userEventsProvider = FutureProvider<List<Event>>((ref) async {
   EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getAllUserEvents();
-
 });
 
 final eventSearchProvider = Provider<List<Event>>((ref) {
   final allEvents = ref.watch(allEventsProvider);
   return allEvents.when(
-    skipLoadingOnRefresh: true,
-    skipLoadingOnReload: true,
-    data: (data)=> data.data.events, 
-    error: (error, stackTrace)=> <Event>[], 
-    loading: ()=> []
-  );
+      skipLoadingOnRefresh: true,
+      skipLoadingOnReload: true,
+      data: (data) => data.data.events,
+      error: (error, stackTrace) => <Event>[],
+      loading: () => []);
 });

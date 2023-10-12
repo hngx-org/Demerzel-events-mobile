@@ -143,6 +143,8 @@ class GroupRepository {
     log(response.toString());
     if (response['data'] != null) {
       getAllGroups();
+    } else {
+      log('Failed to update event name. Status code: ${response.statusCode}');
     }
   }
 }

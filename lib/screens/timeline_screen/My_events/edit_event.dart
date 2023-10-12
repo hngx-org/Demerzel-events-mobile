@@ -52,7 +52,13 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
                       eventID: widget.currentEvent.id);
                   Navigator.pop(context);
                 },
-                child: const Text('Save'),
+                child: ref.watch(EventProvider.provider).isBusyEditingEvent? const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Saving '),
+                    CircularProgressIndicator(),
+                  ],
+                ): const Text('Save'),
               ),
             ),
           ],

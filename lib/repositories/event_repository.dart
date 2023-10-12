@@ -32,7 +32,7 @@ class EventRepository {
     await apiService.post(
         url: ApiRoutes.subscribeToEventURI(eventId), body: {}, headers: header);
 
-    return true;
+    return true;  
   }
 
   Future<List<Event>> getAllUserEvents() async {
@@ -164,8 +164,7 @@ class EventRepository {
 
   Future<void> deleteEvent(String eventId) async {
     final header = await authRepository.getAuthHeader();
-    // final apiUrl = await apiService.delete(
-    //     url: ApiRoutes.deleteEventURI(eventId));
+
     final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
     final url = Uri.parse(apiUrl);
     final http.Response response = await http
@@ -173,29 +172,25 @@ class EventRepository {
         .timeout(const Duration(seconds: 60));
     if (response.statusCode == 200 || response.statusCode == 201) {
       log('Event deleted successfully');
-      print('Event deleted');
     } else {
-      // throw response.reasonPhrase?? response.body;
       log('Failed to delete event. Status code: ${response.statusCode}');
-      print("event not deleted.");
     }
   }
 
   Future<void> editEventName(
       {required String newEventName, required String eventID}) async {
     final header = await authRepository.getAuthHeader();
-    //final apiUrl = ApiRoutes.editGroupURI(groupID);
-    // final url = Uri.parse(apiUrl);
-    final http.Response response = await apiService.put(
+      final response = await apiService.put(
       body: {'name': newEventName},
       headers: header,
       url: ApiRoutes.editEventURI(eventID),
-    ).timeout(const Duration(seconds: 60));
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    );
+     log(response.toString());
+    if (response['data'] != null) {
+      getAllUserEvents();
       log('Event name updated successfully');
-      print('Event name updated');
     } else {
-      print("Event Name not updated");
+      log('Failed to update event name. Status code: ${response.statusCode}');
     }
   }
 }

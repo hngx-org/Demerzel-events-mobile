@@ -66,21 +66,21 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         unselectedFontSize: 14,
         items: [
           BottomNavigationBarItem(
-              icon: Icon(Icons.timeline, color: ProjectColors.grey),
+              icon: const Icon(Icons.timeline, color: ProjectColors.grey),
               activeIcon: Icon(Icons.timeline, color: Theme.of(context).colorScheme.primary),
               label: HngString.timeLine),
           BottomNavigationBarItem(
-              icon: Icon(Icons.groups_outlined, color: ProjectColors.grey),
+              icon: const Icon(Icons.groups_outlined, color: ProjectColors.grey),
               activeIcon:
                   Icon(Icons.groups_outlined, color: Theme.of(context).colorScheme.primary),
               label: HngString.myPeople),
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month, color: ProjectColors.grey),
+              icon: const Icon(Icons.calendar_month, color: ProjectColors.grey),
               activeIcon:
                   Icon(Icons.calendar_month, color: Theme.of(context).colorScheme.primary),
               label: HngString.calendar),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings, color: ProjectColors.grey),
+              icon: const Icon(Icons.settings, color: ProjectColors.grey),
               activeIcon: Icon(Icons.settings, color: Theme.of(context).colorScheme.primary),
               label: HngString.settings),
         ],
