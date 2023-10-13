@@ -61,7 +61,7 @@ class GroupRepository {
       headers: header,
       body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
     );
-    log(response.statusCode.toString() + response.reasonPhrase.toString());
+    //log(response.statusCode.toString() + response.reasonPhrase.toString());
 
     // final result = await apiService.post(
     //   url: ApiRoutes.groupURI,
