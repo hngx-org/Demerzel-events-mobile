@@ -21,9 +21,9 @@ class EventRepository {
       required this.apiService});
 
   static final provider = Provider<EventRepository>((ref) => EventRepository(
-        authRepository: ref.watch(AuthRepository.provider),
-        apiService: ref.watch(ApiServiceImpl.provider),
-        imageUploadService: ref.watch(ImageUploadService.provider),
+        authRepository: ref.read(AuthRepository.provider),
+        apiService: ref.read(ApiServiceImpl.provider),
+        imageUploadService: ref.read(ImageUploadService.provider),
       ));
 
   Future<bool> subscribeToEvent(String eventId) async {
@@ -181,14 +181,17 @@ class EventRepository {
       {required String newEventName, required String eventID}) async {
     final header = await authRepository.getAuthHeader();
       final response = await apiService.put(
-      body: {'name': newEventName},
+      body: {'location': newEventName},
       headers: header,
       url: ApiRoutes.editEventURI(eventID),
     );
      log(response.toString());
+     
     if (response['data'] != null) {
-      getAllUserEvents();
-      log('Event name updated successfully');
+      // getAllEvent();
+      // getAllUserEvents();
+      bool isUpdated = response['status']=='success'??false;
+      log('Event name updated successfully: ${response}, ${response['status']}, $isUpdated');
     } else {
       log('Failed to update event name. Status code: ${response.statusCode}');
     }

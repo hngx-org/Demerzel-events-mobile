@@ -6,10 +6,12 @@ import 'package:hng_events_app/riverpod/event_provider.dart';
 
 class EditEventName extends ConsumerStatefulWidget {
   final Event currentEvent;
+   
 
   const EditEventName({
     Key? key,
     required this.currentEvent,
+   
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
 
   @override
   Widget build(BuildContext context) {
-    final eventProvider = ref.read(EventProvider.provider);
+    final eventProvider = ref.watch(EventProvider.provider);
 
     return Scaffold(
       appBar: AppBar(

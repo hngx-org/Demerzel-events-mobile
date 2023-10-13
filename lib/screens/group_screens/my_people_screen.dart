@@ -110,7 +110,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                 final currentGroup = groupsNotifier.groups[index];
                 return MyPeopleCard(
                   onDelete: (groupId) {
-                            groupsNotifier.deleteGroup(groupId).then((value) =>
+                            groupsNotifier.deleteGroup(groupId).then((value) => 
                                 ref.refresh(GroupProvider.groupProvider));
                           },
                           onEdit: () {

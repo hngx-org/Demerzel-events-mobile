@@ -123,8 +123,7 @@ Widget TimelineEventCard(
                             }
                           },
                         )
-                      : Text("more"),
-                  Text(activity)
+                      : const SizedBox(),
                 ],
               )),
         ],

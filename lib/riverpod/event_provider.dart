@@ -182,33 +182,10 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
-  // Future<void> deleteEvent(String eventId) async {
-  //   _isBusy = true;
-  //   _error = "";
-  //   notifyListeners();
 
-  //   try {
-  //     await eventRepository.deleteEvent(eventId);
-
-  //     await getAllEvent();
-
-  //     await getUserEvent();
-
-  //     await upcomingEvents;
-  //   } catch (e, s) {
-  //     log(e.toString());
-  //     log(s.toString());
-
-  //     _error = e.toString();
-  //   }
-
-  //   _isBusy = false;
-
-bool _isBusyEditingEvent = false;
+  bool _isBusyEditingEvent = false;
   bool get isBusyEditingEvent => _isBusyEditingEvent;
 
-  //   notifyListeners();
-  // }
   Future<void> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
@@ -232,17 +209,17 @@ bool _isBusyEditingEvent = false;
 
   Future<bool> updateEventName(
       {required String newEventName, required String eventID}) async {
-   _isBusyEditingEvent = true;
+    _isBusyEditingEvent = true;
     _error = "";
     notifyListeners();
 
     try {
       await eventRepository.editEventName(
           newEventName: newEventName, eventID: eventID);
+      // await getAllEvent();
       await getUserEvent();
       _isBusyEditingEvent = false;
       notifyListeners();
-      
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -252,11 +229,10 @@ bool _isBusyEditingEvent = false;
       return false;
     }
 
-     _isBusy = false;
+    _isBusy = false;
     notifyListeners();
     return true;
   }
-
 }
 
 final allEventsProvider = FutureProvider<GetListEventModel>((ref) async {

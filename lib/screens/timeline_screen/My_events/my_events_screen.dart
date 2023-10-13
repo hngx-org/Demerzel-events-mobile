@@ -18,9 +18,6 @@ class MyEventScreen extends ConsumerStatefulWidget {
 }
 
 class _MyEventScreenState extends ConsumerState<MyEventScreen> {
-  
-
- 
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
@@ -140,12 +137,11 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                               .then((value) => ref.refresh(userEventsProvider));
                         },
                         onEdit: () {
-                          
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditEventName(
-                                 currentEvent:  event,
+                                  currentEvent: event,
                                 ),
                               ));
                         },
