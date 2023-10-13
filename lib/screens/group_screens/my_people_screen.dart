@@ -114,10 +114,41 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                                     actions: [
                                       TextButton(
                                         onPressed: () async {
-                                          await groupsNotifier
-                                              .deleteGroup(groupId)
-                                              .then((value) => ref.refresh(
-                                                  GroupProvider.groupProvider));
+                                          try {
+                                            await groupsNotifier
+                                                .deleteGroup(groupId)
+                                                .then((value) => ref.refresh(
+                                                    GroupProvider
+                                                        .groupProvider));
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    "Group deleted successfully"),
+                                              ),
+                                            );
+                                            Navigator.of(context).pop();
+                                          } catch (e) {
+                                            return showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                        "Cannot delete the event"),
+                                                    content: Text(
+                                                        "You did not create the event"),
+                                                    actions: [
+                                                      TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text("OK"))
+                                                    ],
+                                                  );
+                                                });
+                                          }
                                         },
                                         child: const Text("Yes"),
                                       ),
