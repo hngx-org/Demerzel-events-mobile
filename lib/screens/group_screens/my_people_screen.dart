@@ -32,8 +32,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
               )),
           title: Text(
             'My People',
-            style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground),
+            style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
           ),
           actions: [
             Padding(
@@ -78,40 +77,59 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                 ),
               ),
             ),
-
-            Consumer(
-              builder: (context, ref, child) {
-                List<Group> groups = ref.watch(groupSearchprovider);
-                return IconButton(
-                  onPressed: ()=> showSearch(
-                    context: context, delegate: GroupSearchDelegate(groups: groups)), 
-                  icon: const Icon(Icons.search)
-                );
-              }
-            )
+            Consumer(builder: (context, ref, child) {
+              List<Group> groups = ref.watch(groupSearchprovider);
+              return IconButton(
+                  onPressed: () => showSearch(
+                      context: context,
+                      delegate: GroupSearchDelegate(groups: groups)),
+                  icon: const Icon(Icons.search));
+            })
           ],
         ),
-        body: 
-        
-        groupsNotifier.groups.isNotEmpty?
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Visibility(
-            visible: !groupsNotifier.isBusy,
-            replacement: const Center(child: CircularProgressIndicator()),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20
-                ),
-              itemCount: groupsNotifier.groups.length,
-              itemBuilder: (BuildContext context, int index) {
-                final currentGroup = groupsNotifier.groups[index];
-                return MyPeopleCard(
-                  onDelete: (groupId) {
-                            groupsNotifier.deleteGroup(groupId).then((value) => 
-                                ref.refresh(GroupProvider.groupProvider));
+        body: groupsNotifier.groups.isNotEmpty
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Visibility(
+                  visible: !groupsNotifier.isBusy,
+                  replacement: const Center(child: CircularProgressIndicator()),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20),
+                    itemCount: groupsNotifier.groups.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final currentGroup = groupsNotifier.groups[index];
+                      return MyPeopleCard(
+                          onDelete: (groupId) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    title: const Text("Delete group"),
+                                    content: const Text(
+                                        "Are you sure you want to delete group?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () async {
+                                          await groupsNotifier
+                                              .deleteGroup(groupId)
+                                              .then((value) => ref.refresh(
+                                                  GroupProvider.groupProvider));
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                    ],
+                                  );
+                                });
                           },
                           onEdit: () {
                             Navigator.push(
@@ -123,44 +141,47 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                               ),
                             );
                           },
-                    title: currentGroup.name,
-                    image: currentGroup.image,
-                    eventLength: currentGroup.eventCount,
-                    bubbleVisible: true,
-                    onPressed: () async{
-              
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventsScreen(
-                              group: currentGroup,
-                            ),
-                          ));
-                    });
-              },
-            ),
-          ),
-        ):
-        groupsNotifier.isBusy? const Center(child: CircularProgressIndicator(),):
-        Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("No group was found", textAlign: TextAlign.center),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () {
-                ref.refresh(groupTagProvider);
-                groupsNotifier.getGroups();
-              },
-              child: const Text(
-                "Tap to Retry",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ),
-      )
-    );
+                          title: currentGroup.name,
+                          image: currentGroup.image,
+                          eventLength: currentGroup.eventCount,
+                          bubbleVisible: true,
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EventsScreen(
+                                    group: currentGroup,
+                                  ),
+                                ));
+                          });
+                    },
+                  ),
+                ),
+              )
+            : groupsNotifier.isBusy
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text("No group was found",
+                            textAlign: TextAlign.center),
+                        const SizedBox(height: 10),
+                        GestureDetector(
+                          onTap: () {
+                            ref.refresh(groupTagProvider);
+                            groupsNotifier.getGroups();
+                          },
+                          child: const Text(
+                            "Tap to Retry",
+                            style:
+                                TextStyle(decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ));
   }
 }
