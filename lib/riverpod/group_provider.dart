@@ -72,9 +72,8 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<GroupTagModel>> getTags() async{
+  Future<List<GroupTagModel>> getTags() async {
     return await groupRepo.getTags();
-    
   }
 
   Future<bool> subscribeToGroup(String groupId) async {
@@ -178,6 +177,6 @@ final groupSearchprovider = Provider<List<Group>>((ref) {
   return groups.groups;
 });
 
-final groupTagProvider = FutureProvider<List<GroupTagModel>>((ref) async{
+final groupTagProvider = FutureProvider<List<GroupTagModel>>((ref) async {
   return await ref.read(GroupProvider.groupProvider).getTags();
 });

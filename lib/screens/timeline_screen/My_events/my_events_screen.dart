@@ -145,6 +145,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                                         eventNotifier.deleteEvent(eventId).then(
                                             (value) => ref
                                                 .refresh(userEventsProvider));
+                                                Navigator.of(context).pop();
                                       },
                                       child: Text("Yes"),
                                     ),
