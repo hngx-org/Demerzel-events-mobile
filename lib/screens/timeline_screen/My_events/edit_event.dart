@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
 
-
 class EditEventName extends ConsumerStatefulWidget {
   final Event currentEvent;
 
@@ -18,7 +17,8 @@ class EditEventName extends ConsumerStatefulWidget {
 
 class _EditEventNameState extends ConsumerState<EditEventName> {
   final TextEditingController _eventNameController = TextEditingController();
-
+  final TextEditingController _eventLocationController = TextEditingController();
+  final TextEditingController _eventDescriptionController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -27,32 +27,55 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
 
   @override
   Widget build(BuildContext context) {
-    final eventProvider = ref.read(EventProvider.provider);
+    final eventProvider = ref.watch(EventProvider.provider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Event Name'),
+        title: const Text('Edit Events details'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // TextFormField(
+            //   controller: _eventNameController,
+            //   decoration: const InputDecoration(labelText: 'New EventName'),
+            // ),
+            const SizedBox(height: 20),
             TextFormField(
-              controller: _eventNameController,
-              decoration: const InputDecoration(labelText: 'New EventName'),
+              controller: _eventLocationController,
+              decoration: const InputDecoration(labelText: 'New Location'),
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _eventDescriptionController,
+              decoration: const InputDecoration(labelText: 'New Description'),
             ),
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
                 onPressed: () async {
                   final newEventName = _eventNameController.text;
+                  final newEventLocation = _eventLocationController.text;
+                  final newEventDescription = _eventDescriptionController.text;
                   await eventProvider.updateEventName(
                       newEventName: newEventName,
+                      newEventLocation: newEventLocation,
+                      newEventDescription: newEventDescription,
                       eventID: widget.currentEvent.id);
+
                   Navigator.pop(context);
                 },
-                child: const Text('Save'),
+                child: ref.watch(EventProvider.provider).isBusyEditingEvent
+                    ? const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Saving '),
+                          CircularProgressIndicator(),
+                        ],
+                      )
+                    : const Text('Save'),
               ),
             ),
           ],

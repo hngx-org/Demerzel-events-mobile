@@ -43,24 +43,23 @@ class _EditGroupNameState extends ConsumerState<EditGroupName> {
             ),
             const SizedBox(height: 20),
             Center(
-              child: 
-              ElevatedButton(
+              child: ElevatedButton(
                 onPressed: () async {
                   final newGroupName = _groupNameController.text;
-                  
                   await groupProvider.updateGroupName(
                       newGroupName: newGroupName,
                       groupID: widget.currentGroup.id);
-                Navigator.pop(context);      
-                
+                  Navigator.pop(context);
                 },
-                child: ref.watch(GroupProvider.groupProvider).isBusyEditingGroup? const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Saving '),
-                    CircularProgressIndicator(),
-                  ],
-                ): const Text('Save'),
+                child: ref.watch(GroupProvider.groupProvider).isBusyEditingGroup
+                    ? const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Saving '),
+                          CircularProgressIndicator(),
+                        ],
+                      )
+                    : const Text('Save'),
               ),
             ),
           ],

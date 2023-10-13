@@ -21,9 +21,9 @@ class EventRepository {
       required this.apiService});
 
   static final provider = Provider<EventRepository>((ref) => EventRepository(
-        authRepository: ref.watch(AuthRepository.provider),
-        apiService: ref.watch(ApiServiceImpl.provider),
-        imageUploadService: ref.watch(ImageUploadService.provider),
+        authRepository: ref.read(AuthRepository.provider),
+        apiService: ref.read(ApiServiceImpl.provider),
+        imageUploadService: ref.read(ImageUploadService.provider),
       ));
 
   Future<bool> subscribeToEvent(String eventId) async {
@@ -164,8 +164,7 @@ class EventRepository {
 
   Future<void> deleteEvent(String eventId) async {
     final header = await authRepository.getAuthHeader();
-    // final apiUrl = await apiService.delete(
-    //     url: ApiRoutes.deleteEventURI(eventId));
+
     final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
     final url = Uri.parse(apiUrl);
     final http.Response response = await http
@@ -173,29 +172,36 @@ class EventRepository {
         .timeout(const Duration(seconds: 60));
     if (response.statusCode == 200 || response.statusCode == 201) {
       log('Event deleted successfully');
-      print('Event deleted');
     } else {
-      // throw response.reasonPhrase?? response.body;
       log('Failed to delete event. Status code: ${response.statusCode}');
-      print("event not deleted.");
     }
   }
 
   Future<void> editEventName(
-      {required String newEventName, required String eventID}) async {
+      {required String newEventName,
+      required String eventID,
+      required String newEventLocation,
+      required String newEventDescription,
+      }) async {
     final header = await authRepository.getAuthHeader();
-    //final apiUrl = ApiRoutes.editGroupURI(groupID);
-    // final url = Uri.parse(apiUrl);
-    final http.Response response = await apiService.put(
-      body: {'name': newEventName},
+    final response = await apiService.put(
+      body: {
+        'title': newEventName,
+        'Location': newEventLocation,
+        'Description': newEventDescription,
+      },
       headers: header,
       url: ApiRoutes.editEventURI(eventID),
-    ).timeout(const Duration(seconds: 60));
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      log('Event name updated successfully');
-      print('Event name updated');
+    );
+    log(response.toString());
+
+    if (response['data'] != null) {
+      // getAllEvent();
+      // getAllUserEvents();
+      bool isUpdated = response['status'] == 'success' ?? false;
+      log('Event name updated successfully: ${response}, ${response['status']}, $isUpdated');
     } else {
-      print("Event Name not updated");
+      log('Failed to update event name. Status code: ${response.statusCode}');
     }
   }
 }

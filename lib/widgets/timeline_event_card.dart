@@ -11,10 +11,10 @@ Widget TimelineEventCard(
     required String location,
     required String date,
     required String activity,
-     Null Function(String eventId)? onDelete,
-     Null Function ()? onEdit,
+    Null Function(String eventId)? onDelete,
+    Null Function()? onEdit,
     required String eventId,
-    required bool showVert }) {
+    required bool showVert}) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 8.h),
     margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
@@ -98,47 +98,34 @@ Widget TimelineEventCard(
               )),
           Expanded(
               flex: 2,
-              child:  Column(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                 showVert ? PopupMenuButton<String>(
-                    // onSelected: (String value) {
-                    //   if (value == 'Delete') {
-                    //     // onDelete(eventId);
-                    //     // log('Delete item selected');
-                    //     print("delete tapped");
-                    //   } else if (value == 'Edit') {
-                    //     // log('Edit item selected');
-                    //     print("edit tapped");
-                    //   }
-                    // },
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<String>>[
-                      PopupMenuItem<String>(
-                        value: 'Delete',
-                        child: GestureDetector(
-                          child: Text('Delete'),
-                          onTap: () async{
-                            // ignore: await_only_futures
-                            await onDelete!(eventId);
+                  showVert
+                      ? PopupMenuButton<String>(
+                          itemBuilder: (BuildContext context) =>
+                              <PopupMenuEntry<String>>[
+                            PopupMenuItem<String>(
+                              value: 'Delete',
+                              child: Text('Delete'),
+                            ),
+                            PopupMenuItem<String>(
+                              value: 'Edit',
+                              child: Text('Edit'),
+                            ),
+                          ],
+                          child: const Icon(Icons.more_vert),
+                          onSelected: (String value) async {
+                            if (value == "Delete") {
+                              await onDelete!(eventId);
+                            } else if (value == "Edit") {
+                              await onEdit!();
+                            }
                           },
-                        ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: 'Edit',
-                        child: GestureDetector(
-                          child: Text('Edit'),
-                          onTap: () async {
-                            await onEdit!();
-                          },
-                        ),
-                      ),
-                    ],
-                    child: const Icon(Icons.more_vert),
-                  ) : Text("more"), 
-                  Text(activity)
+                        )
+                      : const SizedBox(),
                 ],
-              )  ),
+              )),
         ],
       ),
     ),

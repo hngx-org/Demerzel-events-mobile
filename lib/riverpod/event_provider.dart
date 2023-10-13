@@ -9,7 +9,7 @@ import '../repositories/event_repository.dart';
 
 class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
-  
+
   EventProvider({required this.eventRepository}) {
     getUpcomingEvent();
     getUserEvent();
@@ -182,34 +182,15 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
-  // Future<void> deleteEvent(String eventId) async {
-  //   _isBusy = true;
-  //   _error = "";
-  //   notifyListeners();
 
-  //   try {
-  //     await eventRepository.deleteEvent(eventId);
+  bool _isBusyEditingEvent = false;
+  bool get isBusyEditingEvent => _isBusyEditingEvent;
 
-  //     await getAllEvent();
-
-  //     await getUserEvent();
-
-  //     await upcomingEvents;
-  //   } catch (e, s) {
-  //     log(e.toString());
-  //     log(s.toString());
-
-  //     _error = e.toString();
-  //   }
-
-  //   _isBusy = false;
-  //   notifyListeners();
-  // }
   Future<void> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
-    
+
     try {
       await eventRepository.deleteEvent(eventId);
       print('Deleting event with ID: $eventId');
@@ -226,18 +207,25 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> updateEventName(
-      {required String newEventName, required String eventID}) async {
-    _isBusy = true;
+  Future<bool> updateEventName({
+    required String newEventName,
+    required String eventID,
+    required String newEventLocation,
+    required String newEventDescription,
+  }) async {
+    _isBusyEditingEvent = true;
     _error = "";
     notifyListeners();
-   
 
     try {
-      
       await eventRepository.editEventName(
-          newEventName: newEventName, eventID: eventID);
-      await getAllEvent();
+          newEventName: newEventName,
+          eventID: eventID,
+          newEventLocation: newEventLocation,
+          newEventDescription: newEventDescription);
+
+      await getUserEvent();
+      _isBusyEditingEvent = false;
       notifyListeners();
     } catch (e, s) {
       log(e.toString());
@@ -252,10 +240,6 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
-
-
-  @override
-  notifyListeners();
 }
 
 final allEventsProvider = FutureProvider<GetListEventModel>((ref) async {
@@ -271,16 +255,14 @@ final upcomingEventsProvider = FutureProvider<List<Event>>((ref) async {
 final userEventsProvider = FutureProvider<List<Event>>((ref) async {
   EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getAllUserEvents();
-
 });
 
 final eventSearchProvider = Provider<List<Event>>((ref) {
   final allEvents = ref.watch(allEventsProvider);
   return allEvents.when(
-    skipLoadingOnRefresh: true,
-    skipLoadingOnReload: true,
-    data: (data)=> data.data.events, 
-    error: (error, stackTrace)=> <Event>[], 
-    loading: ()=> []
-  );
+      skipLoadingOnRefresh: true,
+      skipLoadingOnReload: true,
+      data: (data) => data.data.events,
+      error: (error, stackTrace) => <Event>[],
+      loading: () => []);
 });
