@@ -32,7 +32,7 @@ class EventRepository {
     await apiService.post(
         url: ApiRoutes.subscribeToEventURI(eventId), body: {}, headers: header);
 
-    return true;  
+    return true;
   }
 
   Future<List<Event>> getAllUserEvents() async {
@@ -178,19 +178,27 @@ class EventRepository {
   }
 
   Future<void> editEventName(
-      {required String newEventName, required String eventID}) async {
+      {required String newEventName,
+      required String eventID,
+      required String newEventLocation,
+      required String newEventDescription,
+      }) async {
     final header = await authRepository.getAuthHeader();
-      final response = await apiService.put(
-      body: {'location': newEventName},
+    final response = await apiService.put(
+      body: {
+        'title': newEventName,
+        'Location': newEventLocation,
+        'Description': newEventDescription,
+      },
       headers: header,
       url: ApiRoutes.editEventURI(eventID),
     );
-     log(response.toString());
-     
+    log(response.toString());
+
     if (response['data'] != null) {
       // getAllEvent();
       // getAllUserEvents();
-      bool isUpdated = response['status']=='success'??false;
+      bool isUpdated = response['status'] == 'success' ?? false;
       log('Event name updated successfully: ${response}, ${response['status']}, $isUpdated');
     } else {
       log('Failed to update event name. Status code: ${response.statusCode}');

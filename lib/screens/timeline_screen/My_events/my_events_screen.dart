@@ -132,9 +132,31 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                       child: TimelineEventCard(
                         showVert: true,
                         onDelete: (eventId) {
-                          eventNotifier
-                              .deleteEvent(eventId)
-                              .then((value) => ref.refresh(userEventsProvider));
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text("Confirm Delete"),
+                                  content:
+                                      Text("Are you sure you want to delete?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        eventNotifier.deleteEvent(eventId).then(
+                                            (value) => ref
+                                                .refresh(userEventsProvider));
+                                      },
+                                      child: Text("Yes"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("No"),
+                                    )
+                                  ],
+                                );
+                              });
                         },
                         onEdit: () {
                           Navigator.push(

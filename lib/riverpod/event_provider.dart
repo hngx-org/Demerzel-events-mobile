@@ -207,16 +207,23 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> updateEventName(
-      {required String newEventName, required String eventID}) async {
+  Future<bool> updateEventName({
+    required String newEventName,
+    required String eventID,
+    required String newEventLocation,
+    required String newEventDescription,
+  }) async {
     _isBusyEditingEvent = true;
     _error = "";
     notifyListeners();
 
     try {
       await eventRepository.editEventName(
-          newEventName: newEventName, eventID: eventID);
-      // await getAllEvent();
+          newEventName: newEventName,
+          eventID: eventID,
+          newEventLocation: newEventLocation,
+          newEventDescription: newEventDescription);
+
       await getUserEvent();
       _isBusyEditingEvent = false;
       notifyListeners();

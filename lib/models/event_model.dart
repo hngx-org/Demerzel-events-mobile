@@ -48,8 +48,8 @@ class Data {
 class Event extends Equatable {
   final String id;
   final String creatorId;
-  final String thumbnail;
-  final String location;
+  final String thumbnail; 
+  final String location ;
   final String title;
   final String description;
   final String startDate;

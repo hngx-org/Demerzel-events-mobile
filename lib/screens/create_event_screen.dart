@@ -107,13 +107,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        // backgroundColor: ProjectColors.white,
-        // leading: Padding(
-        //   padding: const EdgeInsets.only(left:20.0),
-        //   child: Icon(Icons.arrow_back_ios),
-        //     onPressed: () => Navigator.pop(context),
-        //   ),
-        // ),
+        
         title: const Text(
           'Create Events',
           style: TextStyle(
