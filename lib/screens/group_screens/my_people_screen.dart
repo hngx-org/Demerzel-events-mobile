@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
@@ -100,13 +102,13 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                             crossAxisSpacing: 20,
                             mainAxisSpacing: 20),
                     itemCount: groupsNotifier.groups.length,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (BuildContext ctx, int index) {
                       final currentGroup = groupsNotifier.groups[index];
                       return MyPeopleCard(
                           onDelete: (groupId) {
                             showDialog(
-                                context: context,
-                                builder: (context) {
+                                context: ctx,
+                                builder: (ctx) {
                                   return AlertDialog(
                                     title: const Text("Delete group"),
                                     content: const Text(
@@ -115,39 +117,51 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                                       TextButton(
                                         onPressed: () async {
                                           try {
-                                            await groupsNotifier
-                                                .deleteGroup(groupId)
-                                                .then((value) => ref.refresh(
-                                                    GroupProvider
-                                                        .groupProvider));
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                    "Group deleted successfully"),
-                                              ),
-                                            );
-                                            Navigator.of(context).pop();
+                                            Navigator.of(ctx).pop();
+                                            
+                                            final result = await groupsNotifier
+                                                .deleteGroup(currentGroup.id);
+                                            if (result) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  backgroundColor: Colors.green,
+                                                  content: Text(
+                                                      "Group deleted successfully"),
+                                                ),
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                    backgroundColor: Colors.red,
+                                                      content: Text(
+                                                          "Group could not be deleted ")));
+                                            }
                                           } catch (e) {
-                                            return showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return AlertDialog(
-                                                    title: Text(
-                                                        "Cannot delete the event"),
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
                                                     content: Text(
-                                                        "You did not create the event"),
-                                                    actions: [
-                                                      TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: Text("OK"))
-                                                    ],
-                                                  );
-                                                });
+                                                        "Group could not be deleted ")));
+                                            //return
+                                            // showDialog(
+                                            //     context: context,
+                                            //     builder: (context) {
+                                            //       return AlertDialog(
+                                            //         title: const Text(
+                                            //             "Cannot delete the event"),
+                                            //         content: const Text(
+                                            //             "You did not create the event"),
+                                            //         actions: [
+                                            //           TextButton(
+                                            //               onPressed: () {
+                                            //                 Navigator.of(
+                                            //                         context)
+                                            //                     .pop();
+                                            //               },
+                                            //               child: const Text("OK"))
+                                            //         ],
+                                            //       );
+                                            //     });
                                           }
                                         },
                                         child: const Text("Yes"),
@@ -156,7 +170,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text("No"),
+                                        child: const Text("No"),
                                       ),
                                     ],
                                   );

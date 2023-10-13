@@ -108,7 +108,7 @@ class _State extends ConsumerState<NotificationSettings> {
               style: TextStyle(fontWeight: FontWeight.w700),
             ),
             subtitle: const Text(
-                'Set up reminders for upcoming events to make sure you never miss out.'),
+                'Recieve notifications and reminders about events in your mail'),
             trailing: Switch(
                 value: emailNotifications,
                 onChanged: (value) {

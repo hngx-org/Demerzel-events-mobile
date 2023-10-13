@@ -128,21 +128,29 @@ class GroupProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await groupRepo.deleteGroup(groupId);
-      await getGroups();
-      notifyListeners();
+      final result = await groupRepo.deleteGroup(groupId);
+      print('Provider result is $result');
+      if (result) {
+        _isBusy = false;
+        await getGroups();
+        notifyListeners();
+        return true;
+      } else {
+        _isBusy = false;
+        notifyListeners();
+        return false;
+      }
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
-
+      _isBusy = false;
       _error = e.toString();
       notifyListeners();
       return false;
     }
 
-    _isBusy = false;
-    notifyListeners();
-    return true;
+    // notifyListeners();
+    // return true;
   }
 
   Future<bool> updateGroupName(

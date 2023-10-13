@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
@@ -117,19 +118,18 @@ class GroupRepository {
     }
   }
 
-  Future<void> deleteGroup(String groupId) async {
+  Future<bool> deleteGroup(String groupId) async {
     final header = await authRepository.getAuthHeader();
 
-    final http.Response response = await apiService.delete(
+    final response = await apiService.delete(
         url: ApiRoutes.deleteGroupURI(groupId), headers: header);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      // log('Group deleted successfully');
-      log('Group deleted');
+       
+    if (response is DioException) {
+      return false;
     } else {
-      // throw response.reasonPhrase?? response.body;
-      // log('Failed to delete event. Status code: ${response.statusCode}');
-      log("Group not deleted.");
+      return true;
     }
+   
   }
 
   Future<void> editGroupName(

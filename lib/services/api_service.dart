@@ -120,9 +120,9 @@ class ApiServiceImpl implements ApiService {
           await _dio.delete(url.toString(), queryParameters: queryParameters);
       _log.i('Response from $url \n${response.data}');
       return response.data;
-    } on DioError catch (error) {
+    } on DioException catch (error) {
         _log.e('Error from $url', error: error);
-      rethrow;
+      return error;
     }
   }
 
