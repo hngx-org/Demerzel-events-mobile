@@ -47,25 +47,23 @@ class EventRepository {
             result['data']['events'].map((x) => Event.fromMap(x)));
   }
 
-  Future<GetListEventModel> getAllEvent() async {
+  Future<List<Event>> getAllEvent() async {
     final header = await authRepository.getAuthHeader();
     final queryParameters = {
-      'limit': "10",
+      'limit': "30",
       'page': '1',
     };
 
-    final uri = Uri.https(ApiRoutes.host, '/api/events', queryParameters);
-    log(uri.toString());
     try {
-      final http.Response response = await http.get(uri, headers: header);
+      final result = await apiService.get(
+          url: ApiRoutes.eventURI,
+          headers: header,
+          queryParameters: queryParameters);
 
-      final Map<String, dynamic> data = json.decode(response.body);
-
-      log(data['data']['events'].toString());
-
-      final result = GetListEventModel.fromMap(data);
-
-      return result;
+      return result['data']['events'] == null
+          ? []
+          : List<Event>.from(
+              result['data']['events'].map((x) => Event.fromMap(x)));
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -165,24 +163,24 @@ class EventRepository {
   Future<void> deleteEvent(String eventId) async {
     final header = await authRepository.getAuthHeader();
 
-    final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
-    final url = Uri.parse(apiUrl);
-    final http.Response response = await http
-        .delete(url, headers: header)
-        .timeout(const Duration(seconds: 60));
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      log('Event deleted successfully');
-    } else {
-      log('Failed to delete event. Status code: ${response.statusCode}');
-    }
+    // final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
+    // final url = Uri.parse(apiUrl);
+    final response = await apiService
+        .delete(url:  ApiRoutes.deleteEventURI(eventId), headers: header)
+       ;
+    // if (response.statusCode == 200 || response.statusCode == 201) {
+    //   log('Event deleted successfully');
+    // } else {
+    //   log('Failed to delete event. Status code: ${response.statusCode}');
+    // }
   }
 
-  Future<void> editEventName(
-      {required String newEventName,
-      required String eventID,
-      required String newEventLocation,
-      required String newEventDescription,
-      }) async {
+  Future<void> editEventName({
+    required String newEventName,
+    required String eventID,
+    required String newEventLocation,
+    required String newEventDescription,
+  }) async {
     final header = await authRepository.getAuthHeader();
     final response = await apiService.put(
       body: {

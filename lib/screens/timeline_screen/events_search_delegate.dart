@@ -58,13 +58,9 @@ class EventSearchDelegate extends SearchDelegate {
           },
           context: context,
           screensize: screensize,
-          image: list[index].thumbnail,
-          title: list[index].title,
-          time: list[index].startTime,
-          location: list[index].location,
-          date: list[index].startDate,
-          activity: DateFormatter()
-              .timeLeft(list[index].startDate, list[index].startTime),
+        event: list[index],
+          // activity: DateFormatter()
+          //     .timeLeft(list[index].startDate, list[index].startTime),
         ),
       ),
     );
@@ -93,13 +89,7 @@ class EventSearchDelegate extends SearchDelegate {
           },
           context: context,
           screensize: screensize,
-          image: list[index].thumbnail,
-          title: list[index].title,
-          time: list[index].startTime,
-          location: list[index].location,
-          date: list[index].startDate,
-          activity: DateFormatter()
-              .timeLeft(list[index].startDate, list[index].startTime),
+         event: list[index]
         ),
       ),
     );

@@ -17,12 +17,14 @@ class EditEventName extends ConsumerStatefulWidget {
 
 class _EditEventNameState extends ConsumerState<EditEventName> {
   final TextEditingController _eventNameController = TextEditingController();
-  final TextEditingController _eventLocationController = TextEditingController();
-  final TextEditingController _eventDescriptionController = TextEditingController();
+   TextEditingController? _eventLocationController;
+   TextEditingController? _eventDescriptionController ;
   @override
   void initState() {
     super.initState();
     _eventNameController.text = widget.currentEvent.title;
+    _eventLocationController = TextEditingController(text: widget.currentEvent.location);
+        _eventDescriptionController = TextEditingController(text: widget.currentEvent.description);
   }
 
   @override
@@ -45,10 +47,12 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
             const SizedBox(height: 20),
             TextFormField(
               controller: _eventLocationController,
+              //initialValue: widget.currentEvent.location,
               decoration: const InputDecoration(labelText: 'New Location'),
             ),
             const SizedBox(height: 20),
             TextFormField(
+              //initialValue: widget.currentEvent.description,
               controller: _eventDescriptionController,
               decoration: const InputDecoration(labelText: 'New Description'),
             ),
@@ -57,8 +61,8 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
               child: ElevatedButton(
                 onPressed: () async {
                   final newEventName = _eventNameController.text;
-                  final newEventLocation = _eventLocationController.text;
-                  final newEventDescription = _eventDescriptionController.text;
+                  final newEventLocation = _eventLocationController!.text;
+                  final newEventDescription = _eventDescriptionController!.text;
                   await eventProvider.updateEventName(
                       newEventName: newEventName,
                       newEventLocation: newEventLocation,

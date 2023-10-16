@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
@@ -118,16 +119,12 @@ class MyEventScreen extends ConsumerWidget {
                 onDelete: (eventId) {
                   eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(userEventsProvider));
                 },
-                showVert: true,
+                showVert: ref.read(appUserProvider)?.id == event.creatorId,
                 eventId: event.id,
                 context: context, 
                 screensize: screensize, 
-                image: event.thumbnail, 
-                title: event.title , 
-                time: event.startTime ,
-                location: event.location ,
-                date: event.startDate ,
-                activity: DateFormatter().timeLeft(event.startDate, event.startTime),
+               event: event,
+                //activity: DateFormatter().timeLeft(event.startDate, event.startTime),
               ),
             );
           },

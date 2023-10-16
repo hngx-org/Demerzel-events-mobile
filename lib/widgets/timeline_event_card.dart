@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/models/event_model.dart';
 
 Widget TimelineEventCard(
     {required BuildContext context,
     required Size screensize,
-    required String? image,
-    required String title,
-    required String time,
-    required String location,
-    required String date,
-    required String activity,
+    required Event event,
     Null Function(String eventId)? onDelete,
     Null Function()? onEdit,
     required String eventId,
@@ -41,7 +37,7 @@ Widget TimelineEventCard(
               flex: 3,
               child: Material(
                 borderRadius: BorderRadius.circular(5),
-                child: image == null
+                child: event.thumbnail == null
                     ? ColoredBox(
                         color: Colors.grey,
                         child: SizedBox.square(dimension: 100.r),
@@ -51,7 +47,7 @@ Widget TimelineEventCard(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(3),
                           child: Image.network(
-                            image,
+                            event.thumbnail,
                             height: 90.r,
                             width: 90.r,
                             fit: BoxFit.fill,
@@ -71,7 +67,7 @@ Widget TimelineEventCard(
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            title,
+                            event.title,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
@@ -80,17 +76,17 @@ Widget TimelineEventCard(
                         )),
                     Expanded(
                         flex: 1,
-                        child: Text(time,
+                        child: Text(event.startTime,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16))),
                     Expanded(
                         flex: 1,
-                        child: Text(date,
+                        child: Text(event.startDate,
                             style: TextStyle(
                                 fontSize: 12.r, color: ProjectColors.grey))),
                     Expanded(
                         flex: 1,
-                        child: Text(location,
+                        child: Text(event.location,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 12.r))),
                   ],

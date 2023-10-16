@@ -17,7 +17,7 @@ class EventProvider extends ChangeNotifier {
 
   GetListEventModel? events;
   GetListEventModel? eventsByDate;
-  GetListEventModel? allEvents;
+  List<Event> allEvents = [];
   GroupEventListModel? allGroupEvents;
   List<Event> userEvents = [];
   List<Event> upcomingEvents = [];
@@ -225,6 +225,8 @@ class EventProvider extends ChangeNotifier {
           newEventDescription: newEventDescription);
 
       await getUserEvent();
+      await getAllEvent();
+      await getUpcomingEvent();
       _isBusyEditingEvent = false;
       notifyListeners();
     } catch (e, s) {
@@ -242,7 +244,7 @@ class EventProvider extends ChangeNotifier {
   }
 }
 
-final allEventsProvider = FutureProvider<GetListEventModel>((ref) async {
+final allEventsProvider = FutureProvider<List<Event>>((ref) async {
   EventRepository eventRepository = ref.watch(EventRepository.provider);
   return await eventRepository.getAllEvent();
 });
@@ -262,7 +264,7 @@ final eventSearchProvider = Provider<List<Event>>((ref) {
   return allEvents.when(
       skipLoadingOnRefresh: true,
       skipLoadingOnReload: true,
-      data: (data) => data.data.events,
+      data: (data) => data,
       error: (error, stackTrace) => <Event>[],
       loading: () => []);
 });

@@ -127,24 +127,18 @@ class _CalCardState extends ConsumerState<CalCard> {
                       i <
                           ref
                               .read(EventProvider.provider)
-                              .allEvents!
-                              .data
-                              .events
+                              .allEvents
                               .length;
                       i++) {
                     if (isSameDay(
                         DateTime.parse(ref
                             .read(EventProvider.provider)
-                            .allEvents!
-                            .data
-                            .events[i]
+                            .allEvents[i]
                             .startDate),
                         day)) {
                       events.add(ref
                           .read(EventProvider.provider)
-                          .allEvents!
-                          .data
-                          .events[i]);
+                          .allEvents[i]);
                     }
                   }
                   return events;

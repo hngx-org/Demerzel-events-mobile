@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/screens/comment_screen.dart';
 import 'package:hng_events_app/screens/create_event_screen.dart';
+import 'package:hng_events_app/screens/timeline_screen/My_events/edit_event.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../constants/colors.dart';
@@ -156,7 +158,7 @@ class AllEventsScreen extends ConsumerWidget {
 
   }
 
-  Scaffold onData(BuildContext context, WidgetRef ref, GetListEventModel data, EventProvider eventNotifier, Size screensize) {
+  Scaffold onData(BuildContext context, WidgetRef ref, List<Event> data, EventProvider eventNotifier, Size screensize) {
     return Scaffold(
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -201,11 +203,11 @@ class AllEventsScreen extends ConsumerWidget {
           ),
         ],
       ),
-        body: data.data.events.isEmpty? const Center(child: Text('No Events'),) : 
+        body: data.isEmpty? const Center(child: Text('No Events'),) : 
             ListView.builder(
-          itemCount: data.data.events.length,
+          itemCount: data.length,
           itemBuilder: (BuildContext context, int index) {
-            final Event event = data.data.events[index];
+            final Event event = data[index];
 
             return GestureDetector(
               onTap: () => Navigator.push(
@@ -215,19 +217,23 @@ class AllEventsScreen extends ConsumerWidget {
                 ),
               ),
               child: TimelineEventCard(
-              
+               onEdit: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditEventName(
+                                    currentEvent: event,
+                                  ),
+                                ));
+                          },
                 eventId: event.id,
                 onDelete: (eventId) {
                   eventNotifier.deleteEvent(eventId).then((value) => ref.refresh(allEventsProvider));
                 },
+                showVert: ref.read(appUserProvider)?.id == event.creatorId,
                 context: context, 
                 screensize: screensize, 
-                image: event.thumbnail, 
-                title: event.title , 
-                time: event.startTime ,
-                location: event.location ,
-                date: event.startDate ,
-                activity: DateFormatter().timeLeft(event.startDate, event.startTime), showVert: false,
+             event: event
               ),
             );
           },

@@ -532,10 +532,18 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         showSnackBar('Event must have a future time', Colors.red);
         return;
       }
-      if (calculateTimeDifference(
+        if (calculateTimeDifference(
             startTime: startTime!,
             endTime: endTime!,
           ) <=
+          0) {
+        showSnackBar('End time can\'t be before Start time must be diferent', Colors.red);
+        return;
+      }
+      if (calculateTimeDifference(
+            startTime: startTime!,
+            endTime: endTime!,
+          ) ==
           0) {
         showSnackBar('End time and Start time must be diferent', Colors.red);
         return;
