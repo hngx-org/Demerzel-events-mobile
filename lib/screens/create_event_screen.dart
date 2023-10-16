@@ -51,7 +51,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       context: context,
       initialDate:
           isStart ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2101),
     );
     if (picked != null) {
@@ -107,7 +107,6 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        
         title: const Text(
           'Create Events',
           style: TextStyle(
@@ -506,7 +505,42 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   Future<void> uploadEvent(EventProvider eventController, WidgetRef ref) async {
     CalendarClient calendarClient = CalendarClient();
     if (isFormValid() == false) return;
+// if (startTime!.difference(endDate!) < Duration(days: 0)) {
+//   showSnackBar('End date must be greater than or equal start date', Colors.red);
+//   print(startDate!.difference(endDate!));
+//   return;
+// }
+    int calculateTimeDifference({
+      required TimeOfDay startTime,
+      required TimeOfDay endTime,
+    }) {
+      // Convert start time to minutes since midnight
+      int startMinutes = startTime.hour * 60 + startTime.minute;
 
+      // Convert end time to minutes since midnight
+      int endMinutes = endTime.hour * 60 + endTime.minute;
+      int difference = endMinutes - startMinutes;
+
+      return difference;
+    }
+
+// calculateTimeDifference(startTime: startTime!, endTime: endTime!, );
+    if (endDate!.isAtSameMomentAs(startDate!)) {
+      if (calculateTimeDifference(
+              startTime: TimeOfDay.now(), endTime: startTime!) <
+          2) {
+        showSnackBar('Event must have a future time', Colors.red);
+        return;
+      }
+      if (calculateTimeDifference(
+            startTime: startTime!,
+            endTime: endTime!,
+          ) <=
+          0) {
+        showSnackBar('End time and Start time must be diferent', Colors.red);
+        return;
+      }
+    }
     try {
       isLoading = true;
       setState(() {});
