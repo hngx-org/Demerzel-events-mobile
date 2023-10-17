@@ -529,12 +529,12 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
 
 // calculateTimeDifference(startTime: startTime!, endTime: endTime!, );
     if (endDate!.isAtSameMomentAs(startDate!)) {
-      if (calculateTimeDifference(
-              startTime: TimeOfDay.now(), endTime: startTime!) <
-          1) {
-        showSnackBar(context, 'Event must have a future time', Colors.red);
-        return;
-      }
+      // if (calculateTimeDifference(
+      //         startTime: TimeOfDay.now(), endTime: startTime!) <
+      //     1) {
+      //   showSnackBar(context, 'Event must have a future time', Colors.red);
+      //   return;
+      // }
       if (calculateTimeDifference(
             startTime: startTime!,
             endTime: endTime!,

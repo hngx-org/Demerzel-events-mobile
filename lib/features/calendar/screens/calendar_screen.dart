@@ -25,13 +25,13 @@ class CalendarPage extends ConsumerWidget {
         ),
         title: const Text('Calendar', style: appBarTextStyle),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_vert,
-              // color: ProjectColors.black,
-            ),
-          ),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(
+          //     Icons.more_vert,
+          //     // color: ProjectColors.black,
+          //   ),
+          // ),
         ],
       ),
       body: Padding(
