@@ -167,7 +167,11 @@ class EventProvider extends ChangeNotifier {
 
     try {
       await eventRepository.createEvent(body);
-      await getAllGroupEvent(groupId.toString());
+      if (groupId != null) {
+        await getAllGroupEvent(groupId.toString());
+      } else {
+        await getAllGroupEvent(body['group_id'][0]);
+      }
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -205,15 +209,14 @@ class EventProvider extends ChangeNotifier {
 //         notifyListeners();
 //        return false;
 //      }
-      
+
 //     } catch (e, s) {
 //       log(e.toString());
 //       log(s.toString());
 //      // _error = e.toString();
 // return false;
 //     }
-    
-   
+
 //   }
 
   Future<bool> deleteEvent(String eventId) async {
@@ -222,10 +225,12 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-    final result = await eventRepository.deleteEvent(eventId);
+      final result = await eventRepository.deleteEvent(eventId);
       if (result) {
-        await getUserEvent();
-         await getAllEvent();
+        // await getUserEvent();
+        // await getAllEvent();
+        // await getUpcomingEvent();
+        
         _isBusy = false;
         notifyListeners();
         return true;
@@ -264,7 +269,6 @@ class EventProvider extends ChangeNotifier {
           newEventLocation: newEventLocation,
           newEventDescription: newEventDescription);
 
-     
       if (result) {
         _isBusyEditingEvent = false;
         notifyListeners();

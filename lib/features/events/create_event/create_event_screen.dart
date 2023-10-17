@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_result
 
 import 'dart:developer';
 import 'dart:io';
@@ -504,6 +504,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
   }
 
   Future<void> uploadEvent(EventProvider eventController, WidgetRef ref) async {
+    print(selectedGroup?.id);
+    print(widget.currentGroup?.id);
     CalendarClient calendarClient = CalendarClient();
     if (isFormValid() == false) return;
 // if (startTime!.difference(endDate!) < Duration(days: 0)) {
@@ -529,19 +531,17 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     if (endDate!.isAtSameMomentAs(startDate!)) {
       if (calculateTimeDifference(
               startTime: TimeOfDay.now(), endTime: startTime!) <
-          2) {
+          1) {
         showSnackBar(context, 'Event must have a future time', Colors.red);
         return;
       }
       if (calculateTimeDifference(
             startTime: startTime!,
             endTime: endTime!,
-          ) <=
+          ) <
           0) {
         showSnackBar(
-            context,
-            'End time can\'t be before Start time must be diferent',
-            Colors.red);
+            context, 'End time can\'t be before Start time.', Colors.red);
         return;
       }
       if (calculateTimeDifference(
@@ -557,7 +557,6 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
     try {
       isLoading = true;
       setState(() {});
-
       final body = {
         "image": image,
         "location": locationController.text,
@@ -576,12 +575,15 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       await Future.delayed(const Duration(seconds: 5));
 
       if (result) {
-        calendarClient.insert(context, titleController.text, startDate,
+        await calendarClient.insert(context, titleController.text, startDate,
             startTime, endTime, endDate);
-        await eventController.getAllEvent();
-        await eventController.getUserEvent();
-        await eventController.getUpcomingEvent();
-        
+        ref.refresh(allEventsProvider);
+        ref.refresh(upcomingEventsProvider);
+        ref.refresh(userEventsProvider);
+        // await eventController.getAllEvent();
+        // await eventController.getUserEvent();
+        // await eventController.getUpcomingEvent();
+
         if (widget.currentGroup != null) {
           await eventController.getAllGroupEvent(widget.currentGroup!.id);
         }

@@ -117,7 +117,7 @@ class ApiServiceImpl implements ApiService {
     _log.i('Making Delete Request to $url.');
     try {
       final response =
-          await _dio.delete(url.toString(), queryParameters: queryParameters);
+          await _dio.delete(url.toString(), queryParameters: queryParameters,options: Options(headers: headers));
       _log.i('Response from $url \n${response.data}');
       return response.data;
     } on DioException catch (error) {

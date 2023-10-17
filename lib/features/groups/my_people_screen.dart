@@ -42,6 +42,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
               padding: const EdgeInsets.only(right: 24.0),
               child: NeuTextButton(
                 onPressed: () {
+                 
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -144,26 +145,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                                                 .showSnackBar(const SnackBar(
                                                     content: Text(
                                                         "Group could not be deleted ")));
-                                            //return
-                                            // showDialog(
-                                            //     context: context,
-                                            //     builder: (context) {
-                                            //       return AlertDialog(
-                                            //         title: const Text(
-                                            //             "Cannot delete the event"),
-                                            //         content: const Text(
-                                            //             "You did not create the event"),
-                                            //         actions: [
-                                            //           TextButton(
-                                            //               onPressed: () {
-                                            //                 Navigator.of(
-                                            //                         context)
-                                            //                     .pop();
-                                            //               },
-                                            //               child: const Text("OK"))
-                                            //         ],
-                                            //       );
-                                            //     });
+                                       
                                           }
                                         },
                                         child: const Text("Yes"),

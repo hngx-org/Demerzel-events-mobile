@@ -1,10 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_result
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
+import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
@@ -146,31 +147,41 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                                         onPressed: () async {
                                           try {
                                             Navigator.of(ctx).pop();
-                                            ref.refresh(userEventsProvider);
+
                                             final result = await eventNotifier
                                                 .deleteEvent(eventId);
-                                                
+                                              ref.refresh(userEventsProvider);
+                                              ref.refresh(allEventsProvider);
+                                              ref.refresh(
+                                                  upcomingEventsProvider);
+                                            ref
+                                                .read(
+                                                    GroupProvider.groupProvider)
+                                                .getGroups();
+                                              
                                             if (result) {
+                                              
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(
                                                   backgroundColor: Colors.green,
                                                   content: Text(
-                                                      "Group deleted successfully"),
+                                                      "Event deleted successfully"),
                                                 ),
                                               );
                                             } else {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(const SnackBar(
-                                                    backgroundColor: Colors.red,
+                                                      backgroundColor:
+                                                          Colors.red,
                                                       content: Text(
-                                                          "Group could not be deleted ")));
+                                                          "Event could not be deleted ")));
                                             }
                                           } catch (e) {
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(const SnackBar(
                                                     content: Text(
-                                                        "Group could not be deleted ")));
+                                                        "Event could not be deleted ")));
                                             //return
                                             // showDialog(
                                             //     context: context,
@@ -195,7 +206,6 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                                         },
                                         child: const Text("Yes"),
                                       ),
-                                      
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();

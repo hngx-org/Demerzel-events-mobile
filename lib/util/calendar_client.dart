@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:googleapis/calendar/v3.dart';
@@ -13,8 +14,12 @@ class CalendarClient {
   insert(context, title, startDate, startTime, endTime, endDate) async {
 
 
-    googleAuth.AuthClient? client = await googleSignIn.authenticatedClient();
-    var calendar = CalendarApi(client!);
+    googleAuth.AuthClient? client = await GoogleSignIn(scopes: [CalendarApi.calendarScope]).authenticatedClient();
+    if (client == null) {
+      return;
+    }
+    print('------Gcal');
+    var calendar = CalendarApi(client);
 
     DateTime combinedStartDateTime(DateTime date, TimeOfDay time) => DateTime(
           date.year,

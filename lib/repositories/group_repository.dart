@@ -30,19 +30,13 @@ class GroupRepository {
     final header = await authRepository.getAuthHeader();
 
     try {
-      final http.Response response = await http
-          .get(ApiRoutes.groupURI, headers: header)
-          .timeout(const Duration(seconds: 60));
+      final result =
+          await apiService.get(url: ApiRoutes.groupURI, headers: header);
 
-      log(response.body);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final Map<String, dynamic> data = json.decode(response.body);
-        GroupListModel groupListModel = GroupListModel.fromJson(data);
-        return groupListModel.groups;
-      } else {
-        throw response.reasonPhrase ?? response.body;
-      }
+      return result['data']['groups'] == null
+          ? []
+          : List<Group>.from(
+              result['data']['groups'].map((x) => Group.fromJson(x)));
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -53,16 +47,15 @@ class GroupRepository {
 
   Future createGroup(Map<String, dynamic> body) async {
     final header = await authRepository.getAuthHeader();
-    
+
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
     body["image"] = imageUrl;
-    
+
     final response = await apiService.post(
       url: ApiRoutes.groupURI,
       headers: header,
       body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
     );
- 
   }
 
   Future<bool> subscribeToGroup(String groupId) async {
@@ -109,16 +102,20 @@ class GroupRepository {
 
   Future<bool> deleteGroup(String groupId) async {
     final header = await authRepository.getAuthHeader();
-
+    // ignore: avoid_print
+    print(header);
+    //  final response = await http.delete(
+    //   ApiRoutes.deleteGroupURI(groupId),
+    //   headers: header,
+    // );
     final response = await apiService.delete(
         url: ApiRoutes.deleteGroupURI(groupId), headers: header);
-       
+
     if (response is DioException) {
       return false;
     } else {
       return true;
     }
-   
   }
 
   Future<bool> editGroupName(
@@ -131,14 +128,13 @@ class GroupRepository {
     );
     if (response is DioException) {
       return false;
-    }else{
-       if (response['data'] != null) {
-      getAllGroups();
     } else {
-      return false;
+      if (response['data'] != null) {
+        getAllGroups();
+      } else {
+        return false;
+      }
+      return true;
     }
-    return true;
-    }
-   
   }
 }

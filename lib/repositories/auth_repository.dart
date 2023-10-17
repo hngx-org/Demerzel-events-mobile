@@ -10,15 +10,17 @@ import 'package:hng_events_app/services/http_service/api_service.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:googleapis/calendar/v3.dart';
 
-final GoogleSignIn googleSignIn =
-    GoogleSignIn(scopes: [CalendarApi.calendarScope]);
+
 
 class AuthRepository {
   final LocalStorageService localStorageService;
   final ApiService apiService;
   //final ImageUploadService imageUploadService;
+
+final GoogleSignIn googleSignIn =
+    GoogleSignIn();
+
 
   AuthRepository({
     required this.localStorageService,
