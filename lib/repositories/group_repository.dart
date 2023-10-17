@@ -6,7 +6,7 @@ import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
-import 'package:hng_events_app/services/api_service.dart';
+import 'package:hng_events_app/services/http_service/api_service.dart';
 import 'package:hng_events_app/services/http_service/image_upload_service.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,27 +53,16 @@ class GroupRepository {
 
   Future createGroup(Map<String, dynamic> body) async {
     final header = await authRepository.getAuthHeader();
-    log(header.toString());
+    
     final imageUrl = await imageUploadService.uploadImage(body["image"]);
     body["image"] = imageUrl;
-    print(body['tags']);
+    
     final response = await apiService.post(
       url: ApiRoutes.groupURI,
       headers: header,
       body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
     );
-    //log(response.statusCode.toString() + response.reasonPhrase.toString());
-
-    // final result = await apiService.post(
-    //   url: ApiRoutes.groupURI,
-    //   body: <String, dynamic>{
-    //     'name':body['name'],
-    //     'image': imageUrl,
-    //     'tags': body['tags']
-    //   },
-    //   headers: header);
-
-    // return true;
+ 
   }
 
   Future<bool> subscribeToGroup(String groupId) async {
@@ -132,7 +121,7 @@ class GroupRepository {
    
   }
 
-  Future<void> editGroupName(
+  Future<bool> editGroupName(
       {required String newGroupName, required String groupID}) async {
     final header = await authRepository.getAuthHeader();
     final response = await apiService.put(
@@ -140,11 +129,16 @@ class GroupRepository {
       headers: header,
       url: ApiRoutes.editGroupURI(groupID),
     );
-    log(response.toString());
-    if (response['data'] != null) {
+    if (response is DioException) {
+      return false;
+    }else{
+       if (response['data'] != null) {
       getAllGroups();
     } else {
-      log('Failed to update event name. Status code: ${response.statusCode}');
+      return false;
     }
+    return true;
+    }
+   
   }
 }

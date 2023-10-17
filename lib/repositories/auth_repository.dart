@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/user.dart';
-import 'package:hng_events_app/services/api_service.dart';
+import 'package:hng_events_app/services/http_service/api_service.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';

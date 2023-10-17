@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
-import 'package:hng_events_app/screens/splash_screen.dart';
+import 'package:hng_events_app/features/splash/splash_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

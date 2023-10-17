@@ -1,11 +1,8 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
-import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 
 // class UserProvider extends ChangeNotifier {
 //   UserProvider({

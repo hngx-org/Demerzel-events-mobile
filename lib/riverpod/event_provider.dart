@@ -193,21 +193,18 @@ class EventProvider extends ChangeNotifier {
 
     try {
       await eventRepository.deleteEvent(eventId);
-      print('Deleting event with ID: $eventId');
       await getAllEvent();
       await getUserEvent();
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
-
       _error = e.toString();
     }
-
     _isBusy = false;
     notifyListeners();
   }
 
-  Future<bool> updateEventName({
+  Future<bool> editEvent({
     required String newEventName,
     required String eventID,
     required String newEventLocation,
@@ -218,17 +215,24 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await eventRepository.editEventName(
+      final result = await eventRepository.editEvent(
           newEventName: newEventName,
           eventID: eventID,
           newEventLocation: newEventLocation,
           newEventDescription: newEventDescription);
 
-      await getUserEvent();
-      await getAllEvent();
-      await getUpcomingEvent();
-      _isBusyEditingEvent = false;
-      notifyListeners();
+     
+      if (result) {
+        _isBusyEditingEvent = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isBusy = false;
+        _isBusyEditingEvent = false;
+        _error = 'Failed to update event';
+        notifyListeners();
+        return false;
+      }
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -237,10 +241,6 @@ class EventProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
-
-    _isBusy = false;
-    notifyListeners();
-    return true;
   }
 }
 

@@ -129,10 +129,10 @@ class GroupProvider extends ChangeNotifier {
 
     try {
       final result = await groupRepo.deleteGroup(groupId);
-      print('Provider result is $result');
+
       if (result) {
-        _isBusy = false;
         await getGroups();
+        _isBusy = false;
         notifyListeners();
         return true;
       } else {
@@ -153,18 +153,26 @@ class GroupProvider extends ChangeNotifier {
     // return true;
   }
 
-  Future<bool> updateGroupName(
+  Future<bool> editGroupName(
       {required String newGroupName, required String groupID}) async {
     _isBusyEditingGroup = true;
     _error = "";
     notifyListeners();
 
     try {
-      await groupRepo.editGroupName(
+      final result = await groupRepo.editGroupName(
           newGroupName: newGroupName, groupID: groupID);
-      await getGroups();
-      _isBusyEditingGroup = false;
-      notifyListeners();
+      if (result) {
+        await getGroups();
+        _isBusyEditingGroup = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isBusyEditingGroup = false;
+        _error = 'Error updating group name';
+        notifyListeners();
+        return false;
+      }
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
@@ -174,9 +182,9 @@ class GroupProvider extends ChangeNotifier {
       return false;
     }
 
-    _isBusy = false;
-    notifyListeners();
-    return true;
+    // _isBusy = false;
+    // notifyListeners();
+    // return true;
   }
 }
 

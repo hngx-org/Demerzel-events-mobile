@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hng_events_app/constants/colors.dart';
-import 'package:hng_events_app/screens/create_group.dart';
+import 'package:hng_events_app/features/groups/create_group.dart';
 
 class MyPeopleHeader extends StatelessWidget implements PreferredSizeWidget {
   const MyPeopleHeader({super.key});

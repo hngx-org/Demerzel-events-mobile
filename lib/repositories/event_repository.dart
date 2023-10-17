@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
-import 'package:hng_events_app/services/api_service.dart';
+import 'package:hng_events_app/services/http_service/api_service.dart';
 import 'package:hng_events_app/services/http_service/image_upload_service.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:http/http.dart' as http;
@@ -77,11 +77,14 @@ class EventRepository {
 
     final result =
         await apiService.get(url: ApiRoutes.upcomingEventURI, headers: header);
-
-    return result['data']['events'] == null
-        ? []
-        : List<Event>.from(
-            result['data']['events'].map((x) => Event.fromMap(x)));
+    if (result is DioException) {
+      return [];
+    } else {
+      return result['data']['events'] == null
+          ? []
+          : List<Event>.from(
+              result['data']['events'].map((x) => Event.fromMap(x)));
+    }
   }
 
   Future<GroupEventListModel?> getAllGroupEvent(String groupId) async {
@@ -91,6 +94,9 @@ class EventRepository {
       final http.Response response = await http
           .get(ApiRoutes.groupEventURI(groupId), headers: header)
           .timeout(const Duration(seconds: 60));
+
+      final result = await apiService.get(
+          url: ApiRoutes.groupEventURI(groupId), headers: header);
 
       log("this is ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -163,19 +169,16 @@ class EventRepository {
   Future<void> deleteEvent(String eventId) async {
     final header = await authRepository.getAuthHeader();
 
-    // final apiUrl = ApiRoutes.deleteEventURI(eventId).toString();
-    // final url = Uri.parse(apiUrl);
-    final response = await apiService
-        .delete(url:  ApiRoutes.deleteEventURI(eventId), headers: header)
-       ;
-    // if (response.statusCode == 200 || response.statusCode == 201) {
-    //   log('Event deleted successfully');
-    // } else {
-    //   log('Failed to delete event. Status code: ${response.statusCode}');
-    // }
+    try {
+      final response = await apiService.delete(
+          url: ApiRoutes.deleteEventURI(eventId), headers: header);
+    } on Exception catch (e) {
+      log(e.toString());
+      return;
+    }
   }
 
-  Future<void> editEventName({
+  Future<bool> editEvent({
     required String newEventName,
     required String eventID,
     required String newEventLocation,
@@ -184,22 +187,22 @@ class EventRepository {
     final header = await authRepository.getAuthHeader();
     final response = await apiService.put(
       body: {
-        'title': newEventName,
+        // 'title': newEventName,
         'Location': newEventLocation,
         'Description': newEventDescription,
       },
       headers: header,
       url: ApiRoutes.editEventURI(eventID),
     );
-    log(response.toString());
 
-    if (response['data'] != null) {
-      // getAllEvent();
-      // getAllUserEvents();
-      bool isUpdated = response['status'] == 'success' ?? false;
-      log('Event name updated successfully: ${response}, ${response['status']}, $isUpdated');
+    if (response is DioException) {
+      return false;
     } else {
-      log('Failed to update event name. Status code: ${response.statusCode}');
+      if (response['data'] != null) {
+        await getAllEvent();
+        await getAllUserEvents();
+      }
+      return true;
     }
   }
 }

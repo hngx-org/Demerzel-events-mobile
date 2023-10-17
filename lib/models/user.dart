@@ -38,6 +38,8 @@ class Member extends AppUser  {
           email: email,
           name: name,
         );
+
+        
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

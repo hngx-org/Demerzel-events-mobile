@@ -4,7 +4,7 @@ import 'package:hng_events_app/constants/colors.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
-import 'package:hng_events_app/screens/comment_screen.dart';
+import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/util/date_formatter.dart';
 import 'package:hng_events_app/widgets/comment_stack.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';

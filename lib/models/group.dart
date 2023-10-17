@@ -11,6 +11,7 @@ class Group extends Equatable {
   final int membersCount;
   final int eventCount;
   final List<String>? tags;
+   final String creatorId;
 
   const Group(this.tags, {
     required this.id,
@@ -20,6 +21,7 @@ class Group extends Equatable {
     required this.updatedAt,
     required this.membersCount,
     required this.eventCount,
+    required this.creatorId,
   });
  @override
   List<Object> get props => [id];
@@ -34,6 +36,7 @@ class Group extends Equatable {
       updatedAt: DateTime.parse(json['updated_at']),
       membersCount: json['members_count'],
       eventCount: json['events_count'],
+      creatorId: json['creator_id'],
     );
   }
 }

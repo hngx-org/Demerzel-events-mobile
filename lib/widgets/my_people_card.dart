@@ -11,12 +11,12 @@ class MyPeopleCard extends StatelessWidget {
     required this.eventLength,
     this.onDelete,
     this.groupId,
-    this.onEdit,
+    this.onEdit, required this.showVert,
 
     //  Null Function(String groupId)? onEdit,
     // required String groupId,
   });
-
+final bool showVert;
   final String title;
   final String image;
   final bool bubbleVisible;
