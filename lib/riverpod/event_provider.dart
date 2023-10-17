@@ -186,22 +186,65 @@ class EventProvider extends ChangeNotifier {
   bool _isBusyEditingEvent = false;
   bool get isBusyEditingEvent => _isBusyEditingEvent;
 
-  Future<void> deleteEvent(String eventId) async {
+//   Future<bool> deleteEvent(String eventId) async {
+//     _isBusy = true;
+//     _error = "";
+//     notifyListeners();
+
+//     try {
+//      final result = await eventRepository.deleteEvent(eventId);
+//      if (result) {
+//        _isBusy = false;
+//        await getAllEvent();
+//       await getUserEvent();
+//       notifyListeners();
+//       return true;
+//      }else{
+//       _error = "Couldn't delete Event";
+//        _isBusy = false;
+//         notifyListeners();
+//        return false;
+//      }
+      
+//     } catch (e, s) {
+//       log(e.toString());
+//       log(s.toString());
+//      // _error = e.toString();
+// return false;
+//     }
+    
+   
+//   }
+
+  Future<bool> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
     try {
-      await eventRepository.deleteEvent(eventId);
-      await getAllEvent();
-      await getUserEvent();
+    final result = await eventRepository.deleteEvent(eventId);
+      if (result) {
+        await getUserEvent();
+         await getAllEvent();
+        _isBusy = false;
+        notifyListeners();
+        return true;
+      } else {
+        _isBusy = false;
+        notifyListeners();
+        return false;
+      }
     } catch (e, s) {
       log(e.toString());
       log(s.toString());
+      _isBusy = false;
       _error = e.toString();
+      notifyListeners();
+      return false;
     }
-    _isBusy = false;
-    notifyListeners();
+
+    // notifyListeners();
+    // return true;
   }
 
   Future<bool> editEvent({

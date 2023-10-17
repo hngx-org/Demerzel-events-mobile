@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -118,7 +121,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                 )
               : ListView.builder(
                   itemCount: data.length,
-                  itemBuilder: (BuildContext context, int index) {
+                  itemBuilder: (BuildContext ctx, int index) {
                     final Event event = data[index];
 
                     return GestureDetector(
@@ -132,23 +135,67 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                           showVert: true,
                           onDelete: (eventId) {
                             showDialog(
-                                context: context,
-                                builder: (context) {
+                                context: ctx,
+                                builder: (ctx) {
                                   return AlertDialog(
                                     title: const Text("Confirm Delete"),
                                     content: const Text(
                                         "Are you sure you want to delete?"),
                                     actions: [
                                       TextButton(
-                                        onPressed: () {
-                                          eventNotifier
-                                              .deleteEvent(eventId)
-                                              .then((value) => ref
-                                                  .refresh(userEventsProvider));
-                                          Navigator.of(context).pop();
+                                        onPressed: () async {
+                                          try {
+                                            Navigator.of(ctx).pop();
+                                            ref.refresh(userEventsProvider);
+                                            final result = await eventNotifier
+                                                .deleteEvent(eventId);
+                                                
+                                            if (result) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  backgroundColor: Colors.green,
+                                                  content: Text(
+                                                      "Group deleted successfully"),
+                                                ),
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                    backgroundColor: Colors.red,
+                                                      content: Text(
+                                                          "Group could not be deleted ")));
+                                            }
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        "Group could not be deleted ")));
+                                            //return
+                                            // showDialog(
+                                            //     context: context,
+                                            //     builder: (context) {
+                                            //       return AlertDialog(
+                                            //         title: const Text(
+                                            //             "Cannot delete the event"),
+                                            //         content: const Text(
+                                            //             "You did not create the event"),
+                                            //         actions: [
+                                            //           TextButton(
+                                            //               onPressed: () {
+                                            //                 Navigator.of(
+                                            //                         context)
+                                            //                     .pop();
+                                            //               },
+                                            //               child: const Text("OK"))
+                                            //         ],
+                                            //       );
+                                            //     });
+                                          }
                                         },
                                         child: const Text("Yes"),
                                       ),
+                                      
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();

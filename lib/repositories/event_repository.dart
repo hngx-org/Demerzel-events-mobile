@@ -166,16 +166,18 @@ class EventRepository {
     }
   }
 
-  Future<void> deleteEvent(String eventId) async {
+  Future<bool> deleteEvent(String eventId) async {
     final header = await authRepository.getAuthHeader();
 
-    try {
+   
       final response = await apiService.delete(
           url: ApiRoutes.deleteEventURI(eventId), headers: header);
-    } on Exception catch (e) {
-      log(e.toString());
-      return;
-    }
+      if (response is DioException) {
+        return false;
+      } else {
+        return true;
+      }
+   
   }
 
   Future<bool> editEvent({

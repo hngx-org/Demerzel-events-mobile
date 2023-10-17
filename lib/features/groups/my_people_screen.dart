@@ -137,7 +137,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                                                   .showSnackBar(const SnackBar(
                                                     backgroundColor: Colors.red,
                                                       content: Text(
-                                                          "Group could not be deleted ")));
+                                                          "Group could not be Deleted ")));
                                             }
                                           } catch (e) {
                                             ScaffoldMessenger.of(context)
