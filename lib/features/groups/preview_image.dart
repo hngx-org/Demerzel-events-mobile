@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PreviewImage extends ConsumerStatefulWidget {
@@ -19,6 +21,8 @@ class PreviewImage extends ConsumerStatefulWidget {
 
 class _PreviewImageState extends ConsumerState<PreviewImage> {
   final TextEditingController controller = TextEditingController();
+  CroppedFile? _croppedFile;
+  String? filePath ;
   @override
   Widget build(BuildContext context) {
     final commentNotifier = ref.watch(CommentProvider.provider);
@@ -35,13 +39,14 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                 IconButton(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close)),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.crop)),
+                IconButton(onPressed: _cropImage, icon: const Icon(Icons.crop)),
               ],
             ),
             Expanded(
                 // height: 500,
                 // width: double.infinity,
-                child: Image.file(File(widget.image!.path))),
+                child: _image(),),
+                //Image.file(File(widget.image!.path))),
             // SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.eventId,),
             Align(
               alignment: Alignment.bottomCenter,
@@ -75,11 +80,17 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                           child: CircularProgressIndicator())
                       : InkWell(
                           onTap: () {
+                            if (_croppedFile != null) {
+                              filePath = _croppedFile!.path;
+                            }else{
+                              filePath = widget.image!.path;
+                            }
+                            log(filePath!);
                             commentNotifier
                                 .createComment(
                                   controller.text,
                                   widget.eventId,
-                                  File(widget.image!.path),
+                                  File(filePath!),
                                 )
                                 .then((value) => {
                                       Navigator.pop(context),
@@ -99,4 +110,66 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
       ),
     );
   }
+ Widget _image() {
+    // final screenWidth = MediaQuery.of(context).size.width;
+    // final screenHeight = MediaQuery.of(context).size.height;
+    if (_croppedFile != null) {
+    
+      final path = _croppedFile!.path;
+       
+        filePath = path;
+   
+      return ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: double.maxFinite,
+          //0.8 * screenWidth,
+          maxHeight: double.maxFinite
+          //0.8 * screenHeight,
+        ),
+        child:  Image.file(File(path)),
+      );
+    } else if (widget.image != null) {
+      final path = widget.image!.path;
+      return ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: double.maxFinite,
+          //0.8 * screenWidth,
+          maxHeight:double.maxFinite,
+          // 0.8 * screenHeight,
+        ),
+        child: Image.file(File(path)),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+  Future<void> _cropImage() async {
+    if (widget.image != null) {
+      final croppedFile = await ImageCropper().cropImage(
+        sourcePath: widget.image!.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              //toolbarTitle: 'Cropper',
+              toolbarColor: Colors.deepOrange,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          
+        ],
+      );
+      if (croppedFile != null) {
+        setState(() {
+          _croppedFile = croppedFile;
+          filePath = _croppedFile!.path;
+        });
+      }
+    }
+  }
+
 }
+
