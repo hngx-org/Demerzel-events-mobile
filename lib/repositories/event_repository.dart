@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/error/failures.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/services/http_service/api_service.dart';
@@ -26,13 +28,23 @@ class EventRepository {
         imageUploadService: ref.read(ImageUploadService.provider),
       ));
 
-  Future<bool> subscribeToEvent(String eventId) async {
-    final header = await authRepository.getAuthHeader();
+  Future<Either<Failure, bool>> subscribeToEvent(String eventId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
+      final result = await apiService.post(
+          url: ApiRoutes.subscribeToEventURI(eventId),
+          body: {},
+          headers: header);
 
-    await apiService.post(
-        url: ApiRoutes.subscribeToEventURI(eventId), body: {}, headers: header);
+      if (result is DioException) {
+        return Left(ServerFailure(errorMessage: result.message));
+      }
 
-    return true;
+      return const Right(true);
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
   }
 
   Future<List<Event>> getAllUserEvents() async {
@@ -95,9 +107,6 @@ class EventRepository {
           .get(ApiRoutes.groupEventURI(groupId), headers: header)
           .timeout(const Duration(seconds: 60));
 
-      final result = await apiService.get(
-          url: ApiRoutes.groupEventURI(groupId), headers: header);
-
       log("this is ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -114,21 +123,26 @@ class EventRepository {
     }
   }
 
-  Future<bool> createEvent(Map<String, dynamic> body) async {
-    final header = await authRepository.getAuthHeader();
+  Future<Either<Failure, bool>> createEvent(Map<String, dynamic> body) async {
+    try {
+      final header = await authRepository.getAuthHeader();
 
-    final imageUrl = await imageUploadService.uploadImage(body['image']);
+      final imageUrl = await imageUploadService.uploadImage(body['image']);
 
-    body["thumbnail"] = imageUrl;
-    body.remove("image");
+      body["thumbnail"] = imageUrl;
 
-    // log(body.toString());
+      body.remove("image");
+      final result = await apiService.post(
+          url: ApiRoutes.eventURI, body: body, headers: header);
+      if (result is DioException) {
+        return Left(ServerFailure(errorMessage: result.message));
+      }
 
-    final result =
-        apiService.post(url: ApiRoutes.eventURI, body: body, headers: header);
-    // log(result.toString());
-
-    return true;
+      return const Right(true);
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
   }
 
   Future<GetListEventModel> getEventsByDate(DateTime date) async {
@@ -166,45 +180,44 @@ class EventRepository {
     }
   }
 
-  Future<bool> deleteEvent(String eventId) async {
-    final header = await authRepository.getAuthHeader();
+  Future<Either<Failure, bool>> deleteEvent(String eventId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
 
-   
-      final response = await apiService.delete(
+      await apiService.delete(
           url: ApiRoutes.deleteEventURI(eventId), headers: header);
-      if (response is DioException) {
-        return false;
-      } else {
-        return true;
-      }
-   
+      return const Right(true);
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
   }
 
-  Future<bool> editEvent({
+  Future<Either<Failure, bool>> editEvent({
     required String newEventName,
     required String eventID,
     required String newEventLocation,
     required String newEventDescription,
   }) async {
-    final header = await authRepository.getAuthHeader();
-    final response = await apiService.put(
-      body: {
-        // 'title': newEventName,
-        'Location': newEventLocation,
-        'Description': newEventDescription,
-      },
-      headers: header,
-      url: ApiRoutes.editEventURI(eventID),
-    );
+    try {
+      final header = await authRepository.getAuthHeader();
+      final response = await apiService.put(
+        body: {
+          // 'title': newEventName,
+          'Location': newEventLocation,
+          'Description': newEventDescription,
+        },
+        headers: header,
+        url: ApiRoutes.editEventURI(eventID),
+      );
 
-    if (response is DioException) {
-      return false;
-    } else {
-      if (response['data'] != null) {
-        await getAllEvent();
-        await getAllUserEvents();
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
       }
-      return true;
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 }

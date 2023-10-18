@@ -33,22 +33,17 @@ class GroupProvider extends ChangeNotifier {
     _isBusy = true;
     _error = "";
     notifyListeners();
+    bool result = false;
 
-    try {
-      await groupRepo.createGroup(body);
-      groups = await groupRepo.getAllGroups();
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
-
+    final response = await groupRepo.createGroup(body);
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to create group',
+            },
+        (r) async => {result = r, groups = await groupRepo.getAllGroups()});
     _isBusy = false;
     notifyListeners();
-    return true;
+    return result;
   }
 
   Future<void> getGroups() async {
@@ -80,46 +75,38 @@ class GroupProvider extends ChangeNotifier {
     _isBusy = true;
     _error = "";
     notifyListeners();
+    bool result = false;
 
-    try {
-      await groupRepo.subscribeToGroup(groupId);
-      await getGroups();
-      notifyListeners();
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
+    final response = await groupRepo.subscribeToGroup(groupId);
 
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to subscribe to group',
+            },
+        (r) async => {result = r, getGroups()});
 
     _isBusy = false;
     notifyListeners();
-    return true;
+    return result;
   }
 
   Future<bool> unSubscribeFromGroup(String groupId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
+    bool result = false;
 
-    try {
-      await groupRepo.unSubscribeFromGroup(groupId);
-      await getGroups();
-      notifyListeners();
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
+    final response = await groupRepo.unSubscribeFromGroup(groupId);
 
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to unsubscribe from group',
+            },
+        (r) async => {result = r, await getGroups()});
 
     _isBusy = false;
     notifyListeners();
-    return true;
+    return result;
   }
 
   Future<bool> deleteGroup(String groupId) async {
@@ -127,30 +114,19 @@ class GroupProvider extends ChangeNotifier {
     _error = "";
     notifyListeners();
 
-    try {
-      final result = await groupRepo.deleteGroup(groupId);
+    bool result = false;
 
-      if (result) {
-        await getGroups();
-        _isBusy = false;
-        notifyListeners();
-        return true;
-      } else {
-        _isBusy = false;
-        notifyListeners();
-        return false;
-      }
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-      _isBusy = false;
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    final response = await groupRepo.deleteGroup(groupId);
 
-    // notifyListeners();
-    // return true;
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to delete group',
+            },
+        (r) async => {result = r, await getGroups()});
+
+    _isBusy = false;
+    notifyListeners();
+    return result;
   }
 
   Future<bool> editGroupName(
@@ -159,32 +135,21 @@ class GroupProvider extends ChangeNotifier {
     _error = "";
     notifyListeners();
 
-    try {
-      final result = await groupRepo.editGroupName(
-          newGroupName: newGroupName, groupID: groupID);
-      if (result) {
-        await getGroups();
-        _isBusyEditingGroup = false;
-        notifyListeners();
-        return true;
-      } else {
-        _isBusyEditingGroup = false;
-        _error = 'Error updating group name';
-        notifyListeners();
-        return false;
-      }
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
+    bool result = false;
 
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    final response = await groupRepo.editGroupName(
+        newGroupName: newGroupName, groupID: groupID);
 
-    // _isBusy = false;
-    // notifyListeners();
-    // return true;
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to update group name',
+            },
+        (r) async => {result = r, await getGroups()});
+
+    _isBusyEditingGroup = false;
+
+    notifyListeners();
+    return result;
   }
 }
 

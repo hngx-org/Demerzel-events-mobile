@@ -150,7 +150,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        await ref
+                      final result =  await ref
                             .read(appUserProvider.notifier)
                             .updateUserProfile(namectrl.text, imageFile);
                         setState(() {
@@ -159,11 +159,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         if (!mounted) {
                           return;
                         }
+
+                        if(result == null){
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               backgroundColor: Colors.green,
                                 content: Center(child: Text('Profile Updated'))));
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red,
+                                content: Center(child: Text(result))));}
+
                         
                       },
                       text: 'Save',

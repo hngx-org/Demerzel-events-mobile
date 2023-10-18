@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/error/failures.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
@@ -45,43 +47,64 @@ class GroupRepository {
     }
   }
 
-  Future createGroup(Map<String, dynamic> body) async {
-    final header = await authRepository.getAuthHeader();
+  Future<Either<Failure, bool>> createGroup(Map<String, dynamic> body) async {
+    try {
+      final header = await authRepository.getAuthHeader();
 
-    final imageUrl = await imageUploadService.uploadImage(body["image"]);
-    body["image"] = imageUrl;
+      final imageUrl = await imageUploadService.uploadImage(body["image"]);
+      body["image"] = imageUrl;
 
-    final response = await apiService.post(
-      url: ApiRoutes.groupURI,
-      headers: header,
-      body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
-    );
-  }
+      final response = await apiService.post(
+        url: ApiRoutes.groupURI,
+        headers: header,
+        body: {'name': body['name'], 'image': imageUrl, 'tags': body['tags']},
+      );
 
-  Future<bool> subscribeToGroup(String groupId) async {
-    final header = await authRepository.getAuthHeader();
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
+      }
 
-    final result = await apiService.post(
-        url: ApiRoutes.subscribeToGroupURI(groupId), body: {}, headers: header);
-
-    if (result['status'] == 'success') {
-      return true;
-    } else {
-      return false;
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 
-  Future<bool> unSubscribeFromGroup(String groupId) async {
-    final header = await authRepository.getAuthHeader();
+  Future<Either<Failure, bool>> subscribeToGroup(String groupId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
 
-    final result = await apiService.post(
-        url: ApiRoutes.unSubscribeFromGroupURI(groupId),
-        body: {},
-        headers: header);
-    if (result['status'] == 'success') {
-      return true;
-    } else {
-      return false;
+      final response = await apiService.post(
+          url: ApiRoutes.subscribeToGroupURI(groupId),
+          body: {},
+          headers: header);
+
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failure, bool>> unSubscribeFromGroup(String groupId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
+
+      final response = await apiService.post(
+          url: ApiRoutes.unSubscribeFromGroupURI(groupId),
+          body: {},
+          headers: header);
+
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 
@@ -100,41 +123,39 @@ class GroupRepository {
     }
   }
 
-  Future<bool> deleteGroup(String groupId) async {
-    final header = await authRepository.getAuthHeader();
-    // ignore: avoid_print
-    print(header);
-    //  final response = await http.delete(
-    //   ApiRoutes.deleteGroupURI(groupId),
-    //   headers: header,
-    // );
-    final response = await apiService.delete(
-        url: ApiRoutes.deleteGroupURI(groupId), headers: header);
+  Future<Either<Failure, bool>> deleteGroup(String groupId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
+      final response = await apiService.delete(
+          url: ApiRoutes.deleteGroupURI(groupId), headers: header);
 
-    if (response is DioException) {
-      return false;
-    } else {
-      return true;
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 
-  Future<bool> editGroupName(
+  Future<Either<Failure, bool>> editGroupName(
       {required String newGroupName, required String groupID}) async {
-    final header = await authRepository.getAuthHeader();
-    final response = await apiService.put(
-      body: {'name': newGroupName},
-      headers: header,
-      url: ApiRoutes.editGroupURI(groupID),
-    );
-    if (response is DioException) {
-      return false;
-    } else {
-      if (response['data'] != null) {
-        getAllGroups();
-      } else {
-        return false;
+    try {
+      final header = await authRepository.getAuthHeader();
+      final response = await apiService.put(
+        body: {'name': newGroupName},
+        headers: header,
+        url: ApiRoutes.editGroupURI(groupID),
+      );
+
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
       }
-      return true;
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
   }
 }

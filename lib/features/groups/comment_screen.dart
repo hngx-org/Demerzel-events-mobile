@@ -8,6 +8,7 @@ import 'package:hng_events_app/features/groups/preview_image.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/comment_card.dart';
 import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:image_picker/image_picker.dart';
@@ -111,11 +112,26 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                               .any((element) => element.id == widget.event.id),
                           onSubscribe: () async {
                             commentNotifier.setIsBusy(true);
-                            await eventNotifier
-                                .subscribeToEvent(widget.event.id);
-                            await eventNotifier.getUserEvent();
-                            await commentNotifier
-                                .getEventComments(widget.event.id);
+                            eventNotifier
+                                .subscribeToEvent(widget.event.id)
+                                .then((value) => {
+                                      if (value)
+                                        {
+                                          showSnackBar(
+                                              context,
+                                              'Subscribe successfully',
+                                              Colors.green),
+                                          eventNotifier.getUserEvent(),
+                                          commentNotifier
+                                              .getEventComments(widget.event.id)
+                                        }
+                                      else
+                                        {
+                                          showSnackBar(context,
+                                              eventNotifier.error, Colors.red)
+                                        }
+                                    });
+
                             commentNotifier.setIsBusy(false);
                           },
                         ),
@@ -157,7 +173,62 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                       Text(imagePath.split('/').last),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.event.id, image: image),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            InkWell(
+                              onTap: _getFromGallery,
+                              child: SvgPicture.asset(
+                                ProjectConstants.imagePicker,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.7,
+                              height: 45,
+                              child: TextField(
+                                textAlignVertical: TextAlignVertical.center,
+                                controller: controller,
+                                decoration: InputDecoration(
+                                  hintText: 'Type a message here',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            commentNotifier.isAddingComments
+                                ? const SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: CircularProgressIndicator())
+                                : InkWell(
+                                    onTap: () {
+                                      commentNotifier
+                                          .createComment(
+                                            controller.text,
+                                            widget.event.id,
+                                            image,
+                                          )
+                                          .then(
+                                              (value) => {controller.clear()});
+                                    },
+                                    child: Icon(
+                                      Icons.send,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
+                                  ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
