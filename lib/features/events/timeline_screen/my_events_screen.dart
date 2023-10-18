@@ -6,7 +6,6 @@ import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
-import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -145,63 +144,33 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                                     actions: [
                                       TextButton(
                                         onPressed: () async {
-                                          try {
-                                            Navigator.of(ctx).pop();
+                                          Navigator.of(ctx).pop();
 
-                                            final result = await eventNotifier
-                                                .deleteEvent(eventId);
-                                              ref.refresh(userEventsProvider);
-                                              ref.refresh(allEventsProvider);
-                                              ref.refresh(
-                                                  upcomingEventsProvider);
+                                          final result = await eventNotifier
+                                              .deleteEvent(eventId);
+
+                                          if (result) {
+                                            ref.refresh(userEventsProvider);
+                                            ref.refresh(allEventsProvider);
+                                            ref.refresh(upcomingEventsProvider);
                                             ref
                                                 .read(
                                                     GroupProvider.groupProvider)
                                                 .getGroups();
-                                              
-                                            if (result) {
-                                              
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                  backgroundColor: Colors.green,
-                                                  content: Text(
-                                                      "Event deleted successfully"),
-                                                ),
-                                              );
-                                            } else {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(const SnackBar(
-                                                      backgroundColor:
-                                                          Colors.red,
-                                                      content: Text(
-                                                          "Event could not be deleted ")));
-                                            }
-                                          } catch (e) {
                                             ScaffoldMessenger.of(context)
-                                                .showSnackBar(const SnackBar(
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                backgroundColor: Colors.green,
+                                                content: Text(
+                                                    "Event deleted successfully"),
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor: Colors.red,
                                                     content: Text(
-                                                        "Event could not be deleted ")));
-                                            //return
-                                            // showDialog(
-                                            //     context: context,
-                                            //     builder: (context) {
-                                            //       return AlertDialog(
-                                            //         title: const Text(
-                                            //             "Cannot delete the event"),
-                                            //         content: const Text(
-                                            //             "You did not create the event"),
-                                            //         actions: [
-                                            //           TextButton(
-                                            //               onPressed: () {
-                                            //                 Navigator.of(
-                                            //                         context)
-                                            //                     .pop();
-                                            //               },
-                                            //               child: const Text("OK"))
-                                            //         ],
-                                            //       );
-                                            //     });
+                                                        eventNotifier.error)));
                                           }
                                         },
                                         child: const Text("Yes"),

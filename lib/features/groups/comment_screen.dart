@@ -7,6 +7,7 @@ import 'package:hng_events_app/constants/styles.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/comment_card.dart';
 import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +16,11 @@ import 'package:svg_flutter/svg.dart';
 class CommentScreen extends ConsumerStatefulWidget {
   final Event event;
   final String? groupId;
-  const CommentScreen( {super.key, required this.event,   this.groupId,});
+  const CommentScreen({
+    super.key,
+    required this.event,
+    this.groupId,
+  });
 
   @override
   ConsumerState<CommentScreen> createState() => _CommentScreenState();
@@ -69,7 +74,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
               Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back)),
-          title: const Text('Comments'),
+        title: const Text('Comments'),
         //SvgPicture.asset('assetName'),
         // title: Text(!commentNotifier.isBusy?'${commentNotifier.comments.length} comments': ''),
 
@@ -92,7 +97,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  physics:const BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -105,11 +110,26 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                               .any((element) => element.id == widget.event.id),
                           onSubscribe: () async {
                             commentNotifier.setIsBusy(true);
-                            await eventNotifier
-                                .subscribeToEvent(widget.event.id);
-                            await eventNotifier.getUserEvent();
-                            await commentNotifier
-                                .getEventComments(widget.event.id);
+                            eventNotifier
+                                .subscribeToEvent(widget.event.id)
+                                .then((value) => {
+                                      if (value)
+                                        {
+                                          showSnackBar(
+                                              context,
+                                              'Subscribe successfully',
+                                              Colors.green),
+                                          eventNotifier.getUserEvent(),
+                                          commentNotifier
+                                              .getEventComments(widget.event.id)
+                                        }
+                                      else
+                                        {
+                                          showSnackBar(context,
+                                              eventNotifier.error, Colors.red)
+                                        }
+                                    });
+
                             commentNotifier.setIsBusy(false);
                           },
                         ),
@@ -190,8 +210,11 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                 : InkWell(
                                     onTap: () {
                                       commentNotifier
-                                          .createComment(controller.text,
-                                              widget.event.id, image, )
+                                          .createComment(
+                                            controller.text,
+                                            widget.event.id,
+                                            image,
+                                          )
                                           .then(
                                               (value) => {controller.clear()});
                                     },

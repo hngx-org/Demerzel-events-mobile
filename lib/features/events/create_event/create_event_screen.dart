@@ -605,7 +605,9 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
           ),
         );
       }
+
       isLoading = false;
+      setState(() {});
     } catch (e, s) {
       isLoading = false;
       log(e.toString());
