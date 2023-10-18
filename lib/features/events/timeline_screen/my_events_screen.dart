@@ -6,6 +6,7 @@ import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
@@ -133,7 +134,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                         ),
                       ),
                       child: TimelineEventCard(
-                          showVert: true,
+                         showVert: ref.read(appUserProvider)?.id == event.creatorId,
                           onDelete: (eventId) {
                             showDialog(
                                 context: ctx,
