@@ -4,7 +4,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
-import 'package:hng_events_app/features/groups/image_preview.dart';
 import 'package:hng_events_app/features/groups/preview_image.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';

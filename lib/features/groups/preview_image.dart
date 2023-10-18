@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -85,10 +86,15 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                             }else{
                               filePath = widget.image!.path;
                             }
+                            
                             log(filePath!);
+                            if ( controller.text.isEmpty ) {
+                              showSnackBar(context, "You can't send a comment without a caption", Colors.red);
+                              return;
+                            }
                             commentNotifier
                                 .createComment(
-                                  controller.text,
+                                  controller.text ,
                                   widget.eventId,
                                   File(filePath!),
                                 )
