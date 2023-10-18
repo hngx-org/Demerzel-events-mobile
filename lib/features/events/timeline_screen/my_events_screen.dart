@@ -6,6 +6,7 @@ import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -132,7 +133,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                         ),
                       ),
                       child: TimelineEventCard(
-                          showVert: true,
+                         showVert: ref.read(appUserProvider)?.id == event.creatorId,
                           onDelete: (eventId) {
                             showDialog(
                                 context: ctx,
@@ -205,65 +206,6 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
       },
     );
 
-    // if (eventNotifier.isBusy) {
-    //   return const Center(child: CircularProgressIndicator());
-    // }
 
-    // if (eventNotifier.userEvents.isEmpty) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         const Text("No event was found", textAlign: TextAlign.center),
-    //         const SizedBox(height: 10),
-    //         GestureDetector(
-    //           onTap: () => eventNotifier.getUserEvent(),
-    //           child: const Text(
-    //             "Tap to Retry",
-    //             style: TextStyle(decoration: TextDecoration.underline),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
-    // return RefreshIndicator(
-    //   onRefresh: () async => eventNotifier.getAllEvent(),
-    //   child: Visibility(
-    //     visible: eventNotifier.userEvents.isNotEmpty,
-    //     replacement: const SizedBox.shrink(),
-    //     child: ListView.builder(
-    //       itemCount: eventNotifier.userEvents.length,
-    //       itemBuilder: (BuildContext context, int index) {
-    //         final Event event = eventNotifier.userEvents[index];
-
-    //         return GestureDetector(
-    //           onTap: () => Navigator.push(
-    //             context,
-    //             MaterialPageRoute(
-    //               builder: (context) => CommentScreen(event: event),
-    //             ),
-    //           ),
-    //           child: TimelineEventCard(
-    //             context: context,
-    //             screensize: screensize,
-    //             image: event.thumbnail,
-    //             title: event.title,
-    //             time: event.startTime,
-    //             location: event.location,
-    //             date: event.startDate,
-    //             activity: DateFormatter().timeLeft(event.startDate, event.startTime),
-    //             onDelete: (eventId) {
-    //              // eventNotifier.eventRepository.deleteEvent(eventNotifier.allEvents!.data.events[index].id);
-    //               eventNotifier.eventRepository.deleteEvent(event.id);
-    //             },
-    //             eventId: eventNotifier.allEvents!.data.events[index].id,
-    //           ),
-    //         );
-    //       },
-    //     ),
-    //   ),
-    // );
   }
 }

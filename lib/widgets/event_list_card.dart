@@ -274,7 +274,10 @@ class _InputFieldState extends ConsumerState<InputField> {
                               ],
                             ),
                           ),
-                          SvgPicture.asset(ProjectConstants.rightChevron),
+                          SvgPicture.asset(
+                        ProjectConstants.rightChevron,
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                         ],
                       ),
                     ),

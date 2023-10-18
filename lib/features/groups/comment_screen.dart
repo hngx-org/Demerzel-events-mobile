@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/constants/styles.dart';
+import 'package:hng_events_app/features/groups/preview_image.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';
@@ -42,7 +43,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
   String imagePath = '';
   File? image;
 
-  _getFromGallery() async {
+  Future<XFile> _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxWidth: 1800,
@@ -55,6 +56,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
         imagePath.split('/').last;
       });
     }
+    return pickedFile!;
   }
 
   @override
@@ -168,7 +170,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                   height: 80,
                   child: Column(
                     children: [
-                      Text(imagePath.split('/').last),
+                      //Text(imagePath.split('/').last),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
@@ -236,6 +238,114 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class SendBar extends StatefulWidget {
+  const SendBar({
+    super.key,
+    required this.controller,
+    required this.commentNotifier,
+    required this.eventId,
+     this.image,
+  });
+
+  final TextEditingController controller;
+  final CommentProvider commentNotifier;
+  final String eventId;
+  final File? image;
+
+  @override
+  State<SendBar> createState() => _SendBarState();
+}
+
+class _SendBarState extends State<SendBar> {
+  final bool showImagePicker = true;
+bool empty = true;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+       showImagePicker? InkWell(
+          onTap: () async {
+            final pickedFile =
+                await ImagePicker().pickImage(
+              source: ImageSource.gallery,
+              maxWidth: 1800,
+              maxHeight: 1800,
+            );
+            if (pickedFile != null) {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) =>
+                    PreviewImage(image: pickedFile, eventId: widget.eventId,  )));
+            }
+            
+          },
+          //() => Navigator.of(context).push(MaterialPageRoute(builder: (context) => CropImageScreen(title: 'Image',),)),
+
+          child: SvgPicture.asset(
+            ProjectConstants.imagePicker,
+            color:
+                Theme.of(context).colorScheme.onBackground,
+          ),
+        ): SizedBox.shrink(),
+        const SizedBox(
+          width: 10,
+        ),
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width * 0.7,
+          height: 45,
+          child: TextField(
+             onChanged: (value) {
+                        if (value != '') {
+                          setState(() {
+                            empty = false;
+                          });
+                        }else{
+                          setState(() {
+                            empty = true;
+                          });
+                        }
+                      },
+            textAlignVertical: TextAlignVertical.center,
+            controller: widget.controller,
+            decoration: InputDecoration(
+              hintText: 'Type a message here',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        widget.commentNotifier.isAddingComments
+            ? const SizedBox(
+                width: 30,
+                height: 30,
+                child: CircularProgressIndicator())
+            : InkWell(
+                onTap: () {
+                  widget.commentNotifier
+                      .createComment(
+                        widget.controller.text,
+                        widget.eventId,
+                        widget.image,
+                      )
+                      .then(
+                          (value) => {widget.controller.clear()});
+                },
+                child: Icon(
+                  Icons.send,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onBackground,
+                ),
+              ),
+      ],
     );
   }
 }
