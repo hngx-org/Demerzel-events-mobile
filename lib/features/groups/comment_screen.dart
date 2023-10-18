@@ -170,7 +170,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                   height: 80,
                   child: Column(
                     children: [
-                      Text(imagePath.split('/').last),
+                      //Text(imagePath.split('/').last),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Row(
@@ -242,7 +242,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
   }
 }
 
-class SendBar extends StatelessWidget {
+class SendBar extends StatefulWidget {
   const SendBar({
     super.key,
     required this.controller,
@@ -255,8 +255,14 @@ class SendBar extends StatelessWidget {
   final CommentProvider commentNotifier;
   final String eventId;
   final File? image;
-  final bool showImagePicker = true;
 
+  @override
+  State<SendBar> createState() => _SendBarState();
+}
+
+class _SendBarState extends State<SendBar> {
+  final bool showImagePicker = true;
+bool empty = true;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -273,7 +279,7 @@ class SendBar extends StatelessWidget {
             if (pickedFile != null) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    PreviewImage(image: pickedFile, eventId: eventId,  )));
+                    PreviewImage(image: pickedFile, eventId: widget.eventId,  )));
             }
             
           },
@@ -292,8 +298,19 @@ class SendBar extends StatelessWidget {
           width: MediaQuery.sizeOf(context).width * 0.7,
           height: 45,
           child: TextField(
+             onChanged: (value) {
+                        if (value != '') {
+                          setState(() {
+                            empty = false;
+                          });
+                        }else{
+                          setState(() {
+                            empty = true;
+                          });
+                        }
+                      },
             textAlignVertical: TextAlignVertical.center,
-            controller: controller,
+            controller: widget.controller,
             decoration: InputDecoration(
               hintText: 'Type a message here',
               border: OutlineInputBorder(
@@ -305,21 +322,21 @@ class SendBar extends StatelessWidget {
         const SizedBox(
           width: 10,
         ),
-        commentNotifier.isAddingComments
+        widget.commentNotifier.isAddingComments
             ? const SizedBox(
                 width: 30,
                 height: 30,
                 child: CircularProgressIndicator())
             : InkWell(
                 onTap: () {
-                  commentNotifier
+                  widget.commentNotifier
                       .createComment(
-                        controller.text,
-                        eventId,
-                        image,
+                        widget.controller.text,
+                        widget.eventId,
+                        widget.image,
                       )
                       .then(
-                          (value) => {controller.clear()});
+                          (value) => {widget.controller.clear()});
                 },
                 child: Icon(
                   Icons.send,

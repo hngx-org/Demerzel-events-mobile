@@ -24,6 +24,7 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
   final TextEditingController controller = TextEditingController();
   CroppedFile? _croppedFile;
   String? filePath ;
+  bool empty = true;
   @override
   Widget build(BuildContext context) {
     final commentNotifier = ref.watch(CommentProvider.provider);
@@ -61,6 +62,17 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                     width: MediaQuery.sizeOf(context).width * 0.8,
                     height: 45,
                     child: TextField(
+                      onChanged: (value) {
+                        if (value != '') {
+                          setState(() {
+                            empty = false;
+                          });
+                        }else{
+                          setState(() {
+                            empty = true;
+                          });
+                        }
+                      },
                       textAlignVertical: TextAlignVertical.center,
                       controller: controller,
                       decoration: InputDecoration(
@@ -74,12 +86,14 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                   const SizedBox(
                     width: 10,
                   ),
-                  commentNotifier.isAddingComments
-                      ? const SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: CircularProgressIndicator())
-                      : InkWell(
+                  // commentNotifier.isAddingComments
+                  //     ? const SizedBox(
+                  //         width: 30,
+                  //         height: 30,
+                  //         child: CircularProgressIndicator())
+                      //:
+                       empty? SizedBox.shrink():
+                       InkWell(
                           onTap: () {
                             if (_croppedFile != null) {
                               filePath = _croppedFile!.path;
@@ -87,21 +101,23 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                               filePath = widget.image!.path;
                             }
                             
+                            
                             log(filePath!);
                             if ( controller.text.isEmpty ) {
                               showSnackBar(context, "You can't send a comment without a caption", Colors.red);
                               return;
                             }
+                            Navigator.pop(context);
+                                      controller.clear();
                             commentNotifier
                                 .createComment(
                                   controller.text ,
                                   widget.eventId,
                                   File(filePath!),
-                                )
-                                .then((value) => {
-                                      Navigator.pop(context),
-                                      controller.clear()
-                                    });
+                                );
+                                // .then((value) => {
+                                      
+                                //     });
                           },
                           child: Icon(
                             Icons.send,
