@@ -274,6 +274,9 @@ bool empty = true;
                 child: CircularProgressIndicator())
             : InkWell(
                 onTap: () {
+                  if (widget.controller.text.isEmpty) {
+                    return;
+                  }
                   widget.commentNotifier
                       .createComment(
                         widget.controller.text,

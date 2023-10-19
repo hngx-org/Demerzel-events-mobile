@@ -231,7 +231,7 @@ class MyPeopleGrid extends ConsumerWidget {
                 const CircularProgressIndicator(),
                 const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text('Please wait..'),
+                  child: Text('Loading Groups...'),
                 ),
               ],
             ),
