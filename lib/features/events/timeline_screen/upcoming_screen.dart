@@ -89,15 +89,20 @@ class EventList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return events.when(
         error: (error, stackTrace) {
-          return const SliverToBoxAdapter(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 35.0),
-                child: Text(
-                  'Failed to Retrieve Events',
-                  style: TextStyle(color: Colors.red),
+          return  SliverToBoxAdapter(
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.sizeOf(context).height *0.35,),
+                const Center(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 35.0),
+                    child: Text(
+                      'Failed to Retrieve Events',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             //),
           );
@@ -130,9 +135,16 @@ class EventList extends ConsumerWidget {
           //     child: Center(child: CircularProgressIndicator()));
         },
         data: (events) => events.isEmpty
-            ? const SliverToBoxAdapter(
-                child: Center(
-                  child: Text('No Events'),
+            ?  SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                        SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                  ),
+                    const Center(
+                      child: Text('No Events'),
+                    ),
+                  ],
                 ),
               )
             : EvenListBuilder(events));

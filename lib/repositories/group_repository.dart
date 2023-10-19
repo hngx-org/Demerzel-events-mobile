@@ -28,12 +28,15 @@ class GroupRepository {
         imageUploadService: ref.read(ImageUploadService.provider));
   });
 
-  Future<List<Group>> getAllGroups() async {
+  Future<List<Group>> getAllGroups({required int limit, required int page}) async {
     final header = await authRepository.getAuthHeader();
-
+final queryParameters = {
+      'limit': "$limit",
+      'page': '$page',
+    };
     try {
       final result =
-          await apiService.get(url: ApiRoutes.groupURI, headers: header);
+          await apiService.get(url: ApiRoutes.groupURI, headers: header, queryParameters: queryParameters);
 
       return result['data']['groups'] == null
           ? []

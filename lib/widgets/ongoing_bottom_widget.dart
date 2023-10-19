@@ -4,11 +4,15 @@ import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/pagination_state.dart';
 
 class OngoingBottomWidget extends ConsumerWidget {
-  const OngoingBottomWidget({super.key, required this.state, });
-final PaginationState<Event> state;
+  const OngoingBottomWidget({
+    super.key,
+    required this.state,
+  });
+
+  final PaginationState state;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-   // final state = ref.watch(allEventsProvider);
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 80),
@@ -20,8 +24,10 @@ final PaginationState<Event> state;
           onGoingError: (items, e, stk) => const Column(
             children: [
               Icon(Icons.info),
-              SizedBox(height: 20,),
-              Text('Error fetching more events'),
+              SizedBox(
+                height: 20,
+              ),
+              Text('Error fetching more items'),
             ],
           ),
         ),

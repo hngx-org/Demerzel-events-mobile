@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/features/events/edit_event.dart';
+import 'package:hng_events_app/features/events/edit_event/edit_event.dart';
 import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/models/event_model.dart';
 import 'package:hng_events_app/riverpod/event_provider.dart';

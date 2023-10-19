@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/models/group.dart';
 import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/repositories/group_repository.dart';
+import 'package:hng_events_app/riverpod/event_pagination.dart';
+import 'package:hng_events_app/riverpod/pagination_state.dart';
 
 class GroupProvider extends ChangeNotifier {
   final GroupRepository groupRepo;
@@ -40,7 +42,7 @@ class GroupProvider extends ChangeNotifier {
         (l) => {
               _error = l.message ?? 'Failed to create group',
             },
-        (r) async => {result = r, groups = await groupRepo.getAllGroups()});
+        (r) async => {result = r, groups = await groupRepo.getAllGroups(page: 1, limit: 20)});
     _isBusy = false;
     notifyListeners();
     return result;
@@ -51,7 +53,7 @@ class GroupProvider extends ChangeNotifier {
     _error = "";
     notifyListeners();
     try {
-      final result = await groupRepo.getAllGroups();
+      final result = await groupRepo.getAllGroups(page: 1, limit: 20);
       groups = result;
       notifyListeners();
     } catch (e, s) {
@@ -160,4 +162,18 @@ final groupSearchprovider = Provider<List<Group>>((ref) {
 
 final groupTagProvider = FutureProvider<List<GroupTagModel>>((ref) async {
   return await ref.read(GroupProvider.groupProvider).getTags();
+});
+
+
+final groupsProvider =
+    StateNotifierProvider<PaginationNotifier<Group>, PaginationState<Group>>(
+        (ref) {
+  return PaginationNotifier(
+    itemsPerBatch: 20,
+    fetchNextItems: (page) {
+      return ref
+          .read(GroupRepository.provider)
+          .getAllGroups(page: page!, limit: 20);
+    },
+  )..init();
 });
