@@ -577,8 +577,8 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
       if (result) {
         await calendarClient.insert(context, titleController.text, startDate,
             startTime, endTime, endDate);
-        ref.refresh(allEventsProvider);
-        ref.refresh(upcomingEventsProvider);
+        ref.refresh(allEventsProviderOld);
+        ref.refresh(upcomingEventsProviderOld);
         ref.refresh(userEventsProvider);
         // await eventController.getAllEvent();
         // await eventController.getUserEvent();

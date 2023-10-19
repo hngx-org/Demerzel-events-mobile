@@ -101,7 +101,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
         body: TabBarView(
           controller: _tabController,
           children: [
-            const UpcomingEventScreen(),
+             UpcomingEventScreen(),
             MyEventScreen(
               key: UniqueKey(),
             ),
