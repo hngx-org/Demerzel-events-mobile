@@ -173,62 +173,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                       //Text(imagePath.split('/').last),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                              onTap: _getFromGallery,
-                              child: SvgPicture.asset(
-                                ProjectConstants.imagePicker,
-                                color:
-                                    Theme.of(context).colorScheme.onBackground,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.7,
-                              height: 45,
-                              child: TextField(
-                                textAlignVertical: TextAlignVertical.center,
-                                controller: controller,
-                                decoration: InputDecoration(
-                                  hintText: 'Type a message here',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            commentNotifier.isAddingComments
-                                ? const SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: CircularProgressIndicator())
-                                : InkWell(
-                                    onTap: () {
-                                      commentNotifier
-                                          .createComment(
-                                            controller.text,
-                                            widget.event.id,
-                                            image,
-                                          )
-                                          .then(
-                                              (value) => {controller.clear()});
-                                    },
-                                    child: Icon(
-                                      Icons.send,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
-                                    ),
-                                  ),
-                          ],
-                        ),
+                        child: SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.event.id)
                       ),
                     ],
                   ),

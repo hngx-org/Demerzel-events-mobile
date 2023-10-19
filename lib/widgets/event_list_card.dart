@@ -136,9 +136,14 @@ class EventsCard extends ConsumerWidget {
                   visible: eventNotifier.userEvents
                       .any((element) => element.id == event!.id),
                   replacement: JoinButton(
+                    title:  'Suscribe To Event',
                     onPressed: () => eventNotifier.subscribeToEvent(event!.id),
                   ),
-                  child: const Text('Already Subscribed 👍🏼'),
+                  child: JoinButton(
+                    title:  'Unsusbcribe From Event',
+                    onPressed: () => eventNotifier.unSubscribeFromoEvent(event!.id),
+                  ),
+                  //const Text('Already Subscribed 👍🏼'),
                 ),
                 const SizedBox(
                   height: 16,
@@ -164,8 +169,9 @@ class EventsCard extends ConsumerWidget {
 
 //button widget add gesture detector to add functionality
 class JoinButton extends StatelessWidget {
-  const JoinButton({super.key, required this.onPressed});
+  const JoinButton({super.key, required this.onPressed, required this.title});
   final VoidCallback onPressed;
+  final String title;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -184,10 +190,10 @@ class JoinButton extends StatelessWidget {
             BoxShadow(color: ProjectColors.black, offset: Offset(2, 2))
           ],
         ),
-        child: const Center(
+        child:  Center(
           child: Text(
-            'Suscribe To Event',
-            style: TextStyle(
+           title,
+            style: const TextStyle(
                 fontFamily: 'NotoSans',
                 // fontWeight: FontWeight.w600,
                 fontSize: 16),

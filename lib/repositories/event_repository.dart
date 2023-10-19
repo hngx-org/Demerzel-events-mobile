@@ -47,6 +47,24 @@ class EventRepository {
     }
   }
 
+Future<Either<Failure, bool>> unSubscribeToEvent(String eventId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
+      final result = await apiService.post(
+          url: ApiRoutes.unSubscribeToEventURI(eventId),
+          body: {},
+          headers: header);
+
+      if (result is DioException) {
+        return Left(ServerFailure(errorMessage: result.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
   Future<List<Event>> getAllUserEvents() async {
     final header = await authRepository.getAuthHeader();
 

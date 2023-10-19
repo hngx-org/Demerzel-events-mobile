@@ -119,6 +119,31 @@ class EventProvider extends ChangeNotifier {
     return result;
   }
 
+
+  Future<bool> unSubscribeFromoEvent(String eventId) async {
+    _isBusy = true;
+    _error = "";
+    notifyListeners();
+
+    bool result = false;
+
+    final response = await eventRepository.unSubscribeToEvent(eventId);
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to unsubscribe from event',
+              result = false
+            },
+        (r) => result = r);
+
+    if (result) {
+      await getAllEvent();
+      await getUserEvent();
+    }
+
+    _isBusy = false;
+    notifyListeners();
+    return result;
+  }
   Future<void> getAllGroupEvent(String groupId) async {
     _isBusy = true;
     _error = "";
