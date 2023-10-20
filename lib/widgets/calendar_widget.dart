@@ -37,7 +37,7 @@ class _CalCardState extends ConsumerState<CalCard> {
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.sizeOf(context).height;
-
+final allEvents = ref.watch(EventProvider.provider).allEvents;
     return SizedBox(
       // height: height * 0.50,
       child: Card(
@@ -124,9 +124,7 @@ class _CalCardState extends ConsumerState<CalCard> {
                     ),
                   ),
                 ),
-                eventLoader: (day) => ref
-                    .read(EventProvider.provider)
-                    .allEvents
+                eventLoader: (day) => allEvents
                     .where((event) =>
                         isSameDay(DateTime.tryParse(event.startDate), day))
                     .toList(),
