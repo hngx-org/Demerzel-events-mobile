@@ -6,7 +6,6 @@ import 'package:hng_events_app/features/groups/comment_screen.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
 import 'package:hng_events_app/features/events/edit_event.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
-import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:hng_events_app/widgets/timeline_event_card.dart';
 import '../../../constants/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +20,8 @@ class MyEventScreen extends ConsumerStatefulWidget {
 }
 
 class _MyEventScreenState extends ConsumerState<MyEventScreen> {
+
+
   @override
   Widget build(BuildContext context) {
     Size screensize = MediaQuery.of(context).size;
@@ -79,6 +80,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
                       child: Icon(Icons.refresh),
                     ),
                     onPressed: () => ref.refresh(userEventsProvider)),
+                    
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 70.0),
@@ -123,6 +125,7 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
               : ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (BuildContext ctx, int index) {
+                    
                     final Event event = data[index];
 
                     return GestureDetector(
@@ -297,4 +300,6 @@ class _MyEventScreenState extends ConsumerState<MyEventScreen> {
     //   ),
     // );
   }
+  
+  
 }

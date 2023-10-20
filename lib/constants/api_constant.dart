@@ -23,8 +23,11 @@ class ApiRoutes {
   static eventURII(String limit, String page) =>
       baseUri.replace(path: '/api/events?limit=$limit&page=$page');
   static final upcomingEventURI = baseUri.replace(path: '/api/events/upcoming');
+  static upcomingEventPageURI(String page) => baseUri.replace(path: '/api/events/upcoming?limit=10&page=$page');
   static final userEventURI =
       baseUri.replace(path: '/api/events/subscriptions');
+  static userEventPageURI(String page) =>
+      baseUri.replace(path: '/api/events/subscriptions?limit=5&page=$page');
   static subscribeToEventURI(String eventId) =>
       baseUri.replace(path: '/api/events/$eventId/subscribe');
   static subscribeToGroupURI(String groupId) =>

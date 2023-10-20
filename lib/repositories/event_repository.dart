@@ -207,4 +207,29 @@ class EventRepository {
       return true;
     }
   }
+
+  Future<List<Event>> getSearchEvents(String query) async{
+    final header = await authRepository.getAuthHeader();
+    final queryParameters = {
+      'title': query,
+    };
+
+    final uri = Uri.https(ApiRoutes.host, '/api/events', queryParameters);
+    final response = await http
+          .get(
+            uri,
+            headers: header,
+          );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(response.body);
+      return (map['data']['events'] as List).map((e) => Event.fromMap(e)).toList() ;
+    } else{
+      throw Exception('failed to retrieve Events from search ${response.statusCode}');
+    }
+
+  }
+
+  
+  
 }

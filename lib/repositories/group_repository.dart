@@ -137,4 +137,23 @@ class GroupRepository {
       return true;
     }
   }
+
+  Future<List<Group>> getSearchGroups(String query) async{
+    final header = await authRepository.getAuthHeader();
+    final queryParameters = {
+      'name': query,
+    };
+
+    final uri = Uri.https(ApiRoutes.host, '/api/groups', queryParameters);
+    
+    final response = await http.get( uri, headers: header,);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = jsonDecode(response.body);
+      return (map['data']['groups'] as List).map((e) => Group.fromJson(e)).toList() ;
+    } else{
+      throw Exception('failed to retrieve groups from search ${response.statusCode}');
+    }
+
+  }
 }

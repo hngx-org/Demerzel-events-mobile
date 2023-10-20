@@ -28,10 +28,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
 
   @override
   Widget build(BuildContext context) {
-    ref.read(notificationProvider.notifier).getNotifications.call();
-
-    List<Event> events = ref.watch(eventSearchProvider);
-    
+    ref.read(notificationProvider.notifier).getNotifications.call();    
     ref.read(NotificationSettingsPrefsNotifier.provider);
     ref.watch(groupTagProvider);
 
@@ -47,7 +44,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
                 child: GestureDetector(
                   onTap: ()=> showSearch(
                       context: context, 
-                      delegate: EventSearchDelegate(events: events)
+                      delegate: EventSearchDelegate()
                     ),
                   child: const TextField(
                     enabled: false,
