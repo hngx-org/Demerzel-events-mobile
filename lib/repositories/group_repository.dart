@@ -186,37 +186,68 @@ class GroupRepository {
         tagId = "5";
         break;
       case '#theaterperfomances':
-        tagId = "6";
+        tagId = "7";
+      case '#comedyshows':
+        tagId = "8";
+      case '#sportsevents':
+        tagId = "9";
+      case '#foodfestivals':
+        tagId = "10";
+      case '#artexhibitions':
+        tagId = "11";
+      case '#musicconcerts':
+        tagId = "12";
+      case '#travelandtourism':
+        tagId = "13";
+      case '#travelandtourism':
+        tagId = "13";
+      case '#fashionshows':
+        tagId = "14";
+      case '#culturalfestivals':
+        tagId = "15";
+      case '#gamingandesports':
+        tagId = "16";
+      case '#filmscreenings':
+        tagId = "17";
+      case '#networkingevents':
+        tagId = "18";
+         case '#educationalseminars':
+        tagId = "19";
+         case '#wellnessandfitness':
+        tagId = "20";
+         case '#outdooradventures':
+        tagId = "21";
         break;
       default:
     }
 
     if (tagId != null) {
-       queryParameters = {
-      //'name': query,
-       'tag': tagId
-    };
-    }else{
-        queryParameters = {
-      'name': query,
-      // 'tag': query
-    };
+      queryParameters = {
+        //'name': query,
+        'tag': tagId
+      };
+    } else {
+      queryParameters = {
+        'name': query,
+        // 'tag': query
+      };
     }
-   
 
     final uri = Uri.https(ApiRoutes.host, '/api/groups', queryParameters);
-log(uri.toString());
+    log(uri.toString());
     final response = await http.get(
       uri,
       headers: header,
     );
-log(response.body.toString());
+    log(response.body.toString());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(response.body);
-      return map['data']['groups'] != null ?(map['data']['groups'] as List)
-          .map((e) => Group.fromJson(e))
-          .toList() : [];
+      return map['data']['groups'] != null
+          ? (map['data']['groups'] as List)
+              .map((e) => Group.fromJson(e))
+              .toList()
+          : [];
     } else {
       throw Exception(
           'failed to retrieve groups from search ${response.statusCode}');
