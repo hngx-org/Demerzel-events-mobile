@@ -579,7 +579,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
             startTime, endTime, endDate);
         ref.refresh(allEventsProvider);
         ref.refresh(upcomingEventsProvider);
-        ref.refresh(userEventsProvider);
+        ref.refresh(myEventsProvider);
         // await eventController.getAllEvent();
         // await eventController.getUserEvent();
         // await eventController.getUpcomingEvent();

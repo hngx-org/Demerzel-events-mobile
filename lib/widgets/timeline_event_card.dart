@@ -9,6 +9,7 @@ Widget TimelineEventCard(
     required Event event,
     Null Function(String eventId)? onDelete,
     Null Function()? onEdit,
+    
     required String eventId,
     required bool showVert}) {
   return Container(
@@ -101,11 +102,11 @@ Widget TimelineEventCard(
                       ? PopupMenuButton<String>(
                           itemBuilder: (BuildContext context) =>
                               <PopupMenuEntry<String>>[
-                            PopupMenuItem<String>(
+                            const PopupMenuItem<String>(
                               value: 'Delete',
                               child: Text('Delete'),
                             ),
-                            PopupMenuItem<String>(
+                            const PopupMenuItem<String>(
                               value: 'Edit',
                               child: Text('Edit'),
                             ),

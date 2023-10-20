@@ -78,7 +78,7 @@ class _EditEventNameState extends ConsumerState<EditEventName> {
                     showSnackBar(
                         context, 'Event details updated', Colors.green);
                     ref.refresh(allEventsProvider);
-                    ref.refresh(userEventsProvider);
+                    ref.refresh(myEventsProvider);
                     ref.refresh(upcomingEventsProvider);
                   } else {
                     showSnackBar(context, eventProvider.error, Colors.red);

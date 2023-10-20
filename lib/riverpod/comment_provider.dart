@@ -30,9 +30,10 @@ final Ref ref;
           comments= await commentRepository.getEventComments(eventId);
     _isAddingComments = false;
     getEventComments(eventId);
-//ref.read(EventProvider.provider).getAllGroupEvent(groupId);
+
         }else{
           _isAddingComments = false;
+           notifyListeners();
           return false;
         }
     

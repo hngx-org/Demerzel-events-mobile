@@ -108,16 +108,14 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                               return;
                             }
                             Navigator.pop(context);
-                                      controller.clear();
+                                    
                             commentNotifier
                                 .createComment(
                                   controller.text ,
                                   widget.eventId,
                                   File(filePath!),
-                                );
-                                // .then((value) => {
-                                      
-                                //     });
+                                ).then((value) => controller.clear());
+                                  
                           },
                           child: Icon(
                             Icons.send,

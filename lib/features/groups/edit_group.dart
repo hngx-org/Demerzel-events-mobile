@@ -54,6 +54,7 @@ class _EditGroupNameState extends ConsumerState<EditGroupName> {
                       groupID: widget.currentGroup.id);
                       if (result) {
                          Navigator.pop(context);
+                         ref.refresh(groupsProvider);
                          showSnackBar(context, 'Group edited ', Colors.green);
                       }else{
                         showSnackBar(context, groupProvider.error, Colors.red);
