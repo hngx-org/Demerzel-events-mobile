@@ -163,6 +163,7 @@ class GroupRepository {
     final header = await authRepository.getAuthHeader();
     final queryParameters = {
       'name': query,
+      'tag': query
     };
 
     final uri = Uri.https(ApiRoutes.host, '/api/groups', queryParameters);
