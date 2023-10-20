@@ -15,10 +15,17 @@ class EventsCard extends ConsumerWidget {
     super.key,
     required this.event,
     this.firstComments,
+    this.isSubscribing = false,
+    required this.onSubscribe,
+    required this.onUnSubscribe,
   });
 
   final Event? event;
   final List? firstComments;
+  final bool isSubscribing;
+
+  final Function() onSubscribe;
+  final Function() onUnSubscribe;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eventNotifier = ref.watch(EventProvider.provider);
@@ -136,13 +143,14 @@ class EventsCard extends ConsumerWidget {
                   visible: eventNotifier.userEvents
                       .any((element) => element.id == event!.id),
                   replacement: JoinButton(
-                    title:  'Suscribe To Event',
-                    onPressed: () => eventNotifier.subscribeToEvent(event!.id),
+                    title: 'Suscribe To Event',
+                    isBusy: isSubscribing,
+                    onPressed: onSubscribe,
                   ),
                   child: JoinButton(
-                    title:  'Unsusbcribe From Event',
-                    onPressed: () => eventNotifier.unSubscribeFromoEvent(event!.id),
-                  ),
+                      title: 'Unsusbcribe From Event',
+                      isBusy: isSubscribing,
+                      onPressed: onUnSubscribe),
                   //const Text('Already Subscribed 👍🏼'),
                 ),
                 const SizedBox(
@@ -150,7 +158,7 @@ class EventsCard extends ConsumerWidget {
                 ),
                 const Divider(
                     height: 0, thickness: 2, color: ProjectColors.grey),
- const SizedBox(
+                const SizedBox(
                   height: 2,
                 ),
                 //inpuField widget
@@ -169,9 +177,14 @@ class EventsCard extends ConsumerWidget {
 
 //button widget add gesture detector to add functionality
 class JoinButton extends StatelessWidget {
-  const JoinButton({super.key, required this.onPressed, required this.title});
+  const JoinButton(
+      {super.key,
+      required this.onPressed,
+      required this.title,
+      this.isBusy = false});
   final VoidCallback onPressed;
   final String title;
+  final bool isBusy;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -190,14 +203,21 @@ class JoinButton extends StatelessWidget {
             BoxShadow(color: ProjectColors.black, offset: Offset(2, 2))
           ],
         ),
-        child:  Center(
-          child: Text(
-           title,
-            style: const TextStyle(
-                fontFamily: 'NotoSans',
-                // fontWeight: FontWeight.w600,
-                fontSize: 16),
-          ),
+        child: Center(
+          child: isBusy
+              ? const SizedBox(
+                  width: 30,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  title,
+                  style: const TextStyle(
+                      fontFamily: 'NotoSans',
+                      // fontWeight: FontWeight.w600,
+                      fontSize: 16),
+                ),
         ),
       ),
     );
@@ -281,9 +301,9 @@ class _InputFieldState extends ConsumerState<InputField> {
                             ),
                           ),
                           SvgPicture.asset(
-                        ProjectConstants.rightChevron,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
+                            ProjectConstants.rightChevron,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ],
                       ),
                     ),

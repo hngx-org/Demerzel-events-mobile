@@ -122,7 +122,7 @@ class EventProvider extends ChangeNotifier {
     return result;
   }
 
-  Future<bool> unSubscribeFromoEvent(String eventId) async {
+  Future<bool> unSubscribeFromEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();

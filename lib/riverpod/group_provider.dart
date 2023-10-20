@@ -25,6 +25,34 @@ class GroupProvider extends ChangeNotifier {
   bool _isBusy = false;
   bool get isBusy => _isBusy;
 
+  bool _isFetchingGroupEvent = false;
+  bool get isFetchingGroupEvent => _isFetchingGroupEvent;
+
+  bool _isSubscribingToGroupEvent = false;
+  bool get isSubscribingToGroupEvent => _isSubscribingToGroupEvent;
+
+  String _currentlyClickedEvent = '';
+
+  String get currentlyClickedEvent => _currentlyClickedEvent;
+
+  void setCurrentlyClickedEvent(String value) {
+    _currentlyClickedEvent = value;
+
+    print('---> $_currentlyClickedEvent $isSubscribingToGroupEvent');
+    notifyListeners();
+  }
+
+
+  void setIsFetchingGroupEvent(bool value) {
+    _isFetchingGroupEvent = value;
+    notifyListeners();
+  }
+
+  void setIsSubscribingToGroupEvent(bool value) {
+    _isSubscribingToGroupEvent = value;
+    notifyListeners();
+  }
+
   bool _isBusyEditingGroup = false;
   bool get isBusyEditingGroup => _isBusyEditingGroup;
 
@@ -42,7 +70,10 @@ class GroupProvider extends ChangeNotifier {
         (l) => {
               _error = l.message ?? 'Failed to create group',
             },
-        (r) async => {result = r, groups = await groupRepo.getAllGroups(page: 1, limit: 20)});
+        (r) async => {
+              result = r,
+              groups = await groupRepo.getAllGroups(page: 1, limit: 20)
+            });
     _isBusy = false;
     notifyListeners();
     return result;
@@ -155,7 +186,8 @@ class GroupProvider extends ChangeNotifier {
   }
 }
 
-final groupSearchprovider = FutureProvider.autoDispose.family<List<Group>, String>((ref, query) async{
+final groupSearchprovider =
+    FutureProvider.autoDispose.family<List<Group>, String>((ref, query) async {
   GroupRepository groupRepository = ref.watch(GroupRepository.provider);
   return await groupRepository.getSearchGroups(query);
 });
@@ -163,7 +195,6 @@ final groupSearchprovider = FutureProvider.autoDispose.family<List<Group>, Strin
 final groupTagProvider = FutureProvider<List<GroupTagModel>>((ref) async {
   return await ref.read(GroupProvider.groupProvider).getTags();
 });
-
 
 final groupsProvider =
     StateNotifierProvider<PaginationNotifier<Group>, PaginationState<Group>>(

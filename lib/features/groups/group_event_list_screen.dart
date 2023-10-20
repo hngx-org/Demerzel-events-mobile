@@ -8,6 +8,7 @@ import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/features/events/create_event/create_event_screen.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 
 import 'package:hng_events_app/widgets/event_list_card.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
@@ -35,14 +36,22 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
 
   bool isLoading = false;
 
-  Future getGroupEvents() async => await ref
-      .read(EventProvider.provider.notifier)
-      .getAllGroupEvent(widget.group.id);
+  Future getGroupEvents() async {
+    final groupRef = ref.read(GroupProvider.groupProvider.notifier);
+
+    groupRef.setIsFetchingGroupEvent(true);
+
+    await ref
+        .read(EventProvider.provider.notifier)
+        .getAllGroupEvent(widget.group.id);
+
+    groupRef.setIsFetchingGroupEvent(false);
+  }
 
   @override
   Widget build(BuildContext context) {
     final eventNotifier = ref.watch(EventProvider.provider);
-
+    final groupRef = ref.read(GroupProvider.groupProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -85,7 +94,6 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
               final eventNotifier = ref.watch(EventProvider.provider);
               final userRef = ref.watch(appUserProvider);
               final members = eventNotifier.allGroupEvents?.data.members ?? [];
-
               // Check if userRef exists in members
               bool isUserInMembers =
                   members.any((element) => element == userRef);
@@ -160,7 +168,7 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
           )
         ],
       ),
-      body: eventNotifier.isBusy
+      body: ref.read(GroupProvider.groupProvider).isFetchingGroupEvent
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -185,6 +193,55 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
                                   .allGroupEvents!.data.events.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) => EventsCard(
+                                isSubscribing: ref
+                                        .read(GroupProvider.groupProvider)
+                                        .isSubscribingToGroupEvent &&
+                                    ref
+                                            .read(GroupProvider.groupProvider)
+                                            .currentlyClickedEvent ==
+                                        eventNotifier.allGroupEvents!.data
+                                            .events[index].id,
+                                onSubscribe: () async {
+                                  groupRef.setIsSubscribingToGroupEvent(true);
+                                  groupRef.setCurrentlyClickedEvent(
+                                      eventNotifier.allGroupEvents!.data
+                                          .events[index].id);
+                                  final result = await eventNotifier
+                                      .subscribeToEvent(eventNotifier
+                                          .allGroupEvents!
+                                          .data
+                                          .events[index]
+                                          .id);
+
+                                  if (result) {
+                                    showSnackBar(
+                                        context, 'Subcribed', Colors.green);
+                                  } else {
+                                    showSnackBar(context, 'Failed to subscribe',
+                                        Colors.red);
+                                  }
+                                  groupRef.setIsSubscribingToGroupEvent(false);
+                                },
+                                onUnSubscribe: () async {
+                                  groupRef.setIsSubscribingToGroupEvent(true);
+                                  groupRef.setCurrentlyClickedEvent(
+                                      eventNotifier.allGroupEvents!.data
+                                          .events[index].id);
+                                  final result = await eventNotifier
+                                      .unSubscribeFromEvent(eventNotifier
+                                          .allGroupEvents!
+                                          .data
+                                          .events[index]
+                                          .id);
+                                  if (result) {
+                                    showSnackBar(
+                                        context, 'Unsubscribed', Colors.green);
+                                  } else {
+                                    showSnackBar(context,
+                                        'Fail to unsubscribed', Colors.red);
+                                  }
+                                  groupRef.setIsSubscribingToGroupEvent(false);
+                                },
                                 event: eventNotifier
                                     .allGroupEvents!.data.events[index],
                                 firstComments: eventNotifier.allGroupEvents
