@@ -108,10 +108,11 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: CommentPageCard(
                           event: widget.event,
+                          isSubscribing: commentNotifier.isSubscribing,
                           joined: !eventNotifier.userEvents
                               .any((element) => element.id == widget.event.id),
                           onSubscribe: () async {
-                            commentNotifier.setIsBusy(true);
+                            commentNotifier.setIsSubscribing(true);
                             eventNotifier
                                 .subscribeToEvent(widget.event.id)
                                 .then((value) => {
@@ -129,10 +130,11 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                         {
                                           showSnackBar(context,
                                               eventNotifier.error, Colors.red)
-                                        }
+                                        },
+                                       commentNotifier.setIsSubscribing(false)
                                     });
 
-                            commentNotifier.setIsBusy(false);
+                           
                           },
                         ),
                       ),
