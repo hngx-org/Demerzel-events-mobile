@@ -123,8 +123,6 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                                               'Subscribe successfully',
                                               Colors.green),
                                           eventNotifier.getUserEvent(),
-                                          commentNotifier
-                                              .getEventComments(widget.event.id)
                                         }
                                       else
                                         {
