@@ -199,8 +199,6 @@ class GroupRepository {
         tagId = "12";
       case '#travelandtourism':
         tagId = "13";
-      case '#travelandtourism':
-        tagId = "13";
       case '#fashionshows':
         tagId = "14";
       case '#culturalfestivals':
@@ -211,11 +209,11 @@ class GroupRepository {
         tagId = "17";
       case '#networkingevents':
         tagId = "18";
-         case '#educationalseminars':
+      case '#educationalseminars':
         tagId = "19";
-         case '#wellnessandfitness':
+      case '#wellnessandfitness':
         tagId = "20";
-         case '#outdooradventures':
+      case '#outdooradventures':
         tagId = "21";
         break;
       default:
