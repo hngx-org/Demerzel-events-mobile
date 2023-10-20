@@ -14,8 +14,8 @@ class EventProvider extends ChangeNotifier {
   final EventRepository eventRepository;
 
   EventProvider({required this.eventRepository}) {
-    getUpcomingEvent();
-    getUserEvent();
+    // getUpcomingEvent();
+    // getUserEvent();
   }
 
   GetListEventModel? events;
@@ -62,7 +62,7 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await eventRepository.getAllEvent(page: 1, limit: 5);
+      final result = await eventRepository.getAllEvent(page: 1, limit: 30);
       allEvents = result;
       notifyListeners();
     } catch (e, s) {
