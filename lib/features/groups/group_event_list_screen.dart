@@ -110,10 +110,10 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
                             content: Text('Succesfful'),
                           ));
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,
-                            content: Text('Couldn\'t leave group'),
+                            content: Text(
+                                ref.read(GroupProvider.groupProvider).error),
                           ));
                         }
                       },
@@ -142,10 +142,10 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
                             content: Text('Group Joined'),
                           ));
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,
-                            content: Text('Couldn\'t join group'),
+                            content: Text(
+                                ref.read(GroupProvider.groupProvider).error),
                           ));
                         }
                       },
@@ -185,11 +185,10 @@ class _EventsScreenState extends ConsumerState<GroupEventsScreen> {
                                   .allGroupEvents!.data.events.length,
                               shrinkWrap: true,
                               itemBuilder: (context, index) => EventsCard(
-                          
                                 event: eventNotifier
                                     .allGroupEvents!.data.events[index],
-                                firstComments: eventNotifier
-                                    .allGroupEvents?.data.events[index].firstComments,
+                                firstComments: eventNotifier.allGroupEvents
+                                    ?.data.events[index].firstComments,
                               ),
                             ),
                     ),

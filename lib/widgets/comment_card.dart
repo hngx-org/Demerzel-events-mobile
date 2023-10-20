@@ -26,7 +26,6 @@ class CommentPageCard extends ConsumerStatefulWidget {
 class _CommentPageCardState extends ConsumerState<CommentPageCard> {
   @override
   Widget build(BuildContext context) {
-    bool? isChecked = false;
     return Container(
       decoration: ProjectConstants.appBoxDecoration.copyWith(
           border:

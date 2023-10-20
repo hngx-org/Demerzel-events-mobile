@@ -44,18 +44,19 @@ class _CalCardState extends ConsumerState<CalCard> {
         elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
-          side:  BorderSide(color: Theme.of(context).colorScheme.onBackground,),
-          
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
         ),
         child: Padding(
           padding: EdgeInsets.all(height * 0.01),
           child: Column(
             children: [
               TableCalendar(
-                //pageJumpingEnabled: true,
+                pageJumpingEnabled: true,
                 rowHeight: 35,
                 firstDay: DateTime.now().subtract(const Duration(days: 500)),
-                lastDay: DateTime.now().add(const Duration(days: 500)),
+                lastDay: DateTime.now().add(const Duration(days: 1500)),
                 focusedDay: _selectedDay ?? _focusedDay,
                 currentDay: _selectedDay,
                 selectedDayPredicate: (day) {
@@ -82,12 +83,12 @@ class _CalCardState extends ConsumerState<CalCard> {
                   formatButtonVisible: false,
                 ),
                 calendarStyle: CalendarStyle(
-                  todayDecoration:
-                      BoxDecoration(color: ProjectColors.purple),
+                  todayDecoration: const BoxDecoration(color: ProjectColors.purple),
                   selectedDecoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
                   ),
-                  markerDecoration: BoxDecoration(color: ProjectColors.purple, shape: BoxShape.circle),
+                  markerDecoration: const BoxDecoration(
+                      color: ProjectColors.purple, shape: BoxShape.circle),
                   markerSize: 6,
                 ),
                 calendarBuilders: CalendarBuilders(
@@ -96,19 +97,23 @@ class _CalCardState extends ConsumerState<CalCard> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                         //color: Theme.of(context).colorScheme.onBackground,
-                        border: Border.all(color: ProjectColors.purple,),
+                        border: Border.all(
+                          color: ProjectColors.purple,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: Text(
                         date.day.toString(),
-                        style:  TextStyle(color:Theme.of(context).colorScheme.onBackground),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onBackground),
                       )),
-                     
                   todayBuilder: (context, date, events) => Container(
                     margin: const EdgeInsets.all(4.0),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      border: Border.all(color:ProjectColors.purple, ),
+                      border: Border.all(
+                        color: ProjectColors.purple,
+                      ),
                       // color: Theme.of(context).colorScheme.onPrimary,
                       shape: BoxShape.circle,
                     ),
@@ -119,31 +124,12 @@ class _CalCardState extends ConsumerState<CalCard> {
                     ),
                   ),
                 ),
-                eventLoader: ref.read(EventProvider.provider).allEvents == null ? ((day) {
-                  return [];
-                }):(day) {
-                  List events = [];
-                  for (var i = 0;
-                      i <
-                          ref
-                              .read(EventProvider.provider)
-                              .allEvents
-                              .length;
-                      i++) {
-                    if (isSameDay(
-                        DateTime.parse(ref
-                            .read(EventProvider.provider)
-                            .allEvents[i]
-                            .startDate),
-                        day)) {
-                      events.add(ref
-                          .read(EventProvider.provider)
-                          .allEvents[i]);
-                    }
-                  }
-                  return events;
-                },
-
+                eventLoader: (day) => ref
+                    .read(EventProvider.provider)
+                    .allEvents
+                    .where((event) =>
+                        isSameDay(DateTime.tryParse(event.startDate), day))
+                    .toList(),
               ),
             ],
           ),

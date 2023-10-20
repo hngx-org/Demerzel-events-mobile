@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -243,8 +241,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   }
 
   Future<void> createGroup(GroupProvider groupController) async {
-
-    try {
       isLoading = true;
       setState(() {});
 
@@ -260,7 +256,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         isLoading = false;
       });
 
-      if (result) {
+       if (result) {
   
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -279,27 +275,15 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
       } else {
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              "Failed to create group",
-              style: TextStyle(color: Colors.white),
+              groupController.error,
+              style: const TextStyle(color: Colors.white),
             ),
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
             backgroundColor: Colors.red,
           ),
         );
       }
-    } catch (e, s) {
-      isLoading = false;
-      log(e.toString());
-      log(s.toString());
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
   }
 }

@@ -1,26 +1,25 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hng_events_app/constants/api_constant.dart';
+import 'package:hng_events_app/error/failures.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/services/http_service/api_service.dart';
 import 'package:hng_events_app/services/local_storage/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-
-
 class AuthRepository {
   final LocalStorageService localStorageService;
   final ApiService apiService;
   //final ImageUploadService imageUploadService;
 
-final GoogleSignIn googleSignIn =
-    GoogleSignIn();
-
+  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   AuthRepository({
     required this.localStorageService,
@@ -95,7 +94,7 @@ final GoogleSignIn googleSignIn =
       headers: header,
     );
 
-   return AppUser.fromJson(response);
+    return AppUser.fromJson(response);
   }
 
   Future<void> saveToken(String token) async {
@@ -130,21 +129,30 @@ final GoogleSignIn googleSignIn =
     }
   }
 
-  Future updateUserProfile(File? file, String userName) async {
-    Map<String, String> headerMap = await getAuthHeader();
-    final Map<String, dynamic> data = {};
+  Future<Either<Failure, bool>> updateUserProfile(
+      File? file, String userName) async {
+    try {
+      Map<String, String> headerMap = await getAuthHeader();
+      final Map<String, dynamic> data = {};
 
-    if (userName.isNotEmpty) {
-      data.putIfAbsent('name', () => userName);
+      if (userName.isNotEmpty) {
+        data.putIfAbsent('name', () => userName);
+      }
+      if (file != null) {
+        final imageUrl = await getImageUrl(file);
+        data.putIfAbsent('avatar', () => imageUrl);
+      }
+      final response = await apiService.put(
+          url: ApiRoutes.userURI, headers: headerMap, body: data);
+
+      if (response is DioException) {
+        return Left(ServerFailure(errorMessage: response.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      return Left(ServerFailure(errorMessage: e.toString()));
     }
-    if (file != null) {
-      final imageUrl = await getImageUrl(file);
-      data.putIfAbsent('avatar', () => imageUrl);
-    }
-log(data.toString());
-    final response = await apiService.put(
-        url: ApiRoutes.userURI, headers: headerMap, body: data);
-   log(response.toString());
   }
 
   Future<String> getImageUrl(File file) async {
@@ -165,19 +173,19 @@ log(data.toString());
     }
   }
 
-  Future updateProfilePhoto(File imageFile) async {
-    // String userid = await getUserid();
-    String imageUrl = await getImageUrl(imageFile);
-    Map<String, String> headerMap = await getAuthHeader();
-    final response = await http.put(Uri.parse('$baseUrl/users'),
-        headers: headerMap,
-        body: jsonEncode(<String, dynamic>{
-          'avatar': imageUrl,
-        }));
-    if (response.statusCode != 200) {
-      throw Exception("failed to update userPhoto ${response.statusCode}");
-    }
-  }
+  // Future updateProfilePhoto(File imageFile) async {
+  //   // String userid = await getUserid();
+  //   String imageUrl = await getImageUrl(imageFile);
+  //   Map<String, String> headerMap = await getAuthHeader();
+  //   final response = await http.put(Uri.parse('$baseUrl/users'),
+  //       headers: headerMap,
+  //       body: jsonEncode(<String, dynamic>{
+  //         'avatar': imageUrl,
+  //       }));
+  //   if (response.statusCode != 200) {
+  //     throw Exception("failed to update userPhoto ${response.statusCode}");
+  //   }
+  // }
 
   Future<void> removeToken() async {
     await localStorageService.removeFromDisk(_user);

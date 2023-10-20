@@ -94,25 +94,29 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> subscribeToEvent(String eventId) async {
+  Future<bool> subscribeToEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
-    try {
-      await eventRepository.subscribeToEvent(eventId);
+    bool result = false;
+
+    final response = await eventRepository.subscribeToEvent(eventId);
+    response.fold(
+        (l) => {
+              _error = l.message ?? 'Failed to subscribe to event',
+              result = false
+            },
+        (r) => result = r);
+
+    if (result) {
       await getAllEvent();
       await getUserEvent();
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-
-      _error = e.toString();
-      notifyListeners();
     }
 
     _isBusy = false;
     notifyListeners();
+    return result;
   }
 
   Future<void> getAllGroupEvent(String groupId) async {
@@ -165,91 +169,45 @@ class EventProvider extends ChangeNotifier {
     _error = "";
     notifyListeners();
 
-    try {
-      await eventRepository.createEvent(body);
-      if (groupId != null) {
-        await getAllGroupEvent(groupId.toString());
-      } else {
-        await getAllGroupEvent(body['group_id'][0]);
-      }
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
+    bool result = false;
 
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    final response = await eventRepository.createEvent(body);
+
+    response.fold(
+        (l) => {_error = l.message ?? 'Failed to create event', result = false},
+        (r) async => {
+              result = r,
+              if (groupId != null)
+                {await getAllGroupEvent(groupId.toString())}
+              else
+                {await getAllGroupEvent(body['group_id'][0])}
+            });
 
     _isBusy = false;
 
     notifyListeners();
-    return true;
+    return result;
   }
 
   bool _isBusyEditingEvent = false;
   bool get isBusyEditingEvent => _isBusyEditingEvent;
-
-//   Future<bool> deleteEvent(String eventId) async {
-//     _isBusy = true;
-//     _error = "";
-//     notifyListeners();
-
-//     try {
-//      final result = await eventRepository.deleteEvent(eventId);
-//      if (result) {
-//        _isBusy = false;
-//        await getAllEvent();
-//       await getUserEvent();
-//       notifyListeners();
-//       return true;
-//      }else{
-//       _error = "Couldn't delete Event";
-//        _isBusy = false;
-//         notifyListeners();
-//        return false;
-//      }
-
-//     } catch (e, s) {
-//       log(e.toString());
-//       log(s.toString());
-//      // _error = e.toString();
-// return false;
-//     }
-
-//   }
 
   Future<bool> deleteEvent(String eventId) async {
     _isBusy = true;
     _error = "";
     notifyListeners();
 
-    try {
-      final result = await eventRepository.deleteEvent(eventId);
-      if (result) {
-        // await getUserEvent();
-        // await getAllEvent();
-        // await getUpcomingEvent();
-        
-        _isBusy = false;
-        notifyListeners();
-        return true;
-      } else {
-        _isBusy = false;
-        notifyListeners();
-        return false;
-      }
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
-      _isBusy = false;
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    bool result = false;
 
-    // notifyListeners();
-    // return true;
+    final response = await eventRepository.deleteEvent(eventId);
+
+    response.fold(
+        (l) => {_error = l.message ?? 'Failed to delete event', result = false},
+        (r) => result = r);
+
+    _isBusy = false;
+    notifyListeners();
+    return result;
   }
 
   Future<bool> editEvent({
@@ -262,32 +220,22 @@ class EventProvider extends ChangeNotifier {
     _error = "";
     notifyListeners();
 
-    try {
-      final result = await eventRepository.editEvent(
-          newEventName: newEventName,
-          eventID: eventID,
-          newEventLocation: newEventLocation,
-          newEventDescription: newEventDescription);
+    bool result = false;
 
-      if (result) {
-        _isBusyEditingEvent = false;
-        notifyListeners();
-        return true;
-      } else {
-        _isBusy = false;
-        _isBusyEditingEvent = false;
-        _error = 'Failed to update event';
-        notifyListeners();
-        return false;
-      }
-    } catch (e, s) {
-      log(e.toString());
-      log(s.toString());
+    final response = await eventRepository.editEvent(
+        newEventName: newEventName,
+        eventID: eventID,
+        newEventLocation: newEventLocation,
+        newEventDescription: newEventDescription);
 
-      _error = e.toString();
-      notifyListeners();
-      return false;
-    }
+    response.fold((l) => {
+          _error = l.message ?? 'Failed to update event',
+          result = false,
+        }, (r) => result = r);
+
+    _isBusyEditingEvent = false;
+    notifyListeners();
+    return result;
   }
 
   
