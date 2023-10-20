@@ -12,11 +12,13 @@ class CommentPageCard extends ConsumerStatefulWidget {
   final Event event;
   final bool joined;
   final void Function()? onSubscribe;
+  final bool isSubscribing;
   const CommentPageCard({
     super.key,
     required this.event,
     required this.joined,
     this.onSubscribe,
+    required this.isSubscribing,
   });
 
   @override
@@ -118,16 +120,26 @@ class _CommentPageCardState extends ConsumerState<CommentPageCard> {
                     buttonColor: ProjectColors.purple,
                     buttonHeight: 40,
                     borderRadius: BorderRadius.circular(5),
-                    child:  Center(
-                      child: Text(
-                        'I will join',
-                        style: TextStyle(
-                          //fontFamily: 'NotoSans',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.onBackground,
-                        ),
-                      ),
+                    child: Center(
+                      child: widget.isSubscribing
+                          ? const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )),
+                            )
+                          : Text(
+                              'I will join',
+                              style: TextStyle(
+                                //fontFamily: 'NotoSans',
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              ),
+                            ),
                     ),
                   ),
                 ),

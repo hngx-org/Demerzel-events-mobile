@@ -14,9 +14,11 @@ final Ref ref;
   String get error => _error;
 
   bool _isBusy = false;
+  bool _isSubscribing = false;
   bool _isAddingComments = false;
   bool get isBusy => _isBusy;
   bool get isAddingComments => _isAddingComments;
+  bool get isSubscribing => _isSubscribing;
 
   List<Comment> comments = [];
 
@@ -41,8 +43,8 @@ final Ref ref;
     return true;
   }
 
-  void setIsBusy(bool value) {
-    _isBusy = value;
+  void setIsSubscribing(bool value) {
+    _isSubscribing = value;
     notifyListeners();
   }
 
