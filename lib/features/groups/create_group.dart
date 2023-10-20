@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/constants.dart';
 import 'package:hng_events_app/models/group_tag_model.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
+import 'package:hng_events_app/util/snackbar_util.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:svg_flutter/svg.dart';
@@ -140,9 +141,13 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 onTap: () async {
                   if (groupNameController.text.isNotEmpty &&
                       dropDownCtrl.selectedOptions.isNotEmpty) {
+                        if (groupNameController.text.startsWith('#')) {
+                          showSnackBar(context, 'Group name can\'t start with #', Colors.red);
+                          return;
+                        }
                     await createGroup(groupsNotifier, ref);
 
-                    log('refrshed');
+                   
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.red,
