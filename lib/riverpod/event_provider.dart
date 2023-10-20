@@ -267,6 +267,8 @@ class EventProvider extends ChangeNotifier {
     notifyListeners();
     return result;
   }
+
+  
 }
 
 final allEventsProviderOld = FutureProvider<List<Event>>((ref) async {
@@ -284,14 +286,9 @@ final userEventsProvider = FutureProvider<List<Event>>((ref) async {
   return await eventRepository.getAllUserEvents(page: 1, limit: 5);
 });
 
-final eventSearchProvider = Provider<List<Event>>((ref) {
-  final allEvents = ref.watch(allEventsProviderOld);
-  return allEvents.when(
-      skipLoadingOnRefresh: true,
-      skipLoadingOnReload: true,
-      data: (data) => data,
-      error: (error, stackTrace) => <Event>[],
-      loading: () => []);
+final eventSearchProvider = FutureProvider.autoDispose.family<List<Event>, String>((ref, query) {
+  EventRepository eventRepository = ref.watch(EventRepository.provider);
+  return eventRepository.getSearchEvents(query);
 });
 
 final allEventsProvider =
@@ -332,4 +329,3 @@ final myEventsProvider =
     },
   )..init();
 });
-

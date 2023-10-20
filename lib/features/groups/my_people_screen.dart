@@ -85,11 +85,10 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
             ),
           ),
           Consumer(builder: (context, ref, child) {
-            List<Group> groups = ref.watch(groupSearchprovider);
             return IconButton(
                 onPressed: () => showSearch(
                     context: context,
-                    delegate: GroupSearchDelegate(groups: groups)),
+                    delegate: GroupSearchDelegate()),
                 icon: const Icon(Icons.search));
           })
         ],

@@ -155,9 +155,9 @@ class GroupProvider extends ChangeNotifier {
   }
 }
 
-final groupSearchprovider = Provider<List<Group>>((ref) {
-  final groups = ref.watch(GroupProvider.groupProvider);
-  return groups.groups;
+final groupSearchprovider = FutureProvider.autoDispose.family<List<Group>, String>((ref, query) async{
+  GroupRepository groupRepository = ref.watch(GroupRepository.provider);
+  return await groupRepository.getSearchGroups(query);
 });
 
 final groupTagProvider = FutureProvider<List<GroupTagModel>>((ref) async {
