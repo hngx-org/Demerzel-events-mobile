@@ -30,6 +30,8 @@ class ApiRoutes {
       baseUri.replace(path: '/api/events/subscriptions?limit=5&page=$page');
   static subscribeToEventURI(String eventId) =>
       baseUri.replace(path: '/api/events/$eventId/subscribe');
+  static unSubscribeToEventURI(String eventId) =>
+      baseUri.replace(path: '/api/events/$eventId/unsubscribe');
   static subscribeToGroupURI(String groupId) =>
       baseUri.replace(path: '/api/groups/$groupId/subscribe');
   static unSubscribeFromGroupURI(String groupId) =>

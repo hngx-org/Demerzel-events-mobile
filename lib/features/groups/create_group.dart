@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +44,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
   @override
   Widget build(BuildContext context) {
     final groupsNotifier = ref.watch(GroupProvider.groupProvider);
-    final tags = ref.watch(groupTagProvider); 
+    final tags = ref.watch(groupTagProvider);
     // ref.refresh(groupTagProvider);
 
     Size screensize = MediaQuery.of(context).size;
@@ -52,7 +55,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             icon: const Icon(
               Icons.chevron_left,
               size: 30,
-              
             ),
             onPressed: () {
               Navigator.of(context).pop();
@@ -81,7 +83,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 controller: groupNameController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor:Theme.of(context).colorScheme.background,
+                  fillColor: Theme.of(context).colorScheme.background,
                   hintStyle: const TextStyle(
                     fontSize: 15,
                   ),
@@ -108,37 +110,45 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 },
                 child: Container(
                   height: 50,
-                  decoration: ProjectConstants.appBoxDecoration
-                      .copyWith(color: Theme.of(context).colorScheme.background, border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
+                  decoration: ProjectConstants.appBoxDecoration.copyWith(
+                      color: Theme.of(context).colorScheme.background,
+                      border: Border.all(
+                          color: Theme.of(context).colorScheme.onBackground)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(imagePath.split('/').last),
-                        SvgPicture.asset(ProjectConstants.imagePicker, color: Theme.of(context).colorScheme.onBackground,),
+                        SvgPicture.asset(
+                          ProjectConstants.imagePicker,
+                          color: Theme.of(context).colorScheme.onBackground,
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-      
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12.0),
                 child: tagDropDown(tags, context),
               ),
-
-              const SizedBox.square(dimension: 12,),
+              const SizedBox.square(
+                dimension: 12,
+              ),
               GestureDetector(
                 onTap: () async {
-                  if (groupNameController.text.isNotEmpty && dropDownCtrl.selectedOptions.isNotEmpty) {
-                    await createGroup(groupsNotifier);
+                  if (groupNameController.text.isNotEmpty &&
+                      dropDownCtrl.selectedOptions.isNotEmpty) {
+                    await createGroup(groupsNotifier, ref);
+
+                    log('refrshed');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       backgroundColor: Colors.red,
                       content: Text('Please fill required fields'),
                     ));
-      
+
                     return;
                   }
                 },
@@ -154,7 +164,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                             color: Colors.black, // Shadow color
                             spreadRadius: 0, // Spread radius
                             blurRadius: 0, // Blur radius
-                            offset: Offset(4, 5), // Offset in x and y directions
+                            offset:
+                                Offset(4, 5), // Offset in x and y directions
                           ),
                         ],
                         borderRadius: BorderRadius.circular(8.0),
@@ -203,87 +214,92 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     );
   }
 
-  MultiSelectDropDown tagDropDown(AsyncValue<List<GroupTagModel>> tags, BuildContext context) {
+  MultiSelectDropDown tagDropDown(
+      AsyncValue<List<GroupTagModel>> tags, BuildContext context) {
     return MultiSelectDropDown(
       controller: dropDownCtrl,
-      onOptionSelected: (List<ValueItem> selectedOptions) {  }, 
+      onOptionSelected: (List<ValueItem> selectedOptions) {},
       maxItems: 5,
       suffixIcon: tags.when(
-        data: (data)=> const Icon(Icons.arrow_drop_down), 
-        error: (error, stackTrace)=> const Icon(Icons.error_outline, color: Colors.red,), 
-        loading: ()=> const Icon(Icons.circle, color: Colors.grey,),
+        data: (data) => const Icon(Icons.arrow_drop_down),
+        error: (error, stackTrace) => const Icon(
+          Icons.error_outline,
+          color: Colors.red,
+        ),
+        loading: () => const Icon(
+          Icons.circle,
+          color: Colors.grey,
+        ),
       ),
       options: tags.when(
-        data: (data)=> List.generate(
-          data.length,
-          (index)=> ValueItem(label: "#${data.map((e) => e.name.toLowerCase().replaceAll(RegExp(' '), '')).toList()[index]}" , value: data.map((e) => e.id.toString()).toList()[index])
-        ),  
-        error: (error, stackTrace) => <ValueItem>[], 
-        loading: ()=> <ValueItem>[]
-      ),
+          data: (data) => List.generate(
+              data.length,
+              (index) => ValueItem(
+                  label:
+                      "#${data.map((e) => e.name.toLowerCase().replaceAll(RegExp(' '), '')).toList()[index]}",
+                  value: data.map((e) => e.id.toString()).toList()[index])),
+          error: (error, stackTrace) => <ValueItem>[],
+          loading: () => <ValueItem>[]),
       // controller: ,
       inputDecoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Theme.of(context).textTheme.bodyMedium!.color!
-        )
-      ),
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: Theme.of(context).textTheme.bodyMedium!.color!)),
       hint: 'Add #tags',
       optionsBackgroundColor: Theme.of(context).cardColor,
-      optionTextStyle: TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
+      optionTextStyle:
+          TextStyle(color: Theme.of(context).textTheme.bodyMedium!.color),
       selectionType: SelectionType.multi,
       chipConfig: const ChipConfig(wrapType: WrapType.wrap),
       dropdownHeight: 300,
       selectedOptionIcon: const Icon(Icons.check_circle),
-      
     );
   }
 
-  Future<void> createGroup(GroupProvider groupController) async {
-      isLoading = true;
-      setState(() {});
+  Future<void> createGroup(GroupProvider groupController, WidgetRef ref) async {
+    isLoading = true;
+    setState(() {});
 
-      final body = {
-        "image": image,
-        "name": groupNameController.text,
-        "tags": dropDownCtrl.selectedOptions.map((e) => int.parse(e.value!)).toList()
-      };
+    final body = {
+      "image": image,
+      "name": groupNameController.text,
+      "tags":
+          dropDownCtrl.selectedOptions.map((e) => int.parse(e.value!)).toList()
+    };
 
-      final result = await groupController.createGroup(body);
-      // await Future.delayed(const Duration(seconds: 5));
-      setState(() {
-        isLoading = false;
-      });
+    final result = await groupController.createGroup(body);
+    // await Future.delayed(const Duration(seconds: 5));
+    setState(() {
+      isLoading = false;
+    });
 
-       if (result) {
-  
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              "Group create successful!",
-              style: TextStyle(color: Colors.white),
-            ),
-            duration: Duration(seconds: 2),
-            backgroundColor: Colors.green,
+    if (result) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Group create successful!",
+            style: TextStyle(color: Colors.white),
           ),
-        );
-       
-        Navigator.of(context).pop();
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
+      );
 
-        await groupController.getGroups();
-      } else {
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              groupController.error,
-              style: const TextStyle(color: Colors.white),
-            ),
-            duration: const Duration(seconds: 2),
-            backgroundColor: Colors.red,
+      Navigator.of(context).pop();
+      ref.refresh(groupsProvider);
+      await groupController.getGroups();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            groupController.error,
+            style: const TextStyle(color: Colors.white),
           ),
-        );
-      }
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

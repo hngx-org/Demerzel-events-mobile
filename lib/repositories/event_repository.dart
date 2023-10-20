@@ -47,11 +47,32 @@ class EventRepository {
     }
   }
 
-  Future<List<Event>> getAllUserEvents() async {
-    final header = await authRepository.getAuthHeader();
+Future<Either<Failure, bool>> unSubscribeToEvent(String eventId) async {
+    try {
+      final header = await authRepository.getAuthHeader();
+      final result = await apiService.post(
+          url: ApiRoutes.unSubscribeToEventURI(eventId),
+          body: {},
+          headers: header);
 
+      if (result is DioException) {
+        return Left(ServerFailure(errorMessage: result.message));
+      }
+
+      return const Right(true);
+    } catch (e) {
+      log(e.toString());
+      return Left(ServerFailure(errorMessage: e.toString()));
+    }
+  }
+  Future<List<Event>> getAllUserEvents({required int limit, required int page}) async {
+    final header = await authRepository.getAuthHeader();
+final queryParameters = {
+      'limit': "$limit",
+      'page': '$page',
+    };
     final result =
-        await apiService.get(url: ApiRoutes.userEventURI, headers: header);
+        await apiService.get(url: ApiRoutes.userEventURI, headers: header, queryParameters: queryParameters);
 
     return result['data']['events'] == null
         ? []
@@ -59,11 +80,11 @@ class EventRepository {
             result['data']['events'].map((x) => Event.fromMap(x)));
   }
 
-  Future<List<Event>> getAllEvent() async {
+  Future<List<Event>> getAllEvent({required int limit, required int page}) async {
     final header = await authRepository.getAuthHeader();
     final queryParameters = {
-      'limit': "30",
-      'page': '1',
+      'limit': "$limit",
+      'page': '$page',
     };
 
     try {
@@ -84,11 +105,14 @@ class EventRepository {
     }
   }
 
-  Future<List<Event>> getUpcomingEvent() async {
+  Future<List<Event>> getUpcomingEvent({required int limit, required int page}) async {
     final header = await authRepository.getAuthHeader();
-
+  final queryParameters = {
+      'limit': "$limit",
+      'page': '$page',
+    };
     final result =
-        await apiService.get(url: ApiRoutes.upcomingEventURI, headers: header);
+        await apiService.get(url: ApiRoutes.upcomingEventURI, headers: header, queryParameters: queryParameters);
     if (result is DioException) {
       return [];
     } else {
