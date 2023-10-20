@@ -47,4 +47,5 @@ class ApiRoutes {
   static editEventURI(String id) => Uri.parse("$baseUrl/events/$id");
   static deleteGroupURI(String id) => Uri.parse("$baseUrl/groups/$id");
   static editGroupURI(String id) => Uri.parse("$baseUrl/groups/$id");
+  static searchGroupURI(String id) => Uri.parse("$baseUrl/groups/$id");
 }

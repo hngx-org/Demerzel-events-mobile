@@ -28,15 +28,18 @@ class GroupRepository {
         imageUploadService: ref.read(ImageUploadService.provider));
   });
 
-  Future<List<Group>> getAllGroups({required int limit, required int page}) async {
+  Future<List<Group>> getAllGroups(
+      {required int limit, required int page}) async {
     final header = await authRepository.getAuthHeader();
-final queryParameters = {
+    final queryParameters = {
       'limit': "$limit",
       'page': '$page',
     };
     try {
-      final result =
-          await apiService.get(url: ApiRoutes.groupURI, headers: header, queryParameters: queryParameters);
+      final result = await apiService.get(
+          url: ApiRoutes.groupURI,
+          headers: header,
+          queryParameters: queryParameters);
 
       return result['data']['groups'] == null
           ? []
@@ -162,23 +165,61 @@ final queryParameters = {
     }
   }
 
-  Future<List<Group>> getSearchGroups(String query) async{
+  Future<List<Group>> getSearchGroups(String query) async {
     final header = await authRepository.getAuthHeader();
-    final queryParameters = {
+    String? tagId;
+    Map<String, dynamic> queryParameters;
+    switch (query) {
+      case '#nightlifeandparties':
+        tagId = "1";
+        break;
+      case '#family-friendly':
+        tagId = "2";
+        break;
+      case '#charityandfundraising':
+        tagId = "3";
+        break;
+      case '#techconferences':
+        tagId = "4";
+        break;
+      case '#workshops':
+        tagId = "5";
+        break;
+      case '#theaterperfomances':
+        tagId = "6";
+        break;
+      default:
+    }
+
+    if (tagId != null) {
+       queryParameters = {
+      //'name': query,
+       'tag': tagId
+    };
+    }else{
+        queryParameters = {
       'name': query,
       // 'tag': query
     };
+    }
+   
 
     final uri = Uri.https(ApiRoutes.host, '/api/groups', queryParameters);
-    
-    final response = await http.get( uri, headers: header,);
+log(uri.toString());
+    final response = await http.get(
+      uri,
+      headers: header,
+    );
+log(response.body.toString());
 
     if (response.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(response.body);
-      return (map['data']['groups'] as List).map((e) => Group.fromJson(e)).toList() ;
-    } else{
-      throw Exception('failed to retrieve groups from search ${response.statusCode}');
+      return map['data']['groups'] != null ?(map['data']['groups'] as List)
+          .map((e) => Group.fromJson(e))
+          .toList() : [];
+    } else {
+      throw Exception(
+          'failed to retrieve groups from search ${response.statusCode}');
     }
-
   }
 }

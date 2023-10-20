@@ -24,7 +24,7 @@ class MyPeopleScreen extends ConsumerStatefulWidget {
 class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
   @override
   Widget build(BuildContext context) {
-   // final groupsNotifier = ref.watch(GroupProvider.groupProvider);
+    // final groupsNotifier = ref.watch(GroupProvider.groupProvider);
     final groups = ref.watch(groupsProvider);
     final ScrollController controller = ScrollController();
     return Scaffold(
@@ -51,7 +51,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
                     builder: (context) => const CreateGroup(),
                   ),
                 );
-               // ref.refresh(groupsProvider);
+                // ref.refresh(groupsProvider);
               },
               buttonColor: Theme.of(context).primaryColor,
               shadowColor: Theme.of(context).colorScheme.onBackground,
@@ -87,8 +87,7 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
           Consumer(builder: (context, ref, child) {
             return IconButton(
                 onPressed: () => showSearch(
-                    context: context,
-                    delegate: GroupSearchDelegate()),
+                    context: context, delegate: GroupSearchDelegate()),
                 icon: const Icon(Icons.search));
           })
         ],
@@ -215,9 +214,22 @@ class MyPeopleGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return groups.when(
-      data: (groups) => MyPeopleGridBuilder(
-        groups: groups,
-      ),
+      data: (groups) => groups.isEmpty
+          ? SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                  ),
+                  const Center(
+                    child: Text('No Group yet'),
+                  ),
+                ],
+              ),
+            )
+          : MyPeopleGridBuilder(
+              groups: groups,
+            ),
       loading: () {
         return SliverToBoxAdapter(
           child: Center(

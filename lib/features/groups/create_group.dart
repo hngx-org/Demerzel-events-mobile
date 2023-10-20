@@ -288,7 +288,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
 
       Navigator.of(context).pop();
       ref.refresh(groupsProvider);
-      await groupController.getGroups();
+     // await groupController.getGroups();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
