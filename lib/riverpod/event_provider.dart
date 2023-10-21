@@ -15,7 +15,7 @@ class EventProvider extends ChangeNotifier {
 
   EventProvider({required this.eventRepository}) {
     // getUpcomingEvent();
-    // getUserEvent();
+    getUserEvent();
   }
 
   GetListEventModel? events;

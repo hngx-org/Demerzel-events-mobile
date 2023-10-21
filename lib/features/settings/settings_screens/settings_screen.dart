@@ -91,7 +91,9 @@ class SettingsPage extends ConsumerWidget {
                     ),
                     title: Text(
                       userRef?.name ?? 'salome',
-                      style: largeTextStyle,
+                      style: largeTextStyle.copyWith(
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w700), 
                     ),
                     subtitle: Text(
                       userRef?.email ?? 'salome357@gmail.com',
