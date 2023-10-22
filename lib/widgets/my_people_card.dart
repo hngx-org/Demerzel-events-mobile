@@ -98,8 +98,8 @@ final bool showVert;
                             ? Image.asset(
                                 'assets/illustrations/dancers_illustration.png')
                             : SizedBox(
-                                height: 110,
-                                width: 130,
+                                height:  MediaQuery.sizeOf(context).height * 0.15,
+                                width:  MediaQuery.sizeOf(context).width * 0.35,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
                                   child: FadeInImage.memoryNetwork(

@@ -54,7 +54,7 @@ final allEvents = ref.watch(EventProvider.provider).allEvents;
             children: [
               TableCalendar(
                 pageJumpingEnabled: true,
-                rowHeight: 35,
+                rowHeight: MediaQuery.sizeOf(context).height * 0.05,
                 firstDay: DateTime.now().subtract(const Duration(days: 500)),
                 lastDay: DateTime.now().add(const Duration(days: 1500)),
                 focusedDay: _selectedDay ?? _focusedDay,

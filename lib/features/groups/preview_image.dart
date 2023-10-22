@@ -52,77 +52,80 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
             // SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.eventId,),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.8,
-                    height: 45,
-                    child: TextField(
-                      onChanged: (value) {
-                        if (value != '') {
-                          setState(() {
-                            empty = false;
-                          });
-                        }else{
-                          setState(() {
-                            empty = true;
-                          });
-                        }
-                      },
-                      textAlignVertical: TextAlignVertical.center,
-                      controller: controller,
-                      decoration: InputDecoration(
-                        hintText: 'Type a message here',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
+              child: Padding(
+                 padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.8,
+                      height: 45,
+                      child: TextField(
+                        onChanged: (value) {
+                          if (value != '') {
+                            setState(() {
+                              empty = false;
+                            });
+                          }else{
+                            setState(() {
+                              empty = true;
+                            });
+                          }
+                        },
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: controller,
+                        decoration: InputDecoration(
+                          hintText: 'Type a message here',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  // commentNotifier.isAddingComments
-                  //     ? const SizedBox(
-                  //         width: 30,
-                  //         height: 30,
-                  //         child: CircularProgressIndicator())
-                      //:
-                       empty? SizedBox.shrink():
-                       InkWell(
-                          onTap: () {
-                            if (_croppedFile != null) {
-                              filePath = _croppedFile!.path;
-                            }else{
-                              filePath = widget.image!.path;
-                            }
-                            
-                            
-                            log(filePath!);
-                            if ( controller.text.isEmpty ) {
-                              showSnackBar(context, "You can't send a comment without a caption", Colors.red);
-                              return;
-                            }
-                            Navigator.pop(context);
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    // commentNotifier.isAddingComments
+                    //     ? const SizedBox(
+                    //         width: 30,
+                    //         height: 30,
+                    //         child: CircularProgressIndicator())
+                        //:
+                         empty? SizedBox.shrink():
+                         InkWell(
+                            onTap: () {
+                              if (_croppedFile != null) {
+                                filePath = _croppedFile!.path;
+                              }else{
+                                filePath = widget.image!.path;
+                              }
+                              
+                              
+                              log(filePath!);
+                              if ( controller.text.isEmpty ) {
+                                showSnackBar(context, "You can't send a comment without a caption", Colors.red);
+                                return;
+                              }
+                              Navigator.pop(context);
+                                      
+                              commentNotifier
+                                  .createComment(
+                                    controller.text ,
+                                    widget.eventId,
+                                    File(filePath!),
+                                  ).then((value) => controller.clear());
                                     
-                            commentNotifier
-                                .createComment(
-                                  controller.text ,
-                                  widget.eventId,
-                                  File(filePath!),
-                                ).then((value) => controller.clear());
-                                  
-                          },
-                          child: Icon(
-                            Icons.send,
-                            color: Theme.of(context).colorScheme.onBackground,
+                            },
+                            child: Icon(
+                              Icons.send,
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
                           ),
-                        ),
-                ],
+                  ],
+                ),
               ),
             )
           ],

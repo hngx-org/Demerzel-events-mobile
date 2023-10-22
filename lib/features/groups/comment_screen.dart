@@ -172,7 +172,7 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                     children: [
                       //Text(imagePath.split('/').last),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 10.0),
                         child: SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.event.id)
                       ),
                     ],

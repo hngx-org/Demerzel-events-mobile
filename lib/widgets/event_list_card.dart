@@ -187,11 +187,13 @@ class JoinButton extends StatelessWidget {
   final bool isBusy;
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+        final width = MediaQuery.sizeOf(context).width;
     return InkWell(
       onTap: onPressed,
       child: Container(
-        width: 200,
-        height: 50,
+        width: width * 0.6,
+        height: height * 0.065,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Theme.of(context).colorScheme.primary,

@@ -580,6 +580,7 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         ref.refresh(allEventsProvider);
         ref.refresh(upcomingEventsProvider);
         ref.refresh(myEventsProvider);
+        ref.refresh(EventProvider.provider);
         // await eventController.getAllEvent();
         // await eventController.getUserEvent();
         // await eventController.getUpcomingEvent();
@@ -591,7 +592,10 @@ class _CreateEventsState extends ConsumerState<CreateEvents> {
         await ref
             .read(GroupProvider.groupProvider)
             .getGroups()
-            .then((value) => Navigator.of(context).pop());
+            .then((value) {
+              Navigator.of(context).pop();
+              ref.refresh(groupsProvider);
+            });
         showSnackBar(context, 'Event Uploaded Successfully', Colors.green);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

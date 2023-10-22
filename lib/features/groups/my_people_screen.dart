@@ -61,24 +61,27 @@ class _CreateGroupState extends ConsumerState<MyPeopleScreen> {
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text(
-                        'Create',
-                        style: TextStyle(
-                          fontFamily: 'NotoSans',
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.onBackground,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          'Create',
+                          style: TextStyle(
+                            fontFamily: 'NotoSans',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
-                      ),
-                      const Icon(Icons.add),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                    ],
+                        const Icon(Icons.add, size: 30,),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -117,90 +120,93 @@ class MyPeopleGridBuilder extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SliverGrid.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
-      itemCount: groups.length,
-      itemBuilder: (BuildContext ctx, int index) {
-        final currentGroup = groups[index];
-        return MyPeopleCard(
-            showVert: currentGroup.creatorId == ref.read(appUserProvider)?.id,
-            onDelete: (groupId) {
-              showDialog(
-                  context: ctx,
-                  builder: (ctx) {
-                    return AlertDialog(
-                      title: const Text("Delete group"),
-                      content:
-                          const Text("Are you sure you want to delete group?"),
-                      actions: [
-                        TextButton(
-                          onPressed: () async {
-                            try {
-                              Navigator.of(ctx).pop();
-
-                              final result = await ref
-                                  .read(GroupProvider.groupProvider)
-                                  .deleteGroup(currentGroup.id);
-                              if (result) {
-                                ref.refresh(groupsProvider);
+    return SliverPadding(
+      padding:  const EdgeInsets.symmetric(horizontal: 8),
+      sliver: SliverGrid.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 20, mainAxisSpacing: 20),
+        itemCount: groups.length,
+        itemBuilder: (BuildContext ctx, int index) {
+          final currentGroup = groups[index];
+          return MyPeopleCard(
+              showVert: currentGroup.creatorId == ref.read(appUserProvider)?.id,
+              onDelete: (groupId) {
+                showDialog(
+                    context: ctx,
+                    builder: (ctx) {
+                      return AlertDialog(
+                        title: const Text("Delete group"),
+                          content:
+                              const Text("Are you sure you want to delete group?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () async {
+                              try {
+                                Navigator.of(ctx).pop();
+      
+                                final result = await ref
+                                    .read(GroupProvider.groupProvider)
+                                    .deleteGroup(currentGroup.id);
+                                if (result) {
+                                  ref.refresh(groupsProvider);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content: Text("Group deleted successfully"),
+                                    ),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(ref
+                                              .read(GroupProvider.groupProvider)
+                                              .error)));
+                                }
+                              } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.green,
-                                    content: Text("Group deleted successfully"),
-                                  ),
-                                );
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        backgroundColor: Colors.red,
-                                        content: Text(ref
-                                            .read(GroupProvider.groupProvider)
-                                            .error)));
+                                    const SnackBar(
+                                        content:
+                                            Text("Group could not be deleted ")));
                               }
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text("Group could not be deleted ")));
-                            }
-                          },
-                          child: const Text("Yes"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("No"),
-                        ),
-                      ],
-                    );
-                  });
-            },
-            onEdit: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditGroupName(
-                    currentGroup: currentGroup,
-                  ),
-                ),
-              );
-            },
-            title: currentGroup.name,
-            image: currentGroup.image,
-            eventLength: currentGroup.eventCount,
-            bubbleVisible: true,
-            onPressed: () async {
-              Navigator.push(
+                            },
+                            child: const Text("Yes"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("No"),
+                          ),
+                        ],
+                      );
+                    });
+              },
+              onEdit: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => GroupEventsScreen(
-                      group: currentGroup,
+                    builder: (context) => EditGroupName(
+                      currentGroup: currentGroup,
                     ),
-                  ));
-            });
-      },
+                  ),
+                );
+              },
+              title: currentGroup.name,
+              image: currentGroup.image,
+              eventLength: currentGroup.eventCount,
+              bubbleVisible: true,
+              onPressed: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GroupEventsScreen(
+                        group: currentGroup,
+                      ),
+                    ));
+              });
+        },
+      ),
     );
   }
 }
