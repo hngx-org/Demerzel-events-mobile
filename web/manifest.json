@@ -1,6 +1,6 @@
 {
-    "name": "hng_events_app",
-    "short_name": "hng_events_app",
+    "name": "demerzel_event_app",
+    "short_name": "demerzel_event_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
