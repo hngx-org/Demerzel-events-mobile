@@ -10,6 +10,8 @@ import 'package:hng_events_app/widgets/comment_stack.dart';
 import 'package:neubrutalism_ui/neubrutalism_ui.dart';
 import 'package:svg_flutter/svg.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class EventsCard extends ConsumerWidget {
   const EventsCard({
     super.key,
@@ -56,14 +58,14 @@ class EventsCard extends ConsumerWidget {
                         ),
                   title: Text(
                     event!.title,
-                    style: const TextStyle(
+                    style:  TextStyle(
                         fontFamily: 'inter',
                         fontWeight: FontWeight.w800,
-                        fontSize: 16),
+                        fontSize: 16.sp),
                   ),
                   trailing: Container(
-                    width: 60,
-                    height: 30,
+                    width: 60.w,
+                    height: 30.h,
                     decoration: BoxDecoration(
                       // color: Theme.of(context).colorScheme.onBackground,
                       borderRadius: BorderRadius.circular(5),
@@ -77,12 +79,15 @@ class EventsCard extends ConsumerWidget {
                       ],
                     ),
                     child: Center(
-                      child: Text(
-                        DateFormatter.formatDateDayAndMonth(event!.startDate),
-                        style: TextStyle(
-                          fontFamily: 'inter',
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).colorScheme.onBackground,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          DateFormatter.formatDateDayAndMonth(event!.startDate),
+                          style: TextStyle(
+                            fontFamily: 'inter',
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
                       ),
                     ),
@@ -110,8 +115,8 @@ class EventsCard extends ConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 5,
+                 SizedBox(
+                  height: 5.h,
                 ),
                 //time
                 Padding(
@@ -139,7 +144,9 @@ class EventsCard extends ConsumerWidget {
                   height: 8,
                 ),
                 //button widget
-                Visibility(
+(DateFormatter.timeLeft(event!.startDate, event!.endTime) == 'Expired')?
+               Text('Event Expired')
+               : Visibility(
                   visible: eventNotifier.userEvents
                       .any((element) => element.id == event!.id),
                   replacement: JoinButton(
@@ -153,8 +160,8 @@ class EventsCard extends ConsumerWidget {
                       onPressed: onUnSubscribe),
                   //const Text('Already Subscribed 👍🏼'),
                 ),
-                const SizedBox(
-                  height: 16,
+                 SizedBox(
+                  height: 16.h,
                 ),
                 const Divider(
                     height: 0, thickness: 2, color: ProjectColors.grey),
@@ -207,18 +214,20 @@ class JoinButton extends StatelessWidget {
         ),
         child: Center(
           child: isBusy
-              ? const SizedBox(
-                  width: 30,
-                  child: CircularProgressIndicator(
+              ?  SizedBox(
+                  width: 30.w,
+                  child: const CircularProgressIndicator(
                     color: Colors.white,
                   ),
                 )
               : Text(
+                textScaleFactor: 1.0,
                   title,
-                  style: const TextStyle(
+                  style:  TextStyle(
                       fontFamily: 'NotoSans',
+                      
                       // fontWeight: FontWeight.w600,
-                      fontSize: 16),
+                      fontSize: 16.sp),
                 ),
         ),
       ),
@@ -284,7 +293,7 @@ class _InputFieldState extends ConsumerState<InputField> {
                       ),
                     ),
                     child: SizedBox(
-                      height: 40,
+                      height: 40.h,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -297,8 +306,11 @@ class _InputFieldState extends ConsumerState<InputField> {
                                   numberOfAvatars: widget.firstComments!.length,
                                   firstComments: widget.firstComments,
                                 ),
-                                Text(
-                                    '  ${widget.firstComments!.length} ${(widget.firstComments!.length > 1 ? 'comments' : 'comment')}'),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                      '  ${widget.firstComments!.length} ${(widget.firstComments!.length > 1 ? 'comments' : 'comment')}'),
+                                ),
                               ],
                             ),
                           ),

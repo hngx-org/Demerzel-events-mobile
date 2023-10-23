@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/features/auth/auth_wrapper_screen.dart';
+import 'package:hng_events_app/features/splash/splash_screen.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
 import 'package:hng_events_app/features/main/dash_board_screen.dart';
 import 'package:hng_events_app/features/navigation/navigation_manager.dart';
@@ -13,7 +15,7 @@ class ScreenUtilInitScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ScreenUtilInit(
         designSize: const Size(370, 810),
-        minTextAdapt: false,
+        minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, child) {
           return MaterialApp(
@@ -40,7 +42,7 @@ class ScreenUtilInitScreen extends ConsumerWidget {
               ),
               useMaterial3: true,
             ),
-            home: const DashBoardScreen(),
+            home: const SplashScreen(),
             onGenerateRoute: NavigationManager.generateRoute,
           );
         });

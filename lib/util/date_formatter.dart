@@ -13,7 +13,7 @@ class DateFormatter {
     return outputFormat.format(inputDate);
   }
 
-String timeLeft(String startDate, String startTime) {
+ static String timeLeft(String startDate, String startTime) {
   //final formatter =DateFormat('HH:mm');
   final DateTime date;
 

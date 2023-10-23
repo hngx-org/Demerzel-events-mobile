@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/riverpod/comment_provider.dart';
@@ -13,15 +14,19 @@ class PreviewImage extends ConsumerStatefulWidget {
     super.key,
     required this.image,
     required this.eventId,
+    this.text, 
   });
   final XFile? image;
   final String eventId;
+  final String? text;
+  
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PreviewImageState();
 }
 
 class _PreviewImageState extends ConsumerState<PreviewImage> {
   final TextEditingController controller = TextEditingController();
+  
   CroppedFile? _croppedFile;
   String? filePath ;
   bool empty = true;
@@ -60,33 +65,40 @@ class _PreviewImageState extends ConsumerState<PreviewImage> {
                     const SizedBox(
                       width: 10,
                     ),
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.8,
-                      height: 45,
-                      child: TextField(
-                        onChanged: (value) {
-                          if (value != '') {
-                            setState(() {
-                              empty = false;
-                            });
-                          }else{
-                            setState(() {
-                              empty = true;
-                            });
-                          }
-                        },
-                        textAlignVertical: TextAlignVertical.center,
-                        controller: controller,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message here',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
+                    Container(
+        width: MediaQuery.sizeOf(context).width * 0.7,
+        constraints: BoxConstraints(
+          minHeight: 45.0.h, // Set a minimum height for the SizedBox.
+        ),
+        child: SizedBox(
+          height: controller.text.isEmpty ? 45.0 : null,
+          child: TextField(
+            onChanged: (value) {
+              if (value.isNotEmpty) {
+          setState(() {
+            empty = false;
+          });
+              } else {
+          setState(() {
+            empty = true;
+          });
+              }
+            },
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            // maxLines: null, // Set maxLines to null for dynamic expansion.
+            decoration: InputDecoration(
+              hintText: 'Type a message here',
+              border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+              ),
+            ),
+          ),
+        ),
+        )
+,
+                     SizedBox(
+                      width: 10.w,
                     ),
                     // commentNotifier.isAddingComments
                     //     ? const SizedBox(

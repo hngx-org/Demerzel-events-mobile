@@ -90,10 +90,13 @@ class SettingsPage extends ConsumerWidget {
                       backgroundImage: NetworkImage(userRef?.avatar ?? ''),
                     ),
                     title: Text(
+                      
                       userRef?.name ?? 'salome',
                       style: largeTextStyle.copyWith(
+                        
                           overflow: TextOverflow.ellipsis,
                           fontWeight: FontWeight.w700), 
+                          textScaleFactor: 1.0,
                     ),
                     subtitle: Text(
                       userRef?.email ?? 'salome357@gmail.com',

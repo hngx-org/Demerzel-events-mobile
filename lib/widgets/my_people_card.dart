@@ -59,14 +59,18 @@ final bool showVert;
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: "NotoSans",
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textScaleFactor: 1.0,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: "NotoSans",
+                            ),
                           ),
                         ),
                         PopupMenuButton<String>(

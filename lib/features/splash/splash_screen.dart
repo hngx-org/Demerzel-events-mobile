@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hng_events_app/features/auth/auth_wrapper_screen.dart';
+import 'package:hng_events_app/features/main/screen_util.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -64,32 +67,34 @@ class _SplashScreenState extends State<SplashScreen>
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(
-              height: 50,
+            SizedBox(
+              height: 50.0.h,
             ),
             FadeTransition(
               opacity: _fadeAnimation,
               child: SlideTransition(
                 position: _slideAnimation,
                 child: Center(
-                  child:
-                  Image.asset('assets/illustrations/splash_screen_icon.png'),
+                  child: Image.asset(
+                      'assets/illustrations/splash_screen_icon.png'),
                 ),
               ),
             ),
-            const SizedBox(
-              height: 50,
+            SizedBox(
+              height: 50.h,
             ),
             FadeTransition(
               opacity: _fadeAnimation,
-              child: const Center(
+              child:  Center(
                 child: Text(
                   'WetinDeySup',
                   style: TextStyle(
-                    fontSize: 48,
+                    fontSize: 48.sp,
                     fontFamily: 'Lato',
                     fontWeight: FontWeight.bold,
+                    
                   ),
+                  textScaleFactor: 1.0,
                 ),
               ),
             ),

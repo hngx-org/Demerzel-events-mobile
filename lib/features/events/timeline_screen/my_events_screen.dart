@@ -36,7 +36,7 @@ class MyEventScreen extends ConsumerWidget {
                 onPressed: () => ref.refresh(myEventsProvider)),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 70.0),
+            padding:  EdgeInsets.only(bottom: 70.h),
             child: FloatingActionButton(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: const CircleBorder(),
@@ -53,9 +53,9 @@ class MyEventScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.all(Radius.circular(50.r)),
                    
                   ),
-                  child: const Icon(
+                  child:  Icon(
                     Icons.add,
-                    size: 40,
+                    size: 40.w,
                     color: Colors.black,
                   ),
                 )),

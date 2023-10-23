@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hng_events_app/models/event_model.dart';
-import 'package:hng_events_app/riverpod/event_provider.dart';
 import 'package:hng_events_app/riverpod/group_provider.dart';
 import 'package:hng_events_app/riverpod/notifications_provider.dart';
 import 'package:hng_events_app/features/events/timeline_screen/my_events_screen.dart';
@@ -38,7 +36,7 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
         appBar: AppBar(
           title: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: SizedBox(
                 height: 35,
                 child: GestureDetector(
@@ -69,8 +67,22 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
               const Tab(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      "Upcoming",
+                      style: TextStyle(
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Tab(
+                key: UniqueKey(),
+                child: const FittedBox(
+                   fit: BoxFit.scaleDown,
                   child: Text(
-                    "Upcoming",
+                    "My Events",
                     style: TextStyle(
                     ),
                   ),
@@ -78,17 +90,12 @@ class _TimelineScreenState extends ConsumerState<TimelineScreen>
               ),
               Tab(
                 key: UniqueKey(),
-                child: const Text(
-                  "My Events",
-                  style: TextStyle(
-                  ),
-                ),
-              ),
-              Tab(
-                key: UniqueKey(),
-                child: const Text(
-                  "All Events",
-                  style: TextStyle(
+                child: const FittedBox(
+                   fit: BoxFit.scaleDown,
+                  child: Text(
+                    "All Events",
+                    style: TextStyle(
+                    ),
                   ),
                 ),
               ),

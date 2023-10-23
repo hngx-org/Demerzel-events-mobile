@@ -14,6 +14,8 @@ import 'package:hng_events_app/widgets/date_card.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:svg_flutter/svg.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class CommentScreen extends ConsumerStatefulWidget {
   final Event event;
   final String? groupId;
@@ -46,8 +48,8 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
   Future<XFile> _getFromGallery() async {
     XFile? pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      maxWidth: 1800,
-      maxHeight: 1800,
+      maxWidth: 1800.w,
+      maxHeight: 1800.h,
     );
     if (pickedFile != null) {
       setState(() {
@@ -137,12 +139,12 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding:  EdgeInsets.symmetric(horizontal: 18.h),
                         child: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          separatorBuilder: (context, index) => const SizedBox(
-                            height: 10,
+                          separatorBuilder: (context, index) =>  SizedBox(
+                            height: 10.h,
                           ),
                           itemCount: commentNotifier.comments.length,
                           itemBuilder: (context, index) {
@@ -167,15 +169,10 @@ class _CommentScreenState extends ConsumerState<CommentScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
-                  height: 80,
-                  child: Column(
-                    children: [
-                      //Text(imagePath.split('/').last),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 10.0),
-                        child: SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.event.id)
-                      ),
-                    ],
+                  height: 80.h,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0, left: 8.0, top: 7.0, bottom: 5 ),
+                    child: SendBar(controller: controller, commentNotifier: commentNotifier, eventId: widget.event.id)
                   ),
                 ),
               ),
@@ -224,7 +221,7 @@ bool empty = true;
             if (pickedFile != null) {
               Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) =>
-                    PreviewImage(image: pickedFile, eventId: widget.eventId,  )));
+                    PreviewImage(image: pickedFile, eventId: widget.eventId, text: widget.controller.text, )));
             }
             
           },
@@ -236,42 +233,49 @@ bool empty = true;
                 Theme.of(context).colorScheme.onBackground,
           ),
         ): SizedBox.shrink(),
-        const SizedBox(
-          width: 10,
+         SizedBox(
+          width: 10.w,
         ),
-        SizedBox(
-          width: MediaQuery.sizeOf(context).width * 0.7,
-          height: 45,
+        Container(
+        width: MediaQuery.sizeOf(context).width * 0.7,
+        constraints: BoxConstraints(
+          minHeight: 45.0.h, // Set a minimum height for the SizedBox.
+        ),
+        child: SizedBox(
+          height: widget.controller.text.isEmpty ? 45.0 : null,
           child: TextField(
-             onChanged: (value) {
-                        if (value != '') {
-                          setState(() {
-                            empty = false;
-                          });
-                        }else{
-                          setState(() {
-                            empty = true;
-                          });
-                        }
-                      },
+            onChanged: (value) {
+              if (value.isNotEmpty) {
+          setState(() {
+            empty = false;
+          });
+              } else {
+          setState(() {
+            empty = true;
+          });
+              }
+            },
             textAlignVertical: TextAlignVertical.center,
             controller: widget.controller,
+            // maxLines: null, // Set maxLines to null for dynamic expansion.
             decoration: InputDecoration(
               hintText: 'Type a message here',
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(30),
               ),
             ),
           ),
         ),
+        )
+,
         const SizedBox(
           width: 10,
         ),
         widget.commentNotifier.isAddingComments
-            ? const SizedBox(
-                width: 30,
-                height: 30,
-                child: CircularProgressIndicator())
+            ?  SizedBox(
+                width: 30.w,
+                height: 30.h,
+                child: const CircularProgressIndicator())
             : InkWell(
                 onTap: () {
                   if (widget.controller.text.isEmpty) {
@@ -318,22 +322,22 @@ class ChatCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-                height: 30,
-                width: 30,
+                height: 30.h,
+                width: 30.w,
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: profilePic.isEmpty
                         ? Image.asset(
                             profilePic,
                             fit: BoxFit.cover,
-                            height: 30,
-                            width: 30,
+                            height: 30.h,
+                            width: 30.w,
                           )
                         : Image.network(
                             profilePic,
                             fit: BoxFit.cover,
-                            height: 30,
-                            width: 30,
+                            height: 30.h,
+                            width: 30.w,
                           )))
           ],
         ),

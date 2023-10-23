@@ -26,7 +26,7 @@ class AllEventsScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.all(8.0.w),
             child: FloatingActionButton(
                 shape: const CircleBorder(),
                 backgroundColor: Theme.of(context).colorScheme.primary,
@@ -34,7 +34,7 @@ class AllEventsScreen extends ConsumerWidget {
                 onPressed: () =>ref.refresh(allEventsProvider)),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 70.0),
+            padding:  EdgeInsets.only(bottom: 70.h),
             child: FloatingActionButton(
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: const CircleBorder(),

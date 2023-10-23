@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hng_events_app/features/main/dash_board_screen.dart';
 import 'package:hng_events_app/models/user.dart';
 import 'package:hng_events_app/repositories/auth_repository.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
@@ -16,7 +17,7 @@ class AuthWrapper extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final authRepo = ref.watch(AuthRepository.provider);
     AppUser? appUser = ref.watch(appUserProvider);
-    return (appUser == null)? const SignIn(): const ScreenUtilInitScreen();
+    return (appUser == null)? const SignIn(): const DashBoardScreen();
     // return StreamBuilder<User?>(
     //   stream: FirebaseAuth.instance.authStateChanges(),
     //   builder: (context, snapshot) {

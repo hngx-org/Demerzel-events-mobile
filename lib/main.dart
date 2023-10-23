@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hng_events_app/constants/colors.dart';
+import 'package:hng_events_app/features/main/screen_util.dart';
 import 'package:hng_events_app/riverpod/theme_provider.dart';
 import 'package:hng_events_app/riverpod/user_provider.dart';
 import 'package:hng_events_app/features/splash/splash_screen.dart';
@@ -42,7 +43,7 @@ class MyApp extends ConsumerWidget {
           ),
           useMaterial3: true,
         ),
-      home: const SplashScreen(),
+      home: const ScreenUtilInitScreen(),
     );
   }
 }

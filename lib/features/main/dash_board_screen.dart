@@ -62,8 +62,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         showUnselectedLabels: true,
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
+        selectedFontSize: 14.sp,
+        unselectedFontSize: 14.sp,
         items: [
           BottomNavigationBarItem(
               icon: const Icon(Icons.timeline, color: ProjectColors.grey),
